@@ -12,6 +12,7 @@ import webbrowser
 white = [255,255,255]
 off_yellow = [240, 220, 0]
 grey = [200, 200, 200]
+link_blue = [50, 100, 255]
 
 # Font object generator.
 def make_font(fonts, size):
@@ -58,14 +59,15 @@ class Option:
 
 class Credit:
     # Used for scrolling text on the credits screen.
-    def __init__(self, text, pos, size=40):
+    def __init__(self, text, pos, size=40, color=white):
         self.text = text
         self.pos = pos
         self.size = size
+        self.color = color
         self.set_rend()
         
     def set_rend(self):
-        self.rend = get_font(["Palatino"], self.size).render(self.text, True, white)
+        self.rend = get_font(["Palatino"], self.size).render(self.text, True, self.color)
 
 _sound_library = {}
 class JukeBox:
@@ -220,14 +222,6 @@ class TitleScene(SceneBase):
                     if self.menu == -1:
                         # Loop the menu if we went past the end.
                         self.menu = 3
-                    
-            #if event.type == pygame.MOUSEBUTTONDOWN:
-            #    # Left click.
-            #    if event.button == 1:
-            #        mpos = pygame.mouse.get_pos()
-            #        if self.url_rect.collidepoint(mpos):
-            #            # Launch the default web browser for the URL.
-            #            webbrowser.open("http://www.matthewpablo.com", new=2)
     
     # Internal game logic. Doesn't really apply to the main menu.
     def Update(self):
@@ -260,13 +254,6 @@ class TitleScene(SceneBase):
         for x in range(len(self.options)):
             screen.blit(self.options[x].rend, self.options[x].pos)
         
-        # Title music credit at the bottom of the screen.
-        #music_credit = get_font(["Arial"], 13).render(str("Featuring Music by Matthew Pablo"),True,white)
-        #screen.blit(music_credit, [412, 730])
-        #music_url = get_font(["Arial"], 13).render(str("www.matthewpablo.com"),True,white)
-        #screen.blit(music_url, [428, 747])
-        #self.url_rect = music_url.get_rect(topleft=(428, 747))
-
 class GameScene(SceneBase):
     # The actual game. Different versions of this class will need to load maps, characters, dialog, and detect interactions between objects on the screen. Each area will be its own class.
     def __init__(self, song="plesantcreekloop.mp3"):
@@ -313,6 +300,16 @@ class CreditsScene(SceneBase):
                     if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER or event.key == pygame.K_ESCAPE:
                         sound.stop_music()
                         self.SwitchToScene(TitleScene())
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                # Left click.
+                if event.button == 1:
+                    mpos = pygame.mouse.get_pos()
+                    
+                    for x in range(len(self.credit_url_rects)):
+                        
+                        if self.credit_url_rects[x].collidepoint(mpos):
+                            # Launch the default web browser for the URL.
+                            webbrowser.open(self.credit_urls[x], new=2)
     
     # Internal game logic.
     def Update(self):
@@ -330,29 +327,45 @@ class CreditsScene(SceneBase):
             Credit("Additional Programming: ???", (self.y, self.x + 100)),
             Credit("Art: ???", (self.y, self.x + 200)),
             Credit("Title Music - Enchanted Festival, By: Matthew Pablo", (self.y, self.x + 300)),
-            Credit("http://www.matthewpablo.com", (self.y, self.x + 330), 28),
+            Credit("http://www.matthewpablo.com", (self.y, self.x + 330), 28, link_blue),
             Credit("Credits Music - Her Violet Eyes, By: tgfcoder", (self.y, self.x + 400)),
-            Credit("https://twitter.com/tgfcoder", (self.y, self.x + 430), 28),
+            Credit("https://twitter.com/tgfcoder", (self.y, self.x + 430), 28, link_blue),
             Credit("Battle Music - A Wild Creature Appears, By: Aaron Parsons", (self.y, self.x + 500)),
             Credit("Boss Fight Music - Battle of the Void, By: Marcelo Fernandez", (self.y, self.x + 600)),
             Credit("Forest Area Music - Forest, By: syncopika", (self.y, self.x + 700)),
-            Credit("https://greenbearmusic.bandcamp.com/track/forest", (self.y, self.x + 730), 28),
+            Credit("https://greenbearmusic.bandcamp.com/track/forest", (self.y, self.x + 730), 28, link_blue),
             Credit("Town Music - Plesant Creek, By: Matthew Pablo", (self.y, self.x + 800)),
-            Credit("http://www.matthewpablo.com", (self.y, self.x + 830), 28),
+            Credit("http://www.matthewpablo.com", (self.y, self.x + 830), 28, link_blue),
             Credit("Combat System Design: George Markeloff", (self.y, self.x + 900)),
             Credit("Combat Balancing: George Markeloff", (self.y, self.x + 1000)),
             Credit("Character Class Design: George Markeloff", (self.y, self.x + 1100)),
             Credit("Story: George Markeloff", (self.y, self.x + 1200)),
             Credit("Dialog: George Markeloff", (self.y, self.x + 1300)),
             Credit("All audio and art assets licensed under CC-BY 3.0/4.0", (self.y, self.x + 1400)),
-            Credit("https://creativecommons.org/licenses/by/3.0/", (self.y, self.x + 1430), 28),
+            Credit("https://creativecommons.org/licenses/by/3.0/", (self.y, self.x + 1430), 28, link_blue),
             Credit("Written in Python using the Pygame engine.", (self.y, self.x + 1500))
         ]
         
-        # Draw the credit entries on the screen.
-        for x in range(len(credits_roll)):
-            screen.blit(credits_roll[x].rend, credits_roll[x].pos)
+        url_pattern = []
         
+        # Run through the credits roll entries.
+        for x in range(len(credits_roll)):
+            # Draw the entries on the screen.
+            screen.blit(credits_roll[x].rend, credits_roll[x].pos)
+            # Populate the url pattern list with the index numbers of URL entries.
+            if credits_roll[x].color == link_blue:
+                url_pattern.append(x)
+        
+        self.credit_urls = []
+        self.credit_url_rects = []
+        
+        # Run through the URL pattern list.
+        for x in range(len(url_pattern)):
+            # Add the actual URL to a list for input processing.
+            self.credit_urls.append(credits_roll[url_pattern[x]].text)
+            # Add collidable rectangle to a list for input processing.
+            self.credit_url_rects.append(credits_roll[url_pattern[x]].rend.get_rect(topleft=credits_roll[url_pattern[x]].pos))
+            
 # Create a global sound object so that whatever scene is active can use it.
 sound = JukeBox()
 
