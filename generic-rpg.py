@@ -194,6 +194,8 @@ def run_game(width, height, fps, starting_scene):
         
         # Increment the internal game state at the desired FPS limit.
         clock.tick(fps)
+        
+    print("Thanks for playing!")
 
 class TitleScene(SceneBase):
     # Main title screen. You can start/load a game, view the credits, or close the program from here.
