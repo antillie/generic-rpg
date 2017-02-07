@@ -67,12 +67,18 @@ class Credit:
 
 class JukeBox:
     # Sound class that handles all audio output.
+    
+    # Default volume levels.
+    music_volume = 0.2
+    fx_volume = 1.0
+    
     def __init__(self):
         self.music_playing = False
     
     def play_music(self, song):
         if self.music_playing == False:
             pygame.mixer.music.load(song)
+            pygame.mixer.music.set_volume(self.music_volume)
             pygame.mixer.music.play(-1)
             self.music_playing = True
     
@@ -82,6 +88,7 @@ class JukeBox:
         
     def play_sound(self, sound):
         effect = pygame.mixer.Sound(sound)
+        effect.set_volume(self.fx_volume)
         effect.play()
 
 class SceneBase:
@@ -289,7 +296,7 @@ class CreditsScene(SceneBase):
         path = os.path.dirname(os.path.realpath(__file__)) + "/sound/music/" + song
         canonicalized_path = path.replace('/', os.sep).replace('\\', os.sep)
         sound.play_music(canonicalized_path)
-        self.x = 768
+        self.x = 770
         self.y = 100
         
     def ProcessInput(self, events, pressed_keys):
@@ -309,25 +316,26 @@ class CreditsScene(SceneBase):
         
         credits_roll = [
             Credit("Main Programming: George Markeloff", (self.y, self.x)),
-            Credit("Art/Additional Programming: ???", (self.y, self.x + 100)),
-            Credit("Title Music - Enchanted Festival, By: Matthew Pablo", (self.y, self.x + 200)),
-            Credit("http://www.matthewpablo.com", (self.y, self.x + 230), 28),
-            Credit("Credits Music - Her Violet Eyes, By: tgfcoder", (self.y, self.x + 300)),
-            Credit("https://twitter.com/tgfcoder", (self.y, self.x + 330), 28),
-            Credit("Battle Music - A Wild Creature Appears, By: Aaron Parsons", (self.y, self.x + 400)),
-            Credit("Boss Fight Music - Battle of the Void, By: Marcelo Fernandez", (self.y, self.x + 500)),
-            Credit("Forest Area Music - Forest, By: syncopika", (self.y, self.x + 600)),
-            Credit("https://greenbearmusic.bandcamp.com/track/forest", (self.y, self.x + 630), 28),
-            Credit("Town Music - Plesant Creek, By: Matthew Pablo", (self.y, self.x + 700)),
-            Credit("http://www.matthewpablo.com", (self.y, self.x + 730), 28),
-            Credit("Combat System Design: George Markeloff", (self.y, self.x + 800)),
-            Credit("Combat Balancing: George Markeloff", (self.y, self.x + 900)),
-            Credit("Character Class Design: George Markeloff", (self.y, self.x + 1000)),
-            Credit("Story: George Markeloff", (self.y, self.x + 1100)),
-            Credit("Dialog: George Markeloff", (self.y, self.x + 1200)),
-            Credit("All audio and art assets licensed under CC-BY 3.0/4.0", (self.y, self.x + 1300)),
-            Credit("https://creativecommons.org/licenses/by/3.0/", (self.y, self.x + 1330), 28),
-            Credit("Written in Python using the Pygame engine.", (self.y, self.x + 1400))
+            Credit("Additional Programming: ???", (self.y, self.x + 100)),
+            Credit("Art: ???", (self.y, self.x + 200)),
+            Credit("Title Music - Enchanted Festival, By: Matthew Pablo", (self.y, self.x + 300)),
+            Credit("http://www.matthewpablo.com", (self.y, self.x + 330), 28),
+            Credit("Credits Music - Her Violet Eyes, By: tgfcoder", (self.y, self.x + 400)),
+            Credit("https://twitter.com/tgfcoder", (self.y, self.x + 430), 28),
+            Credit("Battle Music - A Wild Creature Appears, By: Aaron Parsons", (self.y, self.x + 500)),
+            Credit("Boss Fight Music - Battle of the Void, By: Marcelo Fernandez", (self.y, self.x + 600)),
+            Credit("Forest Area Music - Forest, By: syncopika", (self.y, self.x + 700)),
+            Credit("https://greenbearmusic.bandcamp.com/track/forest", (self.y, self.x + 730), 28),
+            Credit("Town Music - Plesant Creek, By: Matthew Pablo", (self.y, self.x + 800)),
+            Credit("http://www.matthewpablo.com", (self.y, self.x + 830), 28),
+            Credit("Combat System Design: George Markeloff", (self.y, self.x + 900)),
+            Credit("Combat Balancing: George Markeloff", (self.y, self.x + 1000)),
+            Credit("Character Class Design: George Markeloff", (self.y, self.x + 1100)),
+            Credit("Story: George Markeloff", (self.y, self.x + 1200)),
+            Credit("Dialog: George Markeloff", (self.y, self.x + 1300)),
+            Credit("All audio and art assets licensed under CC-BY 3.0/4.0", (self.y, self.x + 1400)),
+            Credit("https://creativecommons.org/licenses/by/3.0/", (self.y, self.x + 1430), 28),
+            Credit("Written in Python using the Pygame engine.", (self.y, self.x + 1500))
         ]
         for x in range(len(credits_roll)):
             screen.blit(credits_roll[x].rend, credits_roll[x].pos)
