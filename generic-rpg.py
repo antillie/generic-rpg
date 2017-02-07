@@ -46,11 +46,12 @@ _image_library = {}
 def get_image(path):
         global _image_library
         image = _image_library.get(path)
-        path = os.path.dirname(os.path.realpath(__file__)) + "/images/" + path
+        
         if image == None:
-                canonicalized_path = path.replace('/', os.sep).replace('\\', os.sep)
-                image = pygame.image.load(canonicalized_path)
-                _image_library[path] = image
+            path = os.path.dirname(os.path.realpath(__file__)) + "/images/" + path
+            canonicalized_path = path.replace('/', os.sep).replace('\\', os.sep)
+            image = pygame.image.load(canonicalized_path)
+            _image_library[path] = image
         return image
 
 class Option:
@@ -284,9 +285,10 @@ class GameScene(SceneBase):
     def __init__(self, song="plesantcreekloop.mp3"):
         SceneBase.__init__(self)
         self.song = song
+        self.bg = 0
         
         # Play music.
-        sound.play_music(song)
+        sound.play_music(self.song)
         
     # Handles user input passed from the main engine.
     def ProcessInput(self, events, pressed_keys):
@@ -298,14 +300,16 @@ class GameScene(SceneBase):
     
     # Draws things.
     def Render(self, screen):
-        # The game scene is just a blank blue screen at the moment.
-        screen.fill((0, 0, 0))
         
-        screen.blit(get_image("landscaping/mountain_landscape.png"), (20, 20))
+        # Filling a 1024x768 screen requires 16x12 64x64 pixel tiles.
+        x_count = 16
+        y_count = 12
         
-        # Placeholder text.
-        #title = get_font(["Arial"], 50).render("Nothing here yet...",True,white)
-        #screen.blit(title, [200, 60])
+        if self.bg == 0:
+            self.bg = 1
+            for y in range(y_count):
+                for x in range(x_count):
+                    screen.blit(get_image("landscaping/mountain_landscape.png"), (x * 64, y * 64), (448, 128, 64, 64))
         
 class CreditsScene(SceneBase):
     # The credits screen.
