@@ -50,7 +50,7 @@ def get_image(path):
         if image == None:
             path = os.path.dirname(os.path.realpath(__file__)) + "/images/" + path
             canonicalized_path = path.replace('/', os.sep).replace('\\', os.sep)
-            image = pygame.image.load(canonicalized_path)
+            image = pygame.image.load(canonicalized_path).convert()
             _image_library[path] = image
         return image
 
