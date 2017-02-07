@@ -13,6 +13,7 @@ white = [255,255,255]
 off_yellow = [240, 220, 0]
 grey = [200, 200, 200]
 
+# Font object generator.
 def make_font(fonts, size):
     available = pygame.font.get_fonts()
     # get_fonts() returns a list of lowercase spaceless font names
@@ -22,6 +23,7 @@ def make_font(fonts, size):
             return pygame.font.SysFont(choice, size)
     return pygame.font.Font(None, size)
 
+# Cache generated font objects so we don't have to call the generator all the time.
 _cached_fonts = {}
 def get_font(font_preferences, size):
     global _cached_fonts
@@ -65,6 +67,7 @@ class Credit:
     def set_rend(self):
         self.rend = get_font(["Palatino"], self.size).render(self.text, True, white)
 
+_sound_library = {}
 class JukeBox:
     # Sound class that handles all audio output.
     
@@ -77,7 +80,9 @@ class JukeBox:
     
     def play_music(self, song):
         if self.music_playing == False:
-            pygame.mixer.music.load(song)
+            song_path = os.path.dirname(os.path.realpath(__file__)) + "/sound/music/" + song
+            song_path = song_path.replace('/', os.sep).replace('\\', os.sep)
+            pygame.mixer.music.load(song_path)
             pygame.mixer.music.set_volume(self.music_volume)
             pygame.mixer.music.play(-1)
             self.music_playing = True
@@ -87,9 +92,16 @@ class JukeBox:
         self.music_playing = False
         
     def play_sound(self, sound):
-        effect = pygame.mixer.Sound(sound)
-        effect.set_volume(self.fx_volume)
-        effect.play()
+        # Cache sound effect objects so we don't have to generate them every time a sound is played.
+        global _sound_library
+        sound_fx = _sound_library.get(sound)
+        if sound_fx == None:
+            path = os.path.dirname(os.path.realpath(__file__)) + "/sound/" + sound
+            canonicalized_path = path.replace('/', os.sep).replace('\\', os.sep)
+            sound_fx = pygame.mixer.Sound(canonicalized_path)
+            _sound_library[path] = sound
+        sound_fx.set_volume(self.fx_volume)
+        sound_fx.play()
 
 class SceneBase:
     # Template class for scenes. Things like the title screen, loading screen, towns, world map, dungeons, menus, ect...
@@ -116,7 +128,7 @@ def run_game(width, height, fps, starting_scene):
     pygame.init()
     screen = pygame.display.set_mode((width, height))
     clock = pygame.time.Clock()
-    pygame.display.set_caption("Genric RPG")
+    pygame.display.set_caption("Generic RPG")
     active_scene = starting_scene
 
     while active_scene != None:
@@ -167,7 +179,6 @@ class TitleScene(SceneBase):
         self.song = song
         self.menu = 1
         
-        
     # Handles user input passed from the main engine.
     def ProcessInput(self, events, pressed_keys):
         for event in events:
@@ -177,7 +188,7 @@ class TitleScene(SceneBase):
                     # New game.
                     if self.menu == 0:
                         sound.stop_music()
-                        # Move to the next scene when the user pressed Enter
+                        # Switch to the main game scene.
                         self.SwitchToScene(GameScene())
                     # Load game.
                     if self.menu == 1:
@@ -185,18 +196,16 @@ class TitleScene(SceneBase):
                         pass
                     # Roll credits.
                     if self.menu == 2:
-                        # Not yet fully implimented.
                         sound.stop_music()
+                        # Switch to the credits scene.
                         self.SwitchToScene(CreditsScene())
-                    # Exit.
+                    # Exit the game.
                     if self.menu == 3:
                         self.Terminate()
                 # Down arrow.
                 if event.key == pygame.K_DOWN:
                     # Play the menu sound effect.
-                    path = os.path.dirname(os.path.realpath(__file__)) + "/sound/menu_change.wav"
-                    canonicalized_path = path.replace('/', os.sep).replace('\\', os.sep)
-                    sound.play_sound(path)
+                    sound.play_sound("menu_change.wav")
                     # Incriment the menu.
                     self.menu = self.menu + 1
                     if self.menu == 4:
@@ -205,22 +214,20 @@ class TitleScene(SceneBase):
                 # Up arrow.
                 if event.key == pygame.K_UP:
                     # Play the menu sound effect.
-                    path = os.path.dirname(os.path.realpath(__file__)) + "/sound/menu_change.wav"
-                    canonicalized_path = path.replace('/', os.sep).replace('\\', os.sep)
-                    sound.play_sound(path)
+                    sound.play_sound("menu_change.wav")
                     # Incriment the menu.
                     self.menu = self.menu - 1
                     if self.menu == -1:
                         # Loop the menu if we went past the end.
                         self.menu = 3
                     
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                # Left click.
-                if event.button == 1:
-                    mpos = pygame.mouse.get_pos()
-                    if self.url_rect.collidepoint(mpos):
-                        # Launch the default web browser for the URL.
-                        webbrowser.open("http://www.matthewpablo.com", new=2)
+            #if event.type == pygame.MOUSEBUTTONDOWN:
+            #    # Left click.
+            #    if event.button == 1:
+            #        mpos = pygame.mouse.get_pos()
+            #        if self.url_rect.collidepoint(mpos):
+            #            # Launch the default web browser for the URL.
+            #            webbrowser.open("http://www.matthewpablo.com", new=2)
     
     # Internal game logic. Doesn't really apply to the main menu.
     def Update(self):
@@ -232,9 +239,7 @@ class TitleScene(SceneBase):
         screen.fill((0, 0, 0))
         
         # Play the title music.
-        path = os.path.dirname(os.path.realpath(__file__)) + "/sound/music/" + self.song
-        canonicalized_path = path.replace('/', os.sep).replace('\\', os.sep)
-        sound.play_music(canonicalized_path)
+        sound.play_music(self.song)
         
         # Title text.
         title = get_font(["Arial"], 70).render("Generic RPG Name",True,white)
@@ -247,11 +252,13 @@ class TitleScene(SceneBase):
             Option("Credits", (450, 360)),
             Option("Exit", (450, 390))
             ]
-            
+        
+        # Highlight the currently selected menu item.    
         self.options[self.menu].select()
+        
+        # Draw the menu entries.
         for x in range(len(self.options)):
             screen.blit(self.options[x].rend, self.options[x].pos)
-        
         
         # Title music credit at the bottom of the screen.
         #music_credit = get_font(["Arial"], 13).render(str("Featuring Music by Matthew Pablo"),True,white)
@@ -267,9 +274,7 @@ class GameScene(SceneBase):
         self.song = song
         
         # Play music.
-        path = os.path.dirname(os.path.realpath(__file__)) + "/sound/music/" + song
-        canonicalized_path = path.replace('/', os.sep).replace('\\', os.sep)
-        sound.play_music(canonicalized_path)
+        sound.play_music(song)
         
     # Handles user input passed from the main engine.
     def ProcessInput(self, events, pressed_keys):
@@ -292,13 +297,15 @@ class CreditsScene(SceneBase):
     # The credits screen.
     def __init__(self, song="hervioleteyes.mp3"):
         SceneBase.__init__(self)
+        
         # Play music.
-        path = os.path.dirname(os.path.realpath(__file__)) + "/sound/music/" + song
-        canonicalized_path = path.replace('/', os.sep).replace('\\', os.sep)
-        sound.play_music(canonicalized_path)
+        sound.play_music(song)
+        
+        # Starting point for the credits scroll, just off screen.
         self.x = 770
         self.y = 100
-        
+    
+    # Handles user input passed from the main engine.
     def ProcessInput(self, events, pressed_keys):
         for event in events:
             if event.type == pygame.KEYDOWN:
@@ -306,14 +313,18 @@ class CreditsScene(SceneBase):
                     if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER or event.key == pygame.K_ESCAPE:
                         sound.stop_music()
                         self.SwitchToScene(TitleScene())
-                    
+    
+    # Internal game logic.
     def Update(self):
+        # Move the credits up one pixel per frame.
         self.x = self.x - 1
     
+    # Draws things.
     def Render(self, screen):
         # Start with a black screen.
         screen.fill((0, 0, 0))
         
+        # List of credit entries and their starting positions.
         credits_roll = [
             Credit("Main Programming: George Markeloff", (self.y, self.x)),
             Credit("Additional Programming: ???", (self.y, self.x + 100)),
@@ -337,6 +348,8 @@ class CreditsScene(SceneBase):
             Credit("https://creativecommons.org/licenses/by/3.0/", (self.y, self.x + 1430), 28),
             Credit("Written in Python using the Pygame engine.", (self.y, self.x + 1500))
         ]
+        
+        # Draw the credit entries on the screen.
         for x in range(len(credits_roll)):
             screen.blit(credits_roll[x].rend, credits_roll[x].pos)
         
