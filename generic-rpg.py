@@ -41,6 +41,18 @@ def get_font(font_preferences, size):
         _cached_fonts[key] = font
     return font
 
+# Cache image objects so we aren't initializing the same image over and over.
+_image_library = {}
+def get_image(path):
+        global _image_library
+        image = _image_library.get(path)
+        path = os.path.dirname(os.path.realpath(__file__)) + "/images/" + path
+        if image == None:
+                canonicalized_path = path.replace('/', os.sep).replace('\\', os.sep)
+                image = pygame.image.load(canonicalized_path)
+                _image_library[path] = image
+        return image
+
 class Option:
     # Used for entries in menus.
     active = False
@@ -77,6 +89,7 @@ class Credit:
     def set_rend(self):
         self.rend = get_font(self.font, self.size).render(self.text, True, self.color)
 
+# Cache sound objects so we aren't initializing the same sound over and over.
 _sound_library = {}
 class JukeBox:
     # Sound class that handles all audio output.
@@ -284,11 +297,13 @@ class GameScene(SceneBase):
     # Draws things.
     def Render(self, screen):
         # The game scene is just a blank blue screen at the moment.
-        screen.fill((0, 0, 255))
+        screen.fill((0, 0, 0))
+        
+        screen.blit(get_image("landscaping/mountain_landscape.png"), (20, 20))
         
         # Placeholder text.
-        title = get_font(["Arial"], 50).render("Nothing here yet...",True,white)
-        screen.blit(title, [200, 60])
+        #title = get_font(["Arial"], 50).render("Nothing here yet...",True,white)
+        #screen.blit(title, [200, 60])
         
 class CreditsScene(SceneBase):
     # The credits screen.
