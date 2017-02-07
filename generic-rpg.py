@@ -16,6 +16,12 @@ link_blue = [50, 100, 255]
 
 # Font object generator.
 def make_font(fonts, size):
+    
+    if fonts[0] == "Immortal":
+        path = os.path.dirname(os.path.realpath(__file__)) + "/fonts/" + fonts[0] + ".ttf"
+        path = path.replace('/', os.sep).replace('\\', os.sep)
+        return pygame.font.Font(path, size)
+    
     available = pygame.font.get_fonts()
     # get_fonts() returns a list of lowercase spaceless font names
     choices = map(lambda x:x.lower().replace(' ', ''), fonts)
@@ -39,13 +45,14 @@ class Option:
     # Used for entries in menus.
     active = False
     
-    def __init__(self, text, pos):
+    def __init__(self, text, pos, font=["Immortal"]):
         self.text = text
         self.pos = pos
+        self.font = font
         self.set_rend()
         
     def set_rend(self):
-        self.rend = get_font(["Arial"], 20).render(self.text, True, self.get_color())
+        self.rend = get_font(self.font, 20).render(self.text, True, self.get_color())
         
     def get_color(self):
         if self.active:
@@ -59,15 +66,16 @@ class Option:
 
 class Credit:
     # Used for scrolling text on the credits screen.
-    def __init__(self, text, pos, size=40, color=white):
+    def __init__(self, text, pos, size=30, color=white, font=["Immortal"]):
         self.text = text
         self.pos = pos
         self.size = size
         self.color = color
+        self.font = font
         self.set_rend()
         
     def set_rend(self):
-        self.rend = get_font(["Palatino"], self.size).render(self.text, True, self.color)
+        self.rend = get_font(self.font, self.size).render(self.text, True, self.color)
 
 _sound_library = {}
 class JukeBox:
@@ -236,15 +244,17 @@ class TitleScene(SceneBase):
         sound.play_music(self.song)
         
         # Title text.
-        title = get_font(["Arial"], 70).render("Generic RPG Name",True,white)
-        screen.blit(title, [200, 60])
+        title = get_font(["Immortal"], 70).render("Generic RPG Name",True,white)
+        screen.blit(title, [175, 60])
+        
+        menu_x = 430
         
         # Menu entries.
         self.options = [
-            Option("New Game", (450, 300)),
-            Option("Load Game", (450, 330)),
-            Option("Credits", (450, 360)),
-            Option("Exit", (450, 390))
+            Option("New Game", (menu_x, 300)),
+            Option("Load Game", (menu_x, 330)),
+            Option("Credits", (menu_x, 360)),
+            Option("Exit", (menu_x, 390))
             ]
         
         # Highlight the currently selected menu item.    
@@ -289,7 +299,7 @@ class CreditsScene(SceneBase):
         sound.play_music(song)
         
         # Starting point for the credits scroll, just off screen.
-        self.x = 770
+        self.x = 780
         self.y = 100
     
     # Handles user input passed from the main engine.
@@ -321,29 +331,37 @@ class CreditsScene(SceneBase):
         # Start with a black screen.
         screen.fill((0, 0, 0))
         
+        url_size = 19
+        
+        font_eula = path = os.path.dirname(os.path.realpath(__file__)) + "/fonts/fonts_license.html"
+        font_eula = path.replace('/', os.sep).replace('\\', os.sep)
+        
         # List of credit entries and their starting positions.
         credits_roll = [
             Credit("Main Programming: George Markeloff", (self.y, self.x)),
             Credit("Additional Programming: ???", (self.y, self.x + 100)),
             Credit("Art: ???", (self.y, self.x + 200)),
             Credit("Title Music - Enchanted Festival, By: Matthew Pablo", (self.y, self.x + 300)),
-            Credit("http://www.matthewpablo.com", (self.y, self.x + 330), 28, link_blue),
+            Credit("http://www.matthewpablo.com", (self.y, self.x + 330), url_size, link_blue),
             Credit("Credits Music - Her Violet Eyes, By: tgfcoder", (self.y, self.x + 400)),
-            Credit("https://twitter.com/tgfcoder", (self.y, self.x + 430), 28, link_blue),
+            Credit("https://twitter.com/tgfcoder", (self.y, self.x + 430), url_size, link_blue),
             Credit("Battle Music - A Wild Creature Appears, By: Aaron Parsons", (self.y, self.x + 500)),
             Credit("Boss Fight Music - Battle of the Void, By: Marcelo Fernandez", (self.y, self.x + 600)),
             Credit("Forest Area Music - Forest, By: syncopika", (self.y, self.x + 700)),
-            Credit("https://greenbearmusic.bandcamp.com/track/forest", (self.y, self.x + 730), 28, link_blue),
+            Credit("https://greenbearmusic.bandcamp.com/track/forest", (self.y, self.x + 730), url_size, link_blue),
             Credit("Town Music - Plesant Creek, By: Matthew Pablo", (self.y, self.x + 800)),
-            Credit("http://www.matthewpablo.com", (self.y, self.x + 830), 28, link_blue),
+            Credit("http://www.matthewpablo.com", (self.y, self.x + 830), url_size, link_blue),
             Credit("Combat System Design: George Markeloff", (self.y, self.x + 900)),
             Credit("Combat Balancing: George Markeloff", (self.y, self.x + 1000)),
             Credit("Character Class Design: George Markeloff", (self.y, self.x + 1100)),
             Credit("Story: George Markeloff", (self.y, self.x + 1200)),
             Credit("Dialog: George Markeloff", (self.y, self.x + 1300)),
             Credit("All audio and art assets licensed under CC-BY 3.0/4.0", (self.y, self.x + 1400)),
-            Credit("https://creativecommons.org/licenses/by/3.0/", (self.y, self.x + 1430), 28, link_blue),
-            Credit("Written in Python using the Pygame engine.", (self.y, self.x + 1500))
+            Credit("https://creativecommons.org/licenses/by/3.0/", (self.y, self.x + 1430), url_size, link_blue),
+            Credit("Fonts used under Larabie Fonts Freeware Fonts EULA.", (self.y, self.x + 1500)),
+            Credit(font_eula, (self.y, self.x + 1530), url_size, link_blue),
+            Credit("Written in Python using the Pygame engine.", (self.y, self.x + 1600))
+            
         ]
         
         url_pattern = []
