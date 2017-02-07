@@ -33,6 +33,7 @@ def get_font(font_preferences, size):
     return font
 
 class Option:
+    # Used for entries in menus.
     active = False
     
     def __init__(self, text, pos):
@@ -54,6 +55,7 @@ class Option:
         self.set_rend()
 
 class Credit:
+    # Used for scrolling text on the credits screen.
     def __init__(self, text, pos, size=40):
         self.text = text
         self.pos = pos
@@ -63,9 +65,8 @@ class Credit:
     def set_rend(self):
         self.rend = get_font(["Palatino"], self.size).render(self.text, True, white)
 
-
-# Sound class that handles all audio output.
 class JukeBox:
+    # Sound class that handles all audio output.
     def __init__(self):
         self.music_playing = False
     
@@ -83,8 +84,8 @@ class JukeBox:
         effect = pygame.mixer.Sound(sound)
         effect.play()
 
-# Template class for scenes. Things like the title screen, loading screen, towns, world map, dungeons, menus, ect...
 class SceneBase:
+    # Template class for scenes. Things like the title screen, loading screen, towns, world map, dungeons, menus, ect...
     def __init__(self):
         self.next = self
     
@@ -125,14 +126,10 @@ def run_game(width, height, fps, starting_scene):
             elif event.type == pygame.KEYDOWN:
                 # User is holding an ALT key.
                 alt_pressed = pressed_keys[pygame.K_LALT] or pressed_keys[pygame.K_RALT]
-                ## User pressed Escape.
-                #if event.key == pygame.K_ESCAPE:
-                #    quit_attempt = True
                 # User pressed F4 while holding an ALT key.
                 if event.key == pygame.K_F4 and alt_pressed:
                     quit_attempt = True
-            
-            
+                    
             if quit_attempt:
                 # Close the program.
                 active_scene.Terminate()
@@ -156,13 +153,15 @@ def run_game(width, height, fps, starting_scene):
         # Increment the internal game state at the desired FPS limit.
         clock.tick(fps)
 
-# The rest is code where you implement your game using the Scenes model
-
 class TitleScene(SceneBase):
-    def __init__(self):
+    # Main title screen. You can start/load a game, view the credits, or close the program from here.
+    def __init__(self, song="enchantedfestivalloop.mp3"):
         SceneBase.__init__(self)
+        self.song = song
         self.menu = 1
-    
+        
+        
+    # Handles user input passed from the main engine.
     def ProcessInput(self, events, pressed_keys):
         for event in events:
             if event.type == pygame.KEYDOWN:
@@ -215,18 +214,20 @@ class TitleScene(SceneBase):
                     if self.url_rect.collidepoint(mpos):
                         # Launch the default web browser for the URL.
                         webbrowser.open("http://www.matthewpablo.com", new=2)
-            
+    
+    # Internal game logic. Doesn't really apply to the main menu.
     def Update(self):
         pass
-    
+        
+    # Draws things.
     def Render(self, screen):
         # Start with a black screen.
         screen.fill((0, 0, 0))
         
         # Play the title music.
-        path = os.path.dirname(os.path.realpath(__file__)) + "/sound/music/enchantedfestivalloop.mp3"
+        path = os.path.dirname(os.path.realpath(__file__)) + "/sound/music/" + self.song
         canonicalized_path = path.replace('/', os.sep).replace('\\', os.sep)
-        sound.play_music(path)
+        sound.play_music(canonicalized_path)
         
         # Title text.
         title = get_font(["Arial"], 70).render("Generic RPG Name",True,white)
@@ -246,41 +247,48 @@ class TitleScene(SceneBase):
         
         
         # Title music credit at the bottom of the screen.
-        music_credit = get_font(["Arial"], 13).render(str("Title Music by Matthew Pablo"),True,white)
-        screen.blit(music_credit, [412, 730])
-        music_url = get_font(["Arial"], 13).render(str("www.matthewpablo.com"),True,white)
-        screen.blit(music_url, [428, 747])
-        self.url_rect = music_url.get_rect(topleft=(428, 747))
-        
+        #music_credit = get_font(["Arial"], 13).render(str("Featuring Music by Matthew Pablo"),True,white)
+        #screen.blit(music_credit, [412, 730])
+        #music_url = get_font(["Arial"], 13).render(str("www.matthewpablo.com"),True,white)
+        #screen.blit(music_url, [428, 747])
+        #self.url_rect = music_url.get_rect(topleft=(428, 747))
+
 class GameScene(SceneBase):
-    def __init__(self):
+    # The actual game. Different versions of this class will need to load maps, characters, dialog, and detect interactions between objects on the screen. Each area will be its own class.
+    def __init__(self, song="plesantcreekloop.mp3"):
         SceneBase.__init__(self)
-        # Play music. Composed by Aaron Parsons - © 2015 Aaron Parsons Media - Used under the Creative Commons Attribution 3.0 Unported license. (http://opengameart.org/content/a-wild-creature-appears | https://creativecommons.org/licenses/by/3.0/)"
-        path = os.path.dirname(os.path.realpath(__file__)) + "/sound/music/awildcreatureappears.ogg"
+        self.song = song
+        
+        # Play music.
+        path = os.path.dirname(os.path.realpath(__file__)) + "/sound/music/" + song
         canonicalized_path = path.replace('/', os.sep).replace('\\', os.sep)
-        sound.play_music(path)
+        sound.play_music(canonicalized_path)
         
-        
-        # "Music by Marcelo Fernandez - © 2015 Marcelo Fernandez - Used under the Creative Commons Attribution 4.0 International license. (http://opengameart.org/content/battle-of-the-void | https://creativecommons.org/licenses/by/4.0/)"
-        # self.sound.play_music("/sound/music/battleofthevoid.mp3")
-        
+    # Handles user input passed from the main engine.
     def ProcessInput(self, events, pressed_keys):
         pass
-        
+    
+    # Internal game logic.
     def Update(self):
         pass
     
+    # Draws things.
     def Render(self, screen):
-        # The game scene is just a blank blue screen
+        # The game scene is just a blank blue screen at the moment.
         screen.fill((0, 0, 255))
-
+        
+        # Placeholder text.
+        title = get_font(["Arial"], 50).render("Nothing here yet...",True,white)
+        screen.blit(title, [200, 60])
+        
 class CreditsScene(SceneBase):
-    def __init__(self):
+    # The credits screen.
+    def __init__(self, song="hervioleteyes.mp3"):
         SceneBase.__init__(self)
         # Play music.
-        path = os.path.dirname(os.path.realpath(__file__)) + "/sound/music/hervioleteyes.mp3"
+        path = os.path.dirname(os.path.realpath(__file__)) + "/sound/music/" + song
         canonicalized_path = path.replace('/', os.sep).replace('\\', os.sep)
-        sound.play_music(path)
+        sound.play_music(canonicalized_path)
         self.x = 768
         self.y = 100
         
@@ -310,14 +318,16 @@ class CreditsScene(SceneBase):
             Credit("Boss Fight Music - Battle of the Void, By: Marcelo Fernandez", (self.y, self.x + 500)),
             Credit("Forest Area Music - Forest, By: syncopika", (self.y, self.x + 600)),
             Credit("https://greenbearmusic.bandcamp.com/track/forest", (self.y, self.x + 630), 28),
-            Credit("Combat System Design: George Markeloff", (self.y, self.x + 700)),
-            Credit("Combat Balancing: George Markeloff", (self.y, self.x + 800)),
-            Credit("Character Class Design: George Markeloff", (self.y, self.x + 900)),
-            Credit("Story: George Markeloff", (self.y, self.x + 1000)),
-            Credit("Dialog: George Markeloff", (self.y, self.x + 1100)),
-            Credit("All audio and art assets licensed under CC-BY 3.0", (self.y, self.x + 1200)),
-            Credit("https://creativecommons.org/licenses/by/3.0/", (self.y, self.x + 1230), 28),
-            Credit("Written in Python using the Pygame engine.", (self.y, self.x + 1300))
+            Credit("Town Music - Plesant Creek, By: Matthew Pablo", (self.y, self.x + 700)),
+            Credit("http://www.matthewpablo.com", (self.y, self.x + 730), 28),
+            Credit("Combat System Design: George Markeloff", (self.y, self.x + 800)),
+            Credit("Combat Balancing: George Markeloff", (self.y, self.x + 900)),
+            Credit("Character Class Design: George Markeloff", (self.y, self.x + 1000)),
+            Credit("Story: George Markeloff", (self.y, self.x + 1100)),
+            Credit("Dialog: George Markeloff", (self.y, self.x + 1200)),
+            Credit("All audio and art assets licensed under CC-BY 3.0/4.0", (self.y, self.x + 1300)),
+            Credit("https://creativecommons.org/licenses/by/3.0/", (self.y, self.x + 1330), 28),
+            Credit("Written in Python using the Pygame engine.", (self.y, self.x + 1400))
         ]
         for x in range(len(credits_roll)):
             screen.blit(credits_roll[x].rend, credits_roll[x].pos)
