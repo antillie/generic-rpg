@@ -8,7 +8,9 @@ from __future__ import print_function
 import pygame
 import os
 import webbrowser
+from virtualscreen import VirtualScreen
 
+# Colors for text and other non image things.
 white = [255,255,255]
 off_yellow = [240, 220, 0]
 grey = [230, 230, 230]
@@ -52,7 +54,7 @@ def get_image(path):
             image = pygame.image.load(canonicalized_path).convert()
             _image_library[path] = image
         return image
-
+        
 class Option:
     # Used for entries in menus.
     active = False
@@ -150,8 +152,8 @@ class SceneBase:
 def run_game(width, height, fps, starting_scene):
     pygame.init()
     screen_info = pygame.display.Info()
-    #screen = pygame.display.set_mode((width, height), pygame.HWSURFACE|pygame.DOUBLEBUF)
-    screen = pygame.display.set_mode((screen_info.current_w, screen_info.current_h), pygame.FULLSCREEN|pygame.HWSURFACE|pygame.DOUBLEBUF)
+    #screen = pygame.display.set_mode((width, height), pygame.HWSURFACE|pygame.DOUBLEBUF) # Windowed mode.
+    screen = pygame.display.set_mode((screen_info.current_w, screen_info.current_h), pygame.FULLSCREEN|pygame.HWSURFACE|pygame.DOUBLEBUF) # Fullscreen mode.
     clock = pygame.time.Clock()
     pygame.display.set_caption("Generic RPG")
     active_scene = starting_scene
@@ -186,7 +188,7 @@ def run_game(width, height, fps, starting_scene):
         # Have the active scene run its internal game logic.
         active_scene.Update()
         # Tell the active scene to render itself to the display buffer.
-        active_scene.Render(screen)
+        active_scene.Render(screen, screen_info.current_w, screen_info.current_h)
         
         # Change the active scene to whichever scene should be next.
         active_scene = active_scene.next
@@ -253,18 +255,19 @@ class TitleScene(SceneBase):
         pass
         
     # Draws things.
-    def Render(self, screen):
+    def Render(self, screen, real_w, real_h):
         # Start with a black screen.
         screen.fill((0, 0, 0))
         
         # Play the title music.
         sound.play_music(self.song)
         
-        canvas = pygame.Surface((1024, 576))
+        # Create our staticly sized virtual screen so we can draw stuff on it.
+        canvas = VirtualScreen(real_w, real_h)
         
         # Title text.
         title = get_font(["Immortal"], 70).render("Generic RPG Name",True,white)
-        canvas.blit(title, [175, 60])
+        canvas.canvas.blit(title, [175, 60])
         
         menu_x = 430
         
@@ -281,11 +284,10 @@ class TitleScene(SceneBase):
         
         # Draw the menu entries.
         for x in range(len(self.options)):
-            canvas.blit(self.options[x].rend, self.options[x].pos)
+            canvas.canvas.blit(self.options[x].rend, self.options[x].pos)
         
-        canvas = pygame.transform.smoothscale(canvas, (1920, 1080))
-        
-        screen.blit(canvas, (0, 0))
+        # Draw the upscaled virtual screen to actual screen.
+        screen.blit(canvas.render(), (0, 0))
         
 class GameScene(SceneBase):
     # The actual game. Different versions of this class will need to load maps, characters, dialog, and detect interactions between objects on the screen. Each area will be its own class.
@@ -305,9 +307,10 @@ class GameScene(SceneBase):
         pass
     
     # Draws things.
-    def Render(self, screen):
+    def Render(self, screen, real_w, real_h):
         
-        canvas = pygame.Surface((1024, 576))
+        # Create our staticly sized virtual screen so we can draw stuff on it.
+        canvas = VirtualScreen(real_w, real_h)
         
         # Filling a 1024x576 screen requires 16x9 64x64 pixel tiles.
         x_count = 16
@@ -315,11 +318,10 @@ class GameScene(SceneBase):
         
         for y in range(y_count):
             for x in range(x_count):
-                canvas.blit(get_image("landscaping/mountain_landscape.png"), (x * 64, y * 64), (448, 128, 64, 64))
+                canvas.canvas.blit(get_image("landscaping/mountain_landscape.png"), (x * 64, y * 64), (448, 128, 64, 64))
         
-        canvas = pygame.transform.smoothscale(canvas, (1920, 1080))
-        
-        screen.blit(canvas, (0, 0))
+        # Draw the upscaled virtual screen to actual screen.
+        screen.blit(canvas.render(), (0, 0))
             
 class CreditsScene(SceneBase):
     # The credits screen.
@@ -356,11 +358,12 @@ class CreditsScene(SceneBase):
         self.x = self.x - 1
     
     # Draws things.
-    def Render(self, screen):
+    def Render(self, screen, real_w, real_h):
         # Start with a black screen.
         screen.fill((0, 0, 0))
         
-        canvas = pygame.Surface((1024, 576))
+        # Create our staticly sized virtual screen so we can draw stuff on it.
+        canvas = VirtualScreen(real_w, real_h)
         
         url_size = 19
         
@@ -399,7 +402,7 @@ class CreditsScene(SceneBase):
         # Run through the credits roll entries.
         for x in range(len(credits_roll)):
             # Draw the entries on the screen.
-            canvas.blit(credits_roll[x].rend, credits_roll[x].pos)
+            canvas.canvas.blit(credits_roll[x].rend, credits_roll[x].pos)
             # Populate the url pattern list with the index numbers of URL entries.
             if credits_roll[x].color == link_blue:
                 url_pattern.append(x)
@@ -414,12 +417,11 @@ class CreditsScene(SceneBase):
             # Add collidable rectangle to a list for input processing.
             self.credit_url_rects.append(credits_roll[url_pattern[x]].rend.get_rect(topleft=credits_roll[url_pattern[x]].pos))
         
-        canvas = pygame.transform.smoothscale(canvas, (1920, 1080))
-        
-        screen.blit(canvas, (0, 0))
+        # Draw the upscaled virtual screen to actual screen.
+        screen.blit(canvas.render(), (0, 0))
             
 # Create a global sound object so that whatever scene is active can use it.
 sound = JukeBox()
 
-# Start the game with; window width, window height, FPS limit, and starting scene.
+# Start the game with; window width, window height, FPS limit, and starting scene. Window width and height are ignored in fullscreen mode.
 run_game(1024, 576, 60, TitleScene())
