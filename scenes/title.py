@@ -3,7 +3,6 @@
 
 import sys
 sys.path.append("scenes")
-sys.path.append("/..")
 import pygame
 import os
 import virtualscreen

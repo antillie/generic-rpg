@@ -3,10 +3,9 @@
 
 import sys
 sys.path.append("scenes")
-sys.path.append("/..")
-
 import pygame
 import os
+import webbrowser
 import virtualscreen
 import cache
 import sound
@@ -41,6 +40,7 @@ class CreditsScene(base.SceneBase):
         
         # Starting point for the credits scroll, just off screen.
         self.x = 588
+        #self.x = -588
         self.y = 80
     
     # Handles user input passed from the main engine.
@@ -55,6 +55,7 @@ class CreditsScene(base.SceneBase):
                 # Left click.
                 if event.button == 1:
                     mpos = pygame.mouse.get_pos()
+                    print(pygame.mouse.get_pos())
                     for x in range(len(self.credit_url_rects)):
                         if self.credit_url_rects[x].collidepoint(mpos):
                             # Launch the default web browser for the URL.
@@ -64,6 +65,7 @@ class CreditsScene(base.SceneBase):
     def Update(self):
         # Move the credits up one pixel per frame.
         self.x = self.x - 1
+        #pass
     
     # Draws things.
     def Render(self, screen, real_w, real_h):
@@ -124,6 +126,18 @@ class CreditsScene(base.SceneBase):
             self.credit_urls.append(credits_roll[url_pattern[x]].text)
             # Add collidable rectangle to a list for input processing.
             self.credit_url_rects.append(credits_roll[url_pattern[x]].rend.get_rect(topleft=credits_roll[url_pattern[x]].pos))
+            
+        #for x in range(len(self.credit_url_rects)):
+        #    #new_pos = self.credit_url_rects[x].topleft
+        #    new_pos = tuple((self.credit_url_rects[x].topleft[0] * canvas.w_ratio, self.credit_url_rects[x].topleft[1] * canvas.h_ratio))
+        #    
+        #    #new_pos = self.credit_url_rects[x].topleft[1] * canvas.w_ratio
+        #    
+        #    print(new_pos)
+        #    self.credit_url_rects[x].move_ip(new_pos)
+        #    #pygame.draw.rect(canvas.canvas, colors.white, self.credit_url_rects[x])
+            
+            
         
         # Draw the upscaled virtual screen to actual screen.
         screen.blit(canvas.render(), (0, 0))
