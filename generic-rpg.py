@@ -122,7 +122,7 @@ class JukeBox:
             path = os.path.dirname(os.path.realpath(__file__)) + "/sound/" + sound
             canonicalized_path = path.replace('/', os.sep).replace('\\', os.sep)
             sound_fx = pygame.mixer.Sound(canonicalized_path)
-            _sound_library[path] = sound
+            _sound_library[sound] = sound_fx
         sound_fx.set_volume(self.fx_volume)
         sound_fx.play()
 
