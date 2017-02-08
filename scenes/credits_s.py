@@ -3,10 +3,9 @@
 
 import sys
 sys.path.append("scenes")
-sys.path.append("/..")
-
 import pygame
 import os
+import webbrowser
 import virtualscreen
 import cache
 import sound
