@@ -11,7 +11,7 @@ import webbrowser
 
 white = [255,255,255]
 off_yellow = [240, 220, 0]
-grey = [200, 200, 200]
+grey = [230, 230, 230]
 link_blue = [50, 100, 255]
 
 # Font object generator.
@@ -333,7 +333,6 @@ class CreditsScene(SceneBase):
                 # Left click.
                 if event.button == 1:
                     mpos = pygame.mouse.get_pos()
-                    
                     for x in range(len(self.credit_url_rects)):
                         if self.credit_url_rects[x].collidepoint(mpos):
                             # Launch the default web browser for the URL.
