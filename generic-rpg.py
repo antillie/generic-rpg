@@ -337,7 +337,6 @@ class CreditsScene(SceneBase):
                     mpos = pygame.mouse.get_pos()
                     
                     for x in range(len(self.credit_url_rects)):
-                        
                         if self.credit_url_rects[x].collidepoint(mpos):
                             # Launch the default web browser for the URL.
                             webbrowser.open(self.credit_urls[x], new=2)
@@ -354,7 +353,7 @@ class CreditsScene(SceneBase):
         
         url_size = 19
         
-        font_eula = path = os.path.dirname(os.path.realpath(__file__)) + "/fonts/fonts_license.html"
+        font_eula = os.path.dirname(os.path.realpath(__file__)) + "/fonts/fonts_license.html"
         font_eula = path.replace('/', os.sep).replace('\\', os.sep)
         
         # List of credit entries and their starting positions.
