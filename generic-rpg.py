@@ -46,10 +46,9 @@ _image_library = {}
 def get_image(path):
         global _image_library
         image = _image_library.get(path)
-        
         if image == None:
-            path = os.path.dirname(os.path.realpath(__file__)) + "/images/" + path
-            canonicalized_path = path.replace('/', os.sep).replace('\\', os.sep)
+            temp_path = os.path.dirname(os.path.realpath(__file__)) + "/images/" + path
+            canonicalized_path = temp_path.replace('/', os.sep).replace('\\', os.sep)
             image = pygame.image.load(canonicalized_path).convert()
             _image_library[path] = image
         return image
@@ -150,7 +149,8 @@ class SceneBase:
 # Main engine. Sets up the window, handles rendering, manages scene changes, and forwards player input to the active scene.
 def run_game(width, height, fps, starting_scene):
     pygame.init()
-    screen = pygame.display.set_mode((width, height))
+    screen = pygame.display.set_mode((width, height), pygame.HWSURFACE)
+    #screen = pygame.display.set_mode((width, height), pygame.FULLSCREEN)
     clock = pygame.time.Clock()
     pygame.display.set_caption("Generic RPG")
     active_scene = starting_scene
@@ -285,7 +285,6 @@ class GameScene(SceneBase):
     def __init__(self, song="plesantcreekloop.mp3"):
         SceneBase.__init__(self)
         self.song = song
-        self.bg = 0
         
         # Play music.
         sound.play_music(self.song)
@@ -305,12 +304,11 @@ class GameScene(SceneBase):
         x_count = 16
         y_count = 12
         
-        if self.bg == 0:
-            self.bg = 1
-            for y in range(y_count):
-                for x in range(x_count):
-                    screen.blit(get_image("landscaping/mountain_landscape.png"), (x * 64, y * 64), (448, 128, 64, 64))
+        for y in range(y_count):
+            for x in range(x_count):
+                screen.blit(get_image("landscaping/mountain_landscape.png"), (x * 64, y * 64), (448, 128, 64, 64))
         
+            
 class CreditsScene(SceneBase):
     # The credits screen.
     def __init__(self, song="hervioleteyes.mp3"):
@@ -354,7 +352,7 @@ class CreditsScene(SceneBase):
         url_size = 19
         
         font_eula = os.path.dirname(os.path.realpath(__file__)) + "/fonts/fonts_license.html"
-        font_eula = path.replace('/', os.sep).replace('\\', os.sep)
+        font_eula = font_eula.replace('/', os.sep).replace('\\', os.sep)
         
         # List of credit entries and their starting positions.
         credits_roll = [
