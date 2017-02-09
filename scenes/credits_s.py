@@ -10,6 +10,7 @@ import sound
 import base
 import colors
 import title
+import utils
 
 sound = sound.JukeBox()
 
@@ -124,12 +125,8 @@ class CreditsScene(base.SceneBase):
         # Draw the upscaled virtual screen to actual screen.
         screen.blit(canvas.render(), (0, 0))
         
-        # Move the credits up one pixel per frame.
+        # Move the credits up one pixel for the next frame.
         self.x = self.x - 1
         
         for x in range(len(self.credit_url_rects)):
-            self.credit_url_rects[x].left = self.credit_url_rects[x].left * canvas.w_ratio
-            self.credit_url_rects[x].top = self.credit_url_rects[x].top * canvas.h_ratio
-            
-            self.credit_url_rects[x].width = self.credit_url_rects[x].width * canvas.w_ratio
-            self.credit_url_rects[x].height = self.credit_url_rects[x].height * canvas.h_ratio
+            self.credit_url_rects[x] = utils.scale_rect(self.credit_url_rects[x], real_w, real_h)
