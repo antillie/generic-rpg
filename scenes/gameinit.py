@@ -11,19 +11,17 @@ import colors
 
 sound = sound.JukeBox()
 
+# The actual game. Different versions of this class will need to load maps, characters, dialog, and detect interactions between objects on the screen. Each area will be its own class.
 class GameScene(base.SceneBase):
-    # The actual game. Different versions of this class will need to load maps, characters, dialog, and detect interactions between objects on the screen. Each area will be its own class.
+    
     def __init__(self, song="plesantcreekloop.mp3"):
         base.SceneBase.__init__(self)
         self.song = song
-        # Stop whatever music is playing, if any.
-        sound.stop_music()
-        # Play the town theme for now.
-        sound.play_music(self.song)
         
     # Handles user input passed from the main engine.
     def ProcessInput(self, events, pressed_keys):
-        pass
+        # Play the town theme for now.
+        sound.play_music(self.song)
     
     # Internal game logic.
     def Update(self):

@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+# Template class for scenes. Things like the title screen, loading screen, towns, world map, dungeons, menus, ect...
 class SceneBase:
-    # Template class for scenes. Things like the title screen, loading screen, towns, world map, dungeons, menus, ect...
     def __init__(self):
         self.next = self
     

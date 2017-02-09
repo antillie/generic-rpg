@@ -6,9 +6,9 @@ import os
 
 # Cache sound objects so we aren't initializing the same sound over and over.
 _sound_library = {}
+
+# Sound class that handles all audio output.
 class JukeBox:
-    # Sound class that handles all audio output.
-    
     # Default volume levels.
     music_volume = 0.2
     fx_volume = 1.0

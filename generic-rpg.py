@@ -11,11 +11,12 @@ import sys
 import cache
 sys.path.append("scenes")
 import title
+import credits_s
+import gameinit
 
 # Main engine. Sets up the window, handles rendering, manages scene changes, and forwards player input to the active scene.
-def run_game(width, height, fps, starting_scene):
+def run_game(width=1024, height=576, fps=60, fullscreen=False):
     pygame.init()
-    fullscreen = 0
     screen_info = pygame.display.Info()
     # Load and set the window icon.
     temp_path = os.path.dirname(os.path.realpath(__file__)) + "/images/window_shield.png"
@@ -23,7 +24,7 @@ def run_game(width, height, fps, starting_scene):
     image = pygame.image.load(canonicalized_path)
     pygame.display.set_icon(image)
     
-    if fullscreen == 1:
+    if fullscreen:
         # Fullscreen mode.
         screen = pygame.display.set_mode((screen_info.current_w, screen_info.current_h), pygame.FULLSCREEN|pygame.HWSURFACE|pygame.DOUBLEBUF)
     else:
@@ -32,8 +33,15 @@ def run_game(width, height, fps, starting_scene):
     
     clock = pygame.time.Clock()
     pygame.display.set_caption("Generic RPG")
-    active_scene = starting_scene
-
+    
+    # Initialize scenes.
+    TitleScene = title.TitleScene()
+    CreditsScene = credits_s.CreditsScene()
+    GameScene = gameinit.GameScene()
+    
+    # Set the starting scene.
+    active_scene = TitleScene
+    
     while active_scene != None:
         pressed_keys = pygame.key.get_pressed()
         
@@ -64,14 +72,27 @@ def run_game(width, height, fps, starting_scene):
         # Have the active scene run its internal game logic.
         active_scene.Update()
         # Tell the active scene to render itself to the display buffer.
-        if fullscreen == 1:
+        if fullscreen:
             # Fullscreen mode.
             active_scene.Render(screen, screen_info.current_w, screen_info.current_h)
         else:
             # Windowed mode.
             active_scene.Render(screen, width, height)
         # Change the active scene to whichever scene should be next.
-        active_scene = active_scene.next
+        
+        next_scene = active_scene.next
+        
+        if next_scene == "TitleScene":
+            TitleScene.next = "TitleScene"
+            active_scene = TitleScene
+        elif next_scene == "CreditsScene":
+            CreditsScene.next = "CreditsScene"
+            active_scene = CreditsScene
+        elif next_scene == "GameScene":
+            active_scene = GameScene
+            
+        if next_scene == None:
+            active_scene = None
         
         # Draw the updated display buffer on the screen.
         pygame.display.flip()
@@ -82,4 +103,4 @@ def run_game(width, height, fps, starting_scene):
     print("Thanks for playing!")
 
 # Start the game with; window width, window height, FPS limit, and starting scene. Window width and height are ignored in fullscreen mode.
-run_game(1024, 576, 60, title.TitleScene())
+run_game()

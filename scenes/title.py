@@ -8,14 +8,13 @@ import cache
 import sound
 import base
 import colors
-import credits_s
-import gameinit
 import utils
 
 sound = sound.JukeBox()
 
+# Used for entries in the menu.
 class Option:
-    # Used for entries in menus.
+    
     active = False
     
     def __init__(self, text, pos, font=["Immortal"]):
@@ -37,23 +36,20 @@ class Option:
         self.active = True
         self.set_rend()
 
+# Main title screen. You can start/load a game, view the credits, or close the program from here.
 class TitleScene(base.SceneBase):
-    # Main title screen. You can start/load a game, view the credits, or close the program from here.
+    
     def __init__(self, song="enchantedfestivalloop.mp3"):
         base.SceneBase.__init__(self)
         self.song = song
         self.menu = 1
-        # initialize the mixer. This only needs to be done in the title screen.
-        pygame.mixer.init()
-        # Stop whatever music is playing, if any.
-        sound.stop_music()
-        # Play the title theme.
-        sound.play_music(self.song)
         # Initialise the menu rects list.
         self.menu_rects = []
         
     # Handles user input passed from the main engine.
     def ProcessInput(self, events, pressed_keys):
+        # Play the title theme.
+        sound.play_music(self.song)
         for event in events:
             # Keyboard input.
             if event.type == pygame.KEYDOWN:
@@ -63,7 +59,7 @@ class TitleScene(base.SceneBase):
                     if self.menu == 0:
                         sound.stop_music()
                         # Switch to the main game scene.
-                        self.SwitchToScene(gameinit.GameScene())
+                        self.SwitchToScene("GameScene")
                     # Load game.
                     elif self.menu == 1:
                         # Not yet implimented.
@@ -76,7 +72,7 @@ class TitleScene(base.SceneBase):
                     elif self.menu == 3:
                         sound.stop_music()
                         # Switch to the credits scene.
-                        self.SwitchToScene(credits_s.CreditsScene())
+                        self.SwitchToScene("CreditsScene")
                     # Exit the game.
                     elif self.menu == 4:
                         self.Terminate()
@@ -115,7 +111,7 @@ class TitleScene(base.SceneBase):
                             if x == 0:
                                 sound.stop_music()
                                 # Switch to the main game scene.
-                                self.SwitchToScene(gameinit.GameScene())
+                                self.SwitchToScene("GameScene")
                             # Load game.
                             elif x == 1:
                                 # Not yet implimented.
@@ -128,7 +124,7 @@ class TitleScene(base.SceneBase):
                             elif x == 3:
                                 sound.stop_music()
                                 # Switch to the credits scene.
-                                self.SwitchToScene(credits_s.CreditsScene())
+                                self.SwitchToScene("CreditsScene")
                             # Exit the game.
                             elif x == 4:
                                 self.Terminate()

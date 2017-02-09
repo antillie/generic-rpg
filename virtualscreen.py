@@ -3,8 +3,8 @@
 
 import pygame
 
-class VirtualScreen:
-    # Certral location for our virtual screen object. 1024x576 is a 16x9 ratio that is also divisible by 64, this allows us to use 64x64 pixel background tiles easily with the proper aspect ratio.
+# Certral location for our virtual screen object. 1024x576 is a 16x9 ratio that is also divisible by 64, this allows us to use 64x64 pixel background tiles easily with the proper aspect ratio.
+class VirtualScreen:    
     def __init__(self, real_w, real_h, width=1024.0, height=576.0):
         self.width = width
         self.height = height

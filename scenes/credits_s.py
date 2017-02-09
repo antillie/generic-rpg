@@ -9,7 +9,6 @@ import cache
 import sound
 import base
 import colors
-import title
 import utils
 
 sound = sound.JukeBox()
@@ -27,29 +26,30 @@ class Credit:
     def set_rend(self):
         self.rend = cache.get_font(self.font, self.size).render(self.text, True, self.color)
 
+# The credits screen.
 class CreditsScene(base.SceneBase):
-    # The credits screen.
+    
     def __init__(self, song="hervioleteyes.mp3"):
         base.SceneBase.__init__(self)
         self.song = song
-        # Stop whatever music is playing, if any.
-        sound.stop_music()
-        # Play the credits theme.
-        sound.play_music(self.song)
         
         # Starting point for the credits scroll, just off screen.
         self.x = 588
         self.y = 80
-    
+        
     # Handles user input passed from the main engine.
     def ProcessInput(self, events, pressed_keys):
+        # Play the credits theme.
+        sound.play_music(self.song)
+        
         for event in events:
             # Keyboard input.
             if event.type == pygame.KEYDOWN:
                     # Enter or Escape key returns to title screen.
                     if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER or event.key == pygame.K_ESCAPE:
+                        self.x = 588
                         sound.stop_music()
-                        self.SwitchToScene(title.TitleScene())
+                        self.SwitchToScene("TitleScene")
             # Mouse click.
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 # Left click.
@@ -60,8 +60,9 @@ class CreditsScene(base.SceneBase):
                             # Launch the default web browser for the URL.
                             webbrowser.open(self.credit_urls[x], new=2)
                             return
+                    self.x = 588
                     sound.stop_music()
-                    self.SwitchToScene(title.TitleScene())
+                    self.SwitchToScene("TitleScene")
             
     # Internal game logic.
     def Update(self):
@@ -100,7 +101,7 @@ class CreditsScene(base.SceneBase):
             Credit("Character Class Design: George Markeloff", (self.y, self.x + 1100)),
             Credit("Story: George Markeloff", (self.y, self.x + 1200)),
             Credit("Dialog: George Markeloff", (self.y, self.x + 1300)),
-            Credit("All audio and art assets licensed under CC-BY 3.0/4.0", (self.y, self.x + 1400)),
+            Credit("Audio and art assets licensed under CC-BY 3.0/4.0", (self.y, self.x + 1400)),
             Credit("https://creativecommons.org/licenses/by/3.0/", (self.y, self.x + 1430), url_size, colors.link_blue),
             Credit("Fonts used under Larabie Fonts Freeware Fonts EULA.", (self.y, self.x + 1500)),
             Credit(font_eula, (self.y, self.x + 1530), url_size, colors.link_blue),
