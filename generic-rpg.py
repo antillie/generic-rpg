@@ -8,6 +8,7 @@ from __future__ import print_function
 import pygame
 import os
 import sys
+import cache
 sys.path.append("scenes")
 import title
 
@@ -16,11 +17,18 @@ def run_game(width, height, fps, starting_scene):
     pygame.init()
     fullscreen = 0
     screen_info = pygame.display.Info()
+    # Load and set the window icon.
+    temp_path = os.path.dirname(os.path.realpath(__file__)) + "/images/red_shield.png"
+    canonicalized_path = temp_path.replace('/', os.sep).replace('\\', os.sep)
+    image = pygame.image.load(canonicalized_path)
+    pygame.display.set_icon(image)
     
     if fullscreen == 1:
-        screen = pygame.display.set_mode((screen_info.current_w, screen_info.current_h), pygame.FULLSCREEN|pygame.HWSURFACE|pygame.DOUBLEBUF) # Fullscreen mode.
+        # Fullscreen mode.
+        screen = pygame.display.set_mode((screen_info.current_w, screen_info.current_h), pygame.FULLSCREEN|pygame.HWSURFACE|pygame.DOUBLEBUF)
     else:
-        screen = pygame.display.set_mode((width, height), pygame.HWSURFACE|pygame.DOUBLEBUF) # Windowed mode.
+        # Windowed mode.
+        screen = pygame.display.set_mode((width, height), pygame.HWSURFACE|pygame.DOUBLEBUF)
     
     clock = pygame.time.Clock()
     pygame.display.set_caption("Generic RPG")
@@ -57,8 +65,10 @@ def run_game(width, height, fps, starting_scene):
         active_scene.Update()
         # Tell the active scene to render itself to the display buffer.
         if fullscreen == 1:
+            # Fullscreen mode.
             active_scene.Render(screen, screen_info.current_w, screen_info.current_h)
         else:
+            # Windowed mode.
             active_scene.Render(screen, width, height)
         # Change the active scene to whichever scene should be next.
         active_scene = active_scene.next
