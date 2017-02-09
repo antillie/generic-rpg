@@ -19,6 +19,9 @@ import party_screen
 # Global sound object that handles all audio output.
 sound = sound.JukeBox()
 
+# Global cache object that handles all image and font object caching.
+cache = cache.CacheEngine()
+
 # Main engine. Sets up the window, handles rendering, manages scene changes, and forwards player input to the active scene.
 def run_game(width=1024, height=576, fps=60, fullscreen=False):
     # Initialize the engine and get information about the user's display.
@@ -43,10 +46,10 @@ def run_game(width=1024, height=576, fps=60, fullscreen=False):
     pygame.display.set_caption("Generic RPG")
     
     # Initialize scenes and pass them all the sound object so that all audio output is centralized.
-    TitleScene = title.TitleScene(sound)
-    CreditsScene = credits_s.CreditsScene(sound)
-    GameScene = gameinit.GameScene(sound)
-    PartyScreen = party_screen.PartyScreen(sound)
+    TitleScene = title.TitleScene(sound, cache)
+    CreditsScene = credits_s.CreditsScene(sound, cache)
+    GameScene = gameinit.GameScene(sound, cache)
+    PartyScreen = party_screen.PartyScreen(sound, cache)
     
     # Set the starting scene.
     active_scene = TitleScene

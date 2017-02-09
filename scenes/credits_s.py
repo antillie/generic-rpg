@@ -5,32 +5,33 @@ import pygame
 import os
 import webbrowser
 import virtualscreen
-import cache
 import base
 import colors
 import utils
 
 class Credit:
     # Used for scrolling text on the credits screen.
-    def __init__(self, text, pos, size=30, color=colors.white, font=["Immortal"]):
+    def __init__(self, text, pos, cache, size=30, color=colors.white, font=["Immortal"]):
         self.text = text
         self.pos = pos
         self.size = size
         self.color = color
         self.font = font
+        self.cache = cache
         self.set_rend()
         
     def set_rend(self):
-        self.rend = cache.get_font(self.font, self.size).render(self.text, True, self.color)
+        self.rend = self.cache.get_font(self.font, self.size).render(self.text, True, self.color)
 
 # The credits screen.
 class CreditsScene(base.SceneBase):
     
-    def __init__(self, sound, song="hervioleteyes.mp3"):
+    def __init__(self, sound, cache, song="hervioleteyes.mp3"):
         base.SceneBase.__init__(self)
         self.song = song
         self.name = "CreditsScene"
         self.sound = sound
+        self.cache = cache
         
         # Starting point for the credits scroll, just off screen.
         self.x = 588
@@ -82,29 +83,29 @@ class CreditsScene(base.SceneBase):
         
         # List of credit entries and their starting positions.
         credits_roll = [
-            Credit("Main Programming: George Markeloff", (self.y, self.x)),
-            Credit("Additional Programming: ???", (self.y, self.x + 100)),
-            Credit("Art: ???", (self.y, self.x + 200)),
-            Credit("Title Music - Enchanted Festival, By: Matthew Pablo", (self.y, self.x + 300)),
-            Credit("http://www.matthewpablo.com", (self.y, self.x + 330), url_size, colors.link_blue),
-            Credit("Credits Music - Her Violet Eyes, By: tgfcoder", (self.y, self.x + 400)),
-            Credit("https://twitter.com/tgfcoder", (self.y, self.x + 430), url_size, colors.link_blue),
-            Credit("Battle Theme - A Wild Creature Appears, By: Aaron Parsons", (self.y, self.x + 500)),
-            Credit("Boss Theme - Battle of the Void, By: Marcelo Fernandez", (self.y, self.x + 600)),
-            Credit("Forest Theme - Forest, By: syncopika", (self.y, self.x + 700)),
-            Credit("https://greenbearmusic.bandcamp.com/track/forest", (self.y, self.x + 730), url_size, colors.link_blue),
-            Credit("Town Theme - Plesant Creek, By: Matthew Pablo", (self.y, self.x + 800)),
-            Credit("http://www.matthewpablo.com", (self.y, self.x + 830), url_size, colors.link_blue),
-            Credit("Combat System Design: George Markeloff", (self.y, self.x + 900)),
-            Credit("Combat Balancing: George Markeloff", (self.y, self.x + 1000)),
-            Credit("Character Class Design: George Markeloff", (self.y, self.x + 1100)),
-            Credit("Story: George Markeloff", (self.y, self.x + 1200)),
-            Credit("Dialog: George Markeloff", (self.y, self.x + 1300)),
-            Credit("Audio and art assets licensed under CC-BY 3.0/4.0", (self.y, self.x + 1400)),
-            Credit("https://creativecommons.org/licenses/by/3.0/", (self.y, self.x + 1430), url_size, colors.link_blue),
-            Credit("Fonts used under Larabie Fonts Freeware Fonts EULA.", (self.y, self.x + 1500)),
-            Credit(font_eula, (self.y, self.x + 1530), url_size, colors.link_blue),
-            Credit("Written in Python using the Pygame engine.", (self.y, self.x + 1600))
+            Credit("Main Programming: George Markeloff", (self.y, self.x), self.cache),
+            Credit("Additional Programming: ???", (self.y, self.x + 100), self.cache),
+            Credit("Art: ???", (self.y, self.x + 200), self.cache),
+            Credit("Title Music - Enchanted Festival, By: Matthew Pablo", (self.y, self.x + 300), self.cache),
+            Credit("http://www.matthewpablo.com", (self.y, self.x + 330), self.cache, url_size, colors.link_blue),
+            Credit("Credits Music - Her Violet Eyes, By: tgfcoder", (self.y, self.x + 400), self.cache),
+            Credit("https://twitter.com/tgfcoder", (self.y, self.x + 430), self.cache, url_size, colors.link_blue),
+            Credit("Battle Theme - A Wild Creature Appears, By: Aaron Parsons", (self.y, self.x + 500), self.cache),
+            Credit("Boss Theme - Battle of the Void, By: Marcelo Fernandez", (self.y, self.x + 600), self.cache),
+            Credit("Forest Theme - Forest, By: syncopika", (self.y, self.x + 700), self.cache),
+            Credit("https://greenbearmusic.bandcamp.com/track/forest", (self.y, self.x + 730), self.cache, url_size, colors.link_blue),
+            Credit("Town Theme - Plesant Creek, By: Matthew Pablo", (self.y, self.x + 800), self.cache),
+            Credit("http://www.matthewpablo.com", (self.y, self.x + 830), self.cache, url_size, colors.link_blue),
+            Credit("Combat System Design: George Markeloff", (self.y, self.x + 900), self.cache),
+            Credit("Combat Balancing: George Markeloff", (self.y, self.x + 1000), self.cache),
+            Credit("Character Class Design: George Markeloff", (self.y, self.x + 1100), self.cache),
+            Credit("Story: George Markeloff", (self.y, self.x + 1200), self.cache),
+            Credit("Dialog: George Markeloff", (self.y, self.x + 1300), self.cache),
+            Credit("Audio and art assets licensed under CC-BY 3.0/4.0", (self.y, self.x + 1400), self.cache),
+            Credit("https://creativecommons.org/licenses/by/3.0/", (self.y, self.x + 1430), self.cache, url_size, colors.link_blue),
+            Credit("Fonts used under Larabie Fonts Freeware Fonts EULA.", (self.y, self.x + 1500), self.cache),
+            Credit(font_eula, (self.y, self.x + 1530), self.cache, url_size, colors.link_blue),
+            Credit("Written in Python using the Pygame engine.", (self.y, self.x + 1600), self.cache)
         ]
         
         url_pattern = []

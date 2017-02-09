@@ -3,18 +3,18 @@
 
 import pygame
 import virtualscreen
-import cache
 import base
 import colors
 
 # The actual game. Different versions of this class will need to load maps, characters, dialog, and detect interactions between objects on the screen. Each area will be its own class.
 class GameScene(base.SceneBase):
     
-    def __init__(self, sound, song="plesantcreekloop.mp3"):
+    def __init__(self, sound, cache, song="plesantcreekloop.mp3"):
         base.SceneBase.__init__(self)
         self.song = song
         self.name = "GameScene"
         self.sound = sound
+        self.cache = cache
         
     # Handles user input passed from the main engine.
     def ProcessInput(self, events, pressed_keys):
@@ -43,7 +43,7 @@ class GameScene(base.SceneBase):
         
         for y in range(y_count):
             for x in range(x_count):
-                canvas.canvas.blit(cache.get_image("landscaping/mountain_landscape.png"), (x * 64, y * 64), (448, 128, 64, 64))
+                canvas.canvas.blit(self.cache.get_image("landscaping/mountain_landscape.png"), (x * 64, y * 64), (448, 128, 64, 64))
         
         # Draw the upscaled virtual screen to actual screen.
         screen.blit(canvas.render(), (0, 0))

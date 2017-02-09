@@ -3,7 +3,6 @@
 
 import pygame
 import virtualscreen
-import cache
 import base
 import colors
 import utils
@@ -13,14 +12,15 @@ class Option:
     
     active = False
     
-    def __init__(self, text, pos, font=["Immortal"]):
+    def __init__(self, text, pos, cache, font=["Immortal"]):
         self.text = text
         self.pos = pos
         self.font = font
+        self.cache = cache
         self.set_rend()
         
     def set_rend(self):
-        self.rend = cache.get_font(self.font, 20).render(self.text, True, self.get_color())
+        self.rend = self.cache.get_font(self.font, 20).render(self.text, True, self.get_color())
         
     def get_color(self):
         if self.active:
@@ -35,12 +35,13 @@ class Option:
 # The party screen. Lets you save/quit, use items, change classes, ect...
 class PartyScreen(base.SceneBase):
     
-    def __init__(self, sound):
+    def __init__(self, sound, cache):
         base.SceneBase.__init__(self)
         self.name = "PartyScreen"
         self.previous_scene = None
         self.menu = 0
         self.sound = sound
+        self.cache = cache
         self.menu_rects = []
         
     # Handles user input passed from the main engine.
@@ -162,14 +163,14 @@ class PartyScreen(base.SceneBase):
         
         # Menu entries.
         self.options = [
-            Option("Status", (menu_x, 23)),
-            Option("Inventory", (menu_x, 53)),
-            Option("Spells", (menu_x, 83)),
-            Option("Equipment", (menu_x, 113)),
-            Option("Change Job", (menu_x, 143)),
-            Option("Close Menu", (menu_x, 173)),
-            Option("Quit to Title", (menu_x, 203)),
-            Option("Quit to Desktop", (menu_x, 233))
+            Option("Status", (menu_x, 23), self.cache),
+            Option("Inventory", (menu_x, 53), self.cache),
+            Option("Spells", (menu_x, 83), self.cache),
+            Option("Equipment", (menu_x, 113), self.cache),
+            Option("Change Job", (menu_x, 143), self.cache),
+            Option("Close Menu", (menu_x, 173), self.cache),
+            Option("Quit to Title", (menu_x, 203), self.cache),
+            Option("Quit to Desktop", (menu_x, 233), self.cache)
             ]
         
         # Highlight the currently selected menu item.    

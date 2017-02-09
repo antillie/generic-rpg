@@ -3,7 +3,6 @@
 
 import pygame
 import virtualscreen
-import cache
 import base
 import colors
 import utils
@@ -13,14 +12,15 @@ class Option:
     
     active = False
     
-    def __init__(self, text, pos, font=["Immortal"]):
+    def __init__(self, text, pos, cache, font=["Immortal"]):
         self.text = text
         self.pos = pos
         self.font = font
+        self.cache = cache
         self.set_rend()
         
     def set_rend(self):
-        self.rend = cache.get_font(self.font, 20).render(self.text, True, self.get_color())
+        self.rend = self.cache.get_font(self.font, 20).render(self.text, True, self.get_color())
         
     def get_color(self):
         if self.active:
@@ -35,7 +35,7 @@ class Option:
 # Main title screen. You can start/load a game, view the credits, or close the program from here.
 class TitleScene(base.SceneBase):
     
-    def __init__(self, sound, song="enchantedfestivalloop.mp3"):
+    def __init__(self, sound, cache, song="enchantedfestivalloop.mp3"):
         base.SceneBase.__init__(self)
         self.song = song
         self.menu = 1
@@ -44,6 +44,7 @@ class TitleScene(base.SceneBase):
         self.name = "TitleScene"
         self.sound = sound
         self.menu_rects = []
+        self.cache = cache
         
     # Handles user input passed from the main engine.
     def ProcessInput(self, events, pressed_keys):
@@ -141,18 +142,18 @@ class TitleScene(base.SceneBase):
         canvas = virtualscreen.VirtualScreen(real_w, real_h)
         
         # Title text.
-        title = cache.get_font(["Immortal"], 70).render("Generic RPG Name",True,colors.white)
+        title = self.cache.get_font(["Immortal"], 70).render("Generic RPG Name",True,colors.white)
         canvas.canvas.blit(title, [175, 60])
         
         menu_x = 430
         
         # Menu entries.
         self.options = [
-            Option("New Game", (menu_x, 300)),
-            Option("Load Game", (menu_x, 330)),
-            Option("Game Options", (menu_x, 360)),
-            Option("Credits", (menu_x, 390)),
-            Option("Exit", (menu_x, 420))
+            Option("New Game", (menu_x, 300), self.cache),
+            Option("Load Game", (menu_x, 330), self.cache),
+            Option("Game Options", (menu_x, 360), self.cache),
+            Option("Credits", (menu_x, 390), self.cache),
+            Option("Exit", (menu_x, 420), self.cache)
             ]
         
         # Highlight the currently selected menu item.    
