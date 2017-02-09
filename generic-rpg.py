@@ -114,15 +114,15 @@ def run_game(width=1024, height=576, fps=60, fullscreen=False):
                     else:
                         fullscreen = True
                         screen = pygame.display.set_mode((screen_info.current_w, screen_info.current_h), pygame.FULLSCREEN|pygame.HWSURFACE|pygame.DOUBLEBUF)
-                    
-                    
+            # Only listen for resize events in windowed mode.
             elif not fullscreen:
                 if event.type == pygame.VIDEORESIZE:
                     # Update the rendering surface when the user resizes the game window.
                     width = event.size[0]
                     height = event.size[1]
                     screen = pygame.display.set_mode(event.size, pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.RESIZABLE)
-        
+            
+            # No active scene means that we are done.
             if active_scene == None:
                 quit_attempt = True
             
@@ -156,7 +156,8 @@ def run_game(width=1024, height=576, fps=60, fullscreen=False):
             else:
                 # Queue the input to be sent to the active scene.
                 filtered_events.append(event)
-                
+        
+        # No active scene means that we are done.
         if active_scene != None:
             if active_scene.name != "PartyScreen":
                 PartyScreen.previous_scene = active_scene.name
