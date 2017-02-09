@@ -127,7 +127,7 @@ def run_game(width=1024, height=576, fps=60, fullscreen=False):
                 quit_attempt = True
             
             if quit_attempt:
-                # Save the window size last used in windowed mode.
+                # Save the window size and state.
 
                 # Get the user's home directory.
                 homedir = os.path.expanduser("~")

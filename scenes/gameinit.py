@@ -15,6 +15,8 @@ class GameScene(base.SceneBase):
         self.name = "GameScene"
         self.sound = sound
         self.cache = cache
+        self.rect_x = 512
+        self.rect_y = 288
         
     # Handles user input passed from the main engine.
     def ProcessInput(self, events, pressed_keys):
@@ -26,6 +28,25 @@ class GameScene(base.SceneBase):
                 # Escape key pulls up the party screen.
                 if event.key == pygame.K_ESCAPE:
                     self.SwitchToScene("PartyScreen")
+                
+        if pressed_keys[pygame.K_UP]:
+            self.rect_y = self.rect_y - 3
+        if pressed_keys[pygame.K_DOWN]:
+            self.rect_y = self.rect_y + 3
+        if pressed_keys[pygame.K_LEFT]:
+            self.rect_x = self.rect_x - 3
+        if pressed_keys[pygame.K_RIGHT]:
+            self.rect_x = self.rect_x + 3
+                
+        if self.rect_x < 0:
+            self.rect_x = 0
+        if self.rect_y < 0:
+            self.rect_y = 0
+        
+        if self.rect_x > 992:
+            self.rect_x = 992
+        if self.rect_y > 528:
+            self.rect_y = 528
         
     # Internal game logic.
     def Update(self):
@@ -44,6 +65,8 @@ class GameScene(base.SceneBase):
         for y in range(y_count):
             for x in range(x_count):
                 canvas.canvas.blit(self.cache.get_image("landscaping/mountain_landscape.png"), (x * 64, y * 64), (448, 128, 64, 64))
+        
+        pygame.draw.rect(canvas.canvas, colors.brown, pygame.Rect(self.rect_x, self.rect_y, 32, 48))
         
         # Draw the upscaled virtual screen to actual screen.
         screen.blit(canvas.render(), (0, 0))
