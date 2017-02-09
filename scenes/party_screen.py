@@ -26,54 +26,62 @@ class Option:
         if self.active:
             return colors.off_yellow
         else:
-            return colors.grey
+            return colors.white
             
     def select(self):
         self.active = True
         self.set_rend()
 
-# Main title screen. You can start/load a game, view the credits, or close the program from here.
-class TitleScene(base.SceneBase):
+# The party screen. Lets you save/quit, use items, change classes, ect...
+class PartyScreen(base.SceneBase):
     
-    def __init__(self, sound, song="enchantedfestivalloop.mp3"):
+    def __init__(self, sound):
         base.SceneBase.__init__(self)
-        self.song = song
-        self.menu = 1
-        # Initialise the menu rects list.
-        self.menu_rects = []
-        self.name = "TitleScene"
+        self.name = "PartyScreen"
+        self.previous_scene = None
+        self.menu = 0
         self.sound = sound
         self.menu_rects = []
         
     # Handles user input passed from the main engine.
     def ProcessInput(self, events, pressed_keys):
-        # Play the title theme.
-        self.sound.play_music(self.song)
         for event in events:
             # Keyboard input.
             if event.type == pygame.KEYDOWN:
+                # Escape key closes the menu.
+                if event.key == pygame.K_ESCAPE:
+                    self.SwitchToScene(self.previous_scene)
                 # Enter key.
-                if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
-                    # New game.
+                elif event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
+                    # Status.
                     if self.menu == 0:
-                        self.sound.stop_music()
-                        # Switch to the main game scene.
-                        self.SwitchToScene("GameScene")
-                    # Load game.
+                        # Not yet implimented.
+                        pass
+                    # Inventory.
                     elif self.menu == 1:
                         # Not yet implimented.
                         pass
-                    # Game options.
+                    # Spells.
                     elif self.menu == 2:
                         # Not yet implimented.
                         pass
-                    # Roll credits.
+                    # Equipment.
                     elif self.menu == 3:
-                        self.sound.stop_music()
-                        # Switch to the credits scene.
-                        self.SwitchToScene("CreditsScene")
-                    # Exit the game.
+                        # Not yet implimented.
+                        pass
+                    # Change Job.
                     elif self.menu == 4:
+                        # Not yet implimented.
+                        pass
+                    # Close menu.
+                    elif self.menu == 5:
+                        self.SwitchToScene(self.previous_scene)
+                    # Quit to title screen.
+                    elif self.menu == 6:
+                        self.sound.stop_music()
+                        self.SwitchToScene("TitleScene")
+                    # Quit to desktop.
+                    elif self.menu == 7:
                         self.Terminate()
                 # Down arrow.
                 elif event.key == pygame.K_DOWN:
@@ -81,7 +89,7 @@ class TitleScene(base.SceneBase):
                     self.sound.play_sound("menu_change.wav")
                     # Incriment the menu.
                     self.menu = self.menu + 1
-                    if self.menu == 5:
+                    if self.menu == 8:
                         # Loop the menu if we went past the end.
                         self.menu = 0
                 # Up arrow.
@@ -92,7 +100,7 @@ class TitleScene(base.SceneBase):
                     self.menu = self.menu - 1
                     if self.menu == -1:
                         # Loop the menu if we went past the end.
-                        self.menu = 4
+                        self.menu = 7
             # Mouse moved.
             elif event.type == pygame.MOUSEMOTION:
                 mpos = pygame.mouse.get_pos()
@@ -106,53 +114,62 @@ class TitleScene(base.SceneBase):
                     mpos = pygame.mouse.get_pos()
                     for x in range(len(self.menu_rects)):
                         if self.menu_rects[x].collidepoint(mpos):
-                            # New game.
+                            # Status.
                             if self.menu == 0:
-                                self.sound.stop_music()
-                                # Switch to the main game scene.
-                                self.SwitchToScene("GameScene")
-                            # Load game.
+                                # Not yet implimented.
+                                pass
+                            # Inventory.
                             elif self.menu == 1:
                                 # Not yet implimented.
                                 pass
-                            # Game options.
+                            # Spells.
                             elif self.menu == 2:
                                 # Not yet implimented.
                                 pass
-                            # Roll credits.
+                            # Equipment.
                             elif self.menu == 3:
-                                self.sound.stop_music()
-                                # Switch to the credits scene.
-                                self.SwitchToScene("CreditsScene")
-                            # Exit the game.
+                                # Not yet implimented.
+                                pass
+                            # Change Job.
                             elif self.menu == 4:
+                                # Not yet implimented.
+                                pass
+                            # Close menu.
+                            elif self.menu == 5:
+                                self.SwitchToScene(self.previous_scene)
+                            # Quit to title screen.
+                            elif self.menu == 6:
+                                self.sound.stop_music()
+                                self.SwitchToScene("TitleScene")
+                            # Quit to desktop.
+                            elif self.menu == 7:
                                 self.Terminate()
-                
-    # Internal game logic. Doesn't really apply to the main menu.
+    # Internal game logic.
     def Update(self):
         pass
-        
+    
     # Draws things.
     def Render(self, screen, real_w, real_h):
-        # Start with a black screen.
-        screen.fill((0, 0, 0))
-        
         # Create our staticly sized virtual screen so we can draw stuff on it.
         canvas = virtualscreen.VirtualScreen(real_w, real_h)
         
-        # Title text.
-        title = cache.get_font(["Immortal"], 70).render("Generic RPG Name",True,colors.white)
-        canvas.canvas.blit(title, [175, 60])
+        # Start with a blue screen.
+        canvas.canvas.fill((0, 90, 170))
         
-        menu_x = 430
+        pygame.draw.rect(canvas.canvas, colors.white, pygame.Rect(800,10,214,264), 3)
+        
+        menu_x = 813
         
         # Menu entries.
         self.options = [
-            Option("New Game", (menu_x, 300)),
-            Option("Load Game", (menu_x, 330)),
-            Option("Game Options", (menu_x, 360)),
-            Option("Credits", (menu_x, 390)),
-            Option("Exit", (menu_x, 420))
+            Option("Status", (menu_x, 23)),
+            Option("Inventory", (menu_x, 53)),
+            Option("Spells", (menu_x, 83)),
+            Option("Equipment", (menu_x, 113)),
+            Option("Change Job", (menu_x, 143)),
+            Option("Close Menu", (menu_x, 173)),
+            Option("Quit to Title", (menu_x, 203)),
+            Option("Quit to Desktop", (menu_x, 233))
             ]
         
         # Highlight the currently selected menu item.    
@@ -175,4 +192,3 @@ class TitleScene(base.SceneBase):
         
         # Draw the upscaled virtual screen to actual screen.
         screen.blit(canvas.render(), (0, 0))
-        
