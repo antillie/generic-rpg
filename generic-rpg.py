@@ -18,7 +18,7 @@ def run_game(width, height, fps, starting_scene):
     fullscreen = 0
     screen_info = pygame.display.Info()
     # Load and set the window icon.
-    temp_path = os.path.dirname(os.path.realpath(__file__)) + "/images/red_shield.png"
+    temp_path = os.path.dirname(os.path.realpath(__file__)) + "/images/window_shield.png"
     canonicalized_path = temp_path.replace('/', os.sep).replace('\\', os.sep)
     image = pygame.image.load(canonicalized_path)
     pygame.display.set_icon(image)
