@@ -51,7 +51,7 @@ class CreditsScene(base.SceneBase):
                         sound.stop_music()
                         self.SwitchToScene(title.TitleScene())
             # Mouse click.
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            elif event.type == pygame.MOUSEBUTTONDOWN:
                 # Left click.
                 if event.button == 1:
                     mpos = pygame.mouse.get_pos()
@@ -59,6 +59,9 @@ class CreditsScene(base.SceneBase):
                         if self.credit_url_rects[x].collidepoint(mpos):
                             # Launch the default web browser for the URL.
                             webbrowser.open(self.credit_urls[x], new=2)
+                            return
+                    sound.stop_music()
+                    self.SwitchToScene(title.TitleScene())
             
     # Internal game logic.
     def Update(self):

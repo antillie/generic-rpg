@@ -10,6 +10,7 @@ import base
 import colors
 import credits_s
 import gameinit
+import utils
 
 sound = sound.JukeBox()
 
@@ -48,6 +49,8 @@ class TitleScene(base.SceneBase):
         sound.stop_music()
         # Play the title theme.
         sound.play_music(self.song)
+        # Initialise the menu rects list.
+        self.menu_rects = []
         
     # Handles user input passed from the main engine.
     def ProcessInput(self, events, pressed_keys):
@@ -62,23 +65,23 @@ class TitleScene(base.SceneBase):
                         # Switch to the main game scene.
                         self.SwitchToScene(gameinit.GameScene())
                     # Load game.
-                    if self.menu == 1:
+                    elif self.menu == 1:
                         # Not yet implimented.
                         pass
                     # Game options.
-                    if self.menu == 2:
+                    elif self.menu == 2:
                         # Not yet implimented.
                         pass
                     # Roll credits.
-                    if self.menu == 3:
+                    elif self.menu == 3:
                         sound.stop_music()
                         # Switch to the credits scene.
                         self.SwitchToScene(credits_s.CreditsScene())
                     # Exit the game.
-                    if self.menu == 4:
+                    elif self.menu == 4:
                         self.Terminate()
                 # Down arrow.
-                if event.key == pygame.K_DOWN:
+                elif event.key == pygame.K_DOWN:
                     # Play the menu sound effect.
                     sound.play_sound("menu_change.wav")
                     # Incriment the menu.
@@ -87,7 +90,7 @@ class TitleScene(base.SceneBase):
                         # Loop the menu if we went past the end.
                         self.menu = 0
                 # Up arrow.
-                if event.key == pygame.K_UP:
+                elif event.key == pygame.K_UP:
                     # Play the menu sound effect.
                     sound.play_sound("menu_change.wav")
                     # Incriment the menu.
@@ -96,9 +99,39 @@ class TitleScene(base.SceneBase):
                         # Loop the menu if we went past the end.
                         self.menu = 4
             # Mouse moved.
-            if event.type == pygame.MOUSEMOTION:
-                #print "mouse at (%d, %d)" % event.pos
-                pass
+            elif event.type == pygame.MOUSEMOTION:
+                mpos = pygame.mouse.get_pos()
+                for x in range(len(self.menu_rects)):
+                    if self.menu_rects[x].collidepoint(mpos):
+                        self.menu = x
+            # Mouse click.
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                # Left click.
+                if event.button == 1:
+                    mpos = pygame.mouse.get_pos()
+                    for x in range(len(self.menu_rects)):
+                        if self.menu_rects[x].collidepoint(mpos):
+                            # New game.
+                            if x == 0:
+                                sound.stop_music()
+                                # Switch to the main game scene.
+                                self.SwitchToScene(gameinit.GameScene())
+                            # Load game.
+                            elif x == 1:
+                                # Not yet implimented.
+                                pass
+                            # Game options.
+                            elif x == 2:
+                                # Not yet implimented.
+                                pass
+                            # Roll credits.
+                            elif x == 3:
+                                sound.stop_music()
+                                # Switch to the credits scene.
+                                self.SwitchToScene(credits_s.CreditsScene())
+                            # Exit the game.
+                            elif x == 4:
+                                self.Terminate()
                 
     # Internal game logic. Doesn't really apply to the main menu.
     def Update(self):
@@ -140,6 +173,10 @@ class TitleScene(base.SceneBase):
         for x in range(len(self.options)):
             # Add a collidable rectangle to a list for input processing.
             self.menu_rects.append(self.options[x].rend.get_rect(topleft=self.options[x].pos))
+            
+        # Scale the rect objects so they corospond to the scaled disaply output.
+        for x in range(len(self.menu_rects)):
+            self.menu_rects[x] = utils.scale_rect(self.menu_rects[x], real_w, real_h)
         
         # Draw the upscaled virtual screen to actual screen.
         screen.blit(canvas.render(), (0, 0))
