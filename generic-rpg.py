@@ -14,9 +14,16 @@ import title
 # Main engine. Sets up the window, handles rendering, manages scene changes, and forwards player input to the active scene.
 def run_game(width, height, fps, starting_scene):
     pygame.init()
+    
+    fullscreen = 1
+    
     screen_info = pygame.display.Info()
-    #screen = pygame.display.set_mode((width, height), pygame.HWSURFACE|pygame.DOUBLEBUF) # Windowed mode.
-    screen = pygame.display.set_mode((screen_info.current_w, screen_info.current_h), pygame.FULLSCREEN|pygame.HWSURFACE|pygame.DOUBLEBUF) # Fullscreen mode.
+    
+    if fullscreen == 1:
+        screen = pygame.display.set_mode((screen_info.current_w, screen_info.current_h), pygame.FULLSCREEN|pygame.HWSURFACE|pygame.DOUBLEBUF) # Fullscreen mode.
+    else:
+        screen = pygame.display.set_mode((width, height), pygame.HWSURFACE|pygame.DOUBLEBUF) # Windowed mode.
+    
     clock = pygame.time.Clock()
     pygame.display.set_caption("Generic RPG")
     active_scene = starting_scene
@@ -51,8 +58,10 @@ def run_game(width, height, fps, starting_scene):
         # Have the active scene run its internal game logic.
         active_scene.Update()
         # Tell the active scene to render itself to the display buffer.
-        active_scene.Render(screen, screen_info.current_w, screen_info.current_h)
-        
+        if fullscreen == 1:
+            active_scene.Render(screen, screen_info.current_w, screen_info.current_h)
+        else:
+            active_scene.Render(screen, width, height)
         # Change the active scene to whichever scene should be next.
         active_scene = active_scene.next
         

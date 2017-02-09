@@ -1,8 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import sys
-sys.path.append("scenes")
 import pygame
 import os
 import webbrowser
@@ -61,8 +59,7 @@ class CreditsScene(base.SceneBase):
     
     # Internal game logic.
     def Update(self):
-        # Move the credits up one pixel per frame.
-        self.x = self.x - 1
+        pass
     
     # Draws things.
     def Render(self, screen, real_w, real_h):
@@ -126,4 +123,13 @@ class CreditsScene(base.SceneBase):
         
         # Draw the upscaled virtual screen to actual screen.
         screen.blit(canvas.render(), (0, 0))
-
+        
+        # Move the credits up one pixel per frame.
+        self.x = self.x - 1
+        
+        for x in range(len(self.credit_url_rects)):
+            self.credit_url_rects[x].left = self.credit_url_rects[x].left * canvas.w_ratio
+            self.credit_url_rects[x].top = self.credit_url_rects[x].top * canvas.h_ratio
+            
+            self.credit_url_rects[x].width = self.credit_url_rects[x].width * canvas.w_ratio
+            self.credit_url_rects[x].height = self.credit_url_rects[x].height * canvas.h_ratio
