@@ -52,6 +52,7 @@ class TitleScene(base.SceneBase):
     # Handles user input passed from the main engine.
     def ProcessInput(self, events, pressed_keys):
         for event in events:
+            # Keyboard input.
             if event.type == pygame.KEYDOWN:
                 # Enter key.
                 if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
@@ -64,13 +65,17 @@ class TitleScene(base.SceneBase):
                     if self.menu == 1:
                         # Not yet implimented.
                         pass
-                    # Roll credits.
+                    # Game options.
                     if self.menu == 2:
+                        # Not yet implimented.
+                        pass
+                    # Roll credits.
+                    if self.menu == 3:
                         sound.stop_music()
                         # Switch to the credits scene.
                         self.SwitchToScene(credits_s.CreditsScene())
                     # Exit the game.
-                    if self.menu == 3:
+                    if self.menu == 4:
                         self.Terminate()
                 # Down arrow.
                 if event.key == pygame.K_DOWN:
@@ -78,7 +83,7 @@ class TitleScene(base.SceneBase):
                     sound.play_sound("menu_change.wav")
                     # Incriment the menu.
                     self.menu = self.menu + 1
-                    if self.menu == 4:
+                    if self.menu == 5:
                         # Loop the menu if we went past the end.
                         self.menu = 0
                 # Up arrow.
@@ -89,8 +94,12 @@ class TitleScene(base.SceneBase):
                     self.menu = self.menu - 1
                     if self.menu == -1:
                         # Loop the menu if we went past the end.
-                        self.menu = 3
-    
+                        self.menu = 4
+            # Mouse moved.
+            if event.type == pygame.MOUSEMOTION:
+                #print "mouse at (%d, %d)" % event.pos
+                pass
+                
     # Internal game logic. Doesn't really apply to the main menu.
     def Update(self):
         pass
@@ -113,8 +122,9 @@ class TitleScene(base.SceneBase):
         self.options = [
             Option("New Game", (menu_x, 300)),
             Option("Load Game", (menu_x, 330)),
-            Option("Credits", (menu_x, 360)),
-            Option("Exit", (menu_x, 390))
+            Option("Game Options", (menu_x, 360)),
+            Option("Credits", (menu_x, 390)),
+            Option("Exit", (menu_x, 420))
             ]
         
         # Highlight the currently selected menu item.    
@@ -123,6 +133,13 @@ class TitleScene(base.SceneBase):
         # Draw the menu entries.
         for x in range(len(self.options)):
             canvas.canvas.blit(self.options[x].rend, self.options[x].pos)
+        
+        self.menu_rects = []
+        
+        # Run through the options list.
+        for x in range(len(self.options)):
+            # Add a collidable rectangle to a list for input processing.
+            self.menu_rects.append(self.options[x].rend.get_rect(topleft=self.options[x].pos))
         
         # Draw the upscaled virtual screen to actual screen.
         screen.blit(canvas.render(), (0, 0))

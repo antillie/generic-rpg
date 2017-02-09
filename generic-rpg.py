@@ -14,9 +14,7 @@ import title
 # Main engine. Sets up the window, handles rendering, manages scene changes, and forwards player input to the active scene.
 def run_game(width, height, fps, starting_scene):
     pygame.init()
-    
-    fullscreen = 1
-    
+    fullscreen = 0
     screen_info = pygame.display.Info()
     
     if fullscreen == 1:
