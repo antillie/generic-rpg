@@ -19,7 +19,7 @@ class JukeBox:
     def play_music(self, song):
         if self.music_playing == False:
             song_path = os.path.dirname(os.path.realpath(__file__)) + "/sound/music/" + song
-            song_path = song_path.replace('/', os.sep).replace('\\', os.sep)
+            song_path = song_path.replace("/", os.sep).replace("\\", os.sep)
             pygame.mixer.music.load(song_path)
             pygame.mixer.music.set_volume(self.music_volume)
             pygame.mixer.music.play(-1)
@@ -35,7 +35,7 @@ class JukeBox:
         sound_fx = _sound_library.get(sound)
         if sound_fx == None:
             path = os.path.dirname(os.path.realpath(__file__)) + "/sound/" + sound
-            canonicalized_path = path.replace('/', os.sep).replace('\\', os.sep)
+            canonicalized_path = path.replace("/", os.sep).replace("\\", os.sep)
             sound_fx = pygame.mixer.Sound(canonicalized_path)
             _sound_library[sound] = sound_fx
         sound_fx.set_volume(self.fx_volume)

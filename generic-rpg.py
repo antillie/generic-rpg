@@ -28,9 +28,33 @@ def run_game(width=1024, height=576, fps=60, fullscreen=False):
     pygame.init()
     screen_info = pygame.display.Info()
     
+    # Try to load the previous window size and mode.
+    try:
+        homedir = os.path.expanduser("~")
+        location = homedir + "/.generic-rpg/screen-size.ini"
+        location = location.replace("/", os.sep).replace("\\", os.sep)
+        ini_file = open(location, "r")
+        # Read our ini file.
+        geometry_data = ini_file.read()
+        # Then close the file.
+        ini_file.close()
+        # Split the data into a list.
+        window_data = geometry_data.split("x")
+        # Set our window width and height to what we got from the file.
+        width = int(window_data[0])
+        height = int(window_data[1])
+        # Enable or disable fullscreen mode based on what we got from the file.
+        if window_data[2] == "True":
+            fullscreen = True
+        else:
+            fullscreen = False
+    except:
+        # No big deal, just use the defaults.
+        pass
+    
     # Load and set the window icon.
     temp_path = os.path.dirname(os.path.realpath(__file__)) + "/images/window_shield.png"
-    canonicalized_path = temp_path.replace('/', os.sep).replace('\\', os.sep)
+    canonicalized_path = temp_path.replace("/", os.sep).replace("\\", os.sep)
     image = pygame.image.load(canonicalized_path)
     pygame.display.set_icon(image)
     
@@ -55,7 +79,7 @@ def run_game(width=1024, height=576, fps=60, fullscreen=False):
     active_scene = TitleScene
     
     # Main game loop.
-    while active_scene != None:
+    while True:
         pressed_keys = pygame.key.get_pressed()
         
         # Event filtering. Some things should not be passed to the active scene, like the game window being closed or ALT+F4.
@@ -72,52 +96,101 @@ def run_game(width=1024, height=576, fps=60, fullscreen=False):
                 # User pressed F4 while holding an ALT key.
                 if event.key == pygame.K_F4 and alt_pressed:
                     quit_attempt = True
+                # User pressed ALT+Enter.
+                if event.key == pygame.K_RETURN and alt_pressed:
+                    # Toggle between fullscreen and windowed mode.
+                    if fullscreen:
+                        fullscreen = False
+                        screen = pygame.display.set_mode((width, height), pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.RESIZABLE)
+                    else:
+                        fullscreen = True
+                        screen = pygame.display.set_mode((screen_info.current_w, screen_info.current_h), pygame.FULLSCREEN|pygame.HWSURFACE|pygame.DOUBLEBUF)
+                # User pressed F11.
+                if event.key == pygame.K_F11:
+                    # Toggle between fullscreen and windowed mode.
+                    if fullscreen:
+                        fullscreen = False
+                        screen = pygame.display.set_mode((width, height), pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.RESIZABLE)
+                    else:
+                        fullscreen = True
+                        screen = pygame.display.set_mode((screen_info.current_w, screen_info.current_h), pygame.FULLSCREEN|pygame.HWSURFACE|pygame.DOUBLEBUF)
+                    
+                    
             elif not fullscreen:
                 if event.type == pygame.VIDEORESIZE:
                     # Update the rendering surface when the user resizes the game window.
                     width = event.size[0]
                     height = event.size[1]
                     screen = pygame.display.set_mode(event.size, pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.RESIZABLE)
+        
+            if active_scene == None:
+                quit_attempt = True
+            
             if quit_attempt:
+                # Save the window size last used in windowed mode.
+
+                # Get the user's home directory.
+                homedir = os.path.expanduser("~")
+                
+                # Make a directory called ".generic-rpg" if it doesn't exist.
+                location = homedir + "/.generic-rpg"
+                if not os.path.exists(location):
+                    os.makedirs(location)
+                location = location + "/screen-size.ini"
+                location = location.replace("/", os.sep).replace("\\", os.sep)
+                
+                # Get the current window size.
+                ini_file = open(location, "w")
+                ini_data = str(width) + "x" + str(height)
+                if fullscreen:
+                    ini_data = ini_data + "x" + "True"
+                else:
+                    ini_data = ini_data + "x" + "False"
+                # Write the data to our ini file.
+                ini_file.write(ini_data)
+                # Then close the file.
+                ini_file.close()
+                
                 # Close the program.
-                active_scene.Terminate()
+                exit()
             else:
                 # Queue the input to be sent to the active scene.
                 filtered_events.append(event)
+                
+        if active_scene != None:
+            if active_scene.name != "PartyScreen":
+                PartyScreen.previous_scene = active_scene.name
         
-        if active_scene.name != "PartyScreen":
-            PartyScreen.previous_scene = active_scene.name
+            # Pass the input to the active scene for processing.
+            active_scene.ProcessInput(filtered_events, pressed_keys)
+            # Have the active scene run its internal game logic.
+            active_scene.Update()
+            # Tell the active scene to render itself to the display buffer.
+            if fullscreen:
+                # Fullscreen mode.
+                active_scene.Render(screen, screen_info.current_w, screen_info.current_h)
+            else:
+                # Windowed mode.
+                active_scene.Render(screen, width, height)
+                
+            # Get the next scene that sould be active.
+            next_scene = active_scene.next
         
-        # Pass the input to the active scene for processing.
-        active_scene.ProcessInput(filtered_events, pressed_keys)
-        # Have the active scene run its internal game logic.
-        active_scene.Update()
-        # Tell the active scene to render itself to the display buffer.
-        if fullscreen:
-            # Fullscreen mode.
-            active_scene.Render(screen, screen_info.current_w, screen_info.current_h)
-        else:
-            # Windowed mode.
-            active_scene.Render(screen, width, height)
-            
-        # Get the next scene that sould be active.
-        next_scene = active_scene.next
-        
-        # Change the active scene to whichever scene should be next.
-        if next_scene == "TitleScene":
-            TitleScene.next = "TitleScene"
-            active_scene = TitleScene
-        elif next_scene == "CreditsScene":
-            CreditsScene.next = "CreditsScene"
-            active_scene = CreditsScene
-        elif next_scene == "GameScene":
-            GameScene.next = "GameScene"
-            active_scene = GameScene
-        elif next_scene == "PartyScreen":
-            PartyScreen.next = "PartyScreen"
-            active_scene = PartyScreen
-        elif next_scene == None:
-            active_scene = None
+            # Change the active scene to whichever scene should be next.
+            if next_scene == "TitleScene":
+                TitleScene.next = "TitleScene"
+                active_scene = TitleScene
+            elif next_scene == "CreditsScene":
+                CreditsScene.next = "CreditsScene"
+                active_scene = CreditsScene
+            elif next_scene == "GameScene":
+                GameScene.next = "GameScene"
+                active_scene = GameScene
+            elif next_scene == "PartyScreen":
+                PartyScreen.next = "PartyScreen"
+                active_scene = PartyScreen
+            elif next_scene == None:
+                active_scene = None
         
         # Draw the updated display buffer on the screen.
         pygame.display.flip()
