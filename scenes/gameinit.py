@@ -1,8 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import sys
-sys.path.append("scenes")
 import pygame
 import os
 import virtualscreen

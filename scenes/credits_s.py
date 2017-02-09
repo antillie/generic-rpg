@@ -1,8 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import sys
-sys.path.append("scenes")
 import pygame
 import os
 import webbrowser
@@ -12,6 +10,7 @@ import sound
 import base
 import colors
 import title
+import utils
 
 sound = sound.JukeBox()
 
@@ -40,32 +39,30 @@ class CreditsScene(base.SceneBase):
         
         # Starting point for the credits scroll, just off screen.
         self.x = 588
-        #self.x = -588
         self.y = 80
     
     # Handles user input passed from the main engine.
     def ProcessInput(self, events, pressed_keys):
         for event in events:
+            # Keyboard input.
             if event.type == pygame.KEYDOWN:
                     # Enter or Escape key returns to title screen.
                     if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER or event.key == pygame.K_ESCAPE:
                         sound.stop_music()
                         self.SwitchToScene(title.TitleScene())
+            # Mouse click.
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # Left click.
                 if event.button == 1:
                     mpos = pygame.mouse.get_pos()
-                    print(pygame.mouse.get_pos())
                     for x in range(len(self.credit_url_rects)):
                         if self.credit_url_rects[x].collidepoint(mpos):
                             # Launch the default web browser for the URL.
                             webbrowser.open(self.credit_urls[x], new=2)
-    
+            
     # Internal game logic.
     def Update(self):
-        # Move the credits up one pixel per frame.
-        self.x = self.x - 1
-        #pass
+        pass
     
     # Draws things.
     def Render(self, screen, real_w, real_h):
@@ -124,21 +121,15 @@ class CreditsScene(base.SceneBase):
         for x in range(len(url_pattern)):
             # Add the actual URL to a list for input processing.
             self.credit_urls.append(credits_roll[url_pattern[x]].text)
-            # Add collidable rectangle to a list for input processing.
+            # Add a collidable rectangle to a list for input processing.
             self.credit_url_rects.append(credits_roll[url_pattern[x]].rend.get_rect(topleft=credits_roll[url_pattern[x]].pos))
-            
-        #for x in range(len(self.credit_url_rects)):
-        #    #new_pos = self.credit_url_rects[x].topleft
-        #    new_pos = tuple((self.credit_url_rects[x].topleft[0] * canvas.w_ratio, self.credit_url_rects[x].topleft[1] * canvas.h_ratio))
-        #    
-        #    #new_pos = self.credit_url_rects[x].topleft[1] * canvas.w_ratio
-        #    
-        #    print(new_pos)
-        #    self.credit_url_rects[x].move_ip(new_pos)
-        #    #pygame.draw.rect(canvas.canvas, colors.white, self.credit_url_rects[x])
-            
-            
         
         # Draw the upscaled virtual screen to actual screen.
         screen.blit(canvas.render(), (0, 0))
-
+        
+        # Scale the rect objects so they corospond to the scaled disaply output.
+        for x in range(len(self.credit_url_rects)):
+            self.credit_url_rects[x] = utils.scale_rect(self.credit_url_rects[x], real_w, real_h)
+        
+        # Move the credits up one pixel for the next frame.
+        self.x = self.x - 1

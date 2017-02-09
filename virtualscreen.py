@@ -13,9 +13,8 @@ class VirtualScreen:
         # Create a virtual screen with a static size. This makes positioning things on the screen much easier.
         self.canvas = pygame.Surface((self.width, self.height))
         
-        ## Transform ratios for rect object scaling.
-        #self.w_ratio = self.real_w / self.width
-        #self.h_ratio = self.real_h / self.height
+        self.w_ratio = self.real_w / self.width
+        self.h_ratio = self.real_h / self.height
         
     def render(self):
         # Upscale the virtual screen to the size of the actual screen and return the resulting surface object so it can be drawn.
