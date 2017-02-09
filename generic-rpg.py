@@ -33,10 +33,10 @@ def run_game(width=1024, height=576, fps=60, fullscreen=False):
     
     if fullscreen:
         # Fullscreen mode.
-        screen = pygame.display.set_mode((screen_info.current_w, screen_info.current_h), pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.FULLSCREEN)
+        screen = pygame.display.set_mode((screen_info.current_w, screen_info.current_h), pygame.FULLSCREEN|pygame.HWSURFACE|pygame.DOUBLEBUF)
     else:
         # Windowed mode.
-        screen = pygame.display.set_mode((width, height), pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.RESIZABLE)
+        screen = pygame.display.set_mode((width, height), pygame.RESIZABLE|pygame.HWSURFACE|pygame.DOUBLEBUF)
     
     # Initilize the internal clock and set the window title.
     clock = pygame.time.Clock()
@@ -71,9 +71,10 @@ def run_game(width=1024, height=576, fps=60, fullscreen=False):
                     quit_attempt = True
             elif not fullscreen:
                 if event.type == pygame.VIDEORESIZE:
-                    # Update the rendering surface size when the user resizes the game window.
+                    # Update the rendering surface when the user resizes the game window.
+                    width = event.size[0]
+                    height = event.size[1]
                     screen = pygame.display.set_mode(event.size, pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.RESIZABLE)
-                    
             if quit_attempt:
                 # Close the program.
                 active_scene.Terminate()
