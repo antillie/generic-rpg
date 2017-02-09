@@ -2,27 +2,31 @@
 # -*- coding: utf-8 -*-
 
 import pygame
-import os
 import virtualscreen
 import cache
-import sound
 import base
 import colors
-
-sound = sound.JukeBox()
 
 # The actual game. Different versions of this class will need to load maps, characters, dialog, and detect interactions between objects on the screen. Each area will be its own class.
 class GameScene(base.SceneBase):
     
-    def __init__(self, song="plesantcreekloop.mp3"):
+    def __init__(self, sound, song="plesantcreekloop.mp3"):
         base.SceneBase.__init__(self)
         self.song = song
+        self.name = "GameScene"
+        self.sound = sound
         
     # Handles user input passed from the main engine.
     def ProcessInput(self, events, pressed_keys):
         # Play the town theme for now.
-        sound.play_music(self.song)
-    
+        self.sound.play_music(self.song)
+        
+        for event in events:
+            if event.type == pygame.KEYDOWN:
+                # Escape key pulls up the party screen.
+                if event.key == pygame.K_ESCAPE:
+                    self.SwitchToScene("PartyScreen")
+        
     # Internal game logic.
     def Update(self):
         pass

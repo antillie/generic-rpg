@@ -2,15 +2,11 @@
 # -*- coding: utf-8 -*-
 
 import pygame
-import os
 import virtualscreen
 import cache
-import sound
 import base
 import colors
 import utils
-
-sound = sound.JukeBox()
 
 # Used for entries in the menu.
 class Option:
@@ -39,17 +35,19 @@ class Option:
 # Main title screen. You can start/load a game, view the credits, or close the program from here.
 class TitleScene(base.SceneBase):
     
-    def __init__(self, song="enchantedfestivalloop.mp3"):
+    def __init__(self, sound, song="enchantedfestivalloop.mp3"):
         base.SceneBase.__init__(self)
         self.song = song
         self.menu = 1
         # Initialise the menu rects list.
         self.menu_rects = []
+        self.name = "TitleScene"
+        self.sound = sound
         
     # Handles user input passed from the main engine.
     def ProcessInput(self, events, pressed_keys):
         # Play the title theme.
-        sound.play_music(self.song)
+        self.sound.play_music(self.song)
         for event in events:
             # Keyboard input.
             if event.type == pygame.KEYDOWN:
@@ -57,7 +55,7 @@ class TitleScene(base.SceneBase):
                 if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
                     # New game.
                     if self.menu == 0:
-                        sound.stop_music()
+                        self.sound.stop_music()
                         # Switch to the main game scene.
                         self.SwitchToScene("GameScene")
                     # Load game.
@@ -70,7 +68,7 @@ class TitleScene(base.SceneBase):
                         pass
                     # Roll credits.
                     elif self.menu == 3:
-                        sound.stop_music()
+                        self.sound.stop_music()
                         # Switch to the credits scene.
                         self.SwitchToScene("CreditsScene")
                     # Exit the game.
@@ -79,7 +77,7 @@ class TitleScene(base.SceneBase):
                 # Down arrow.
                 elif event.key == pygame.K_DOWN:
                     # Play the menu sound effect.
-                    sound.play_sound("menu_change.wav")
+                    self.sound.play_sound("menu_change.wav")
                     # Incriment the menu.
                     self.menu = self.menu + 1
                     if self.menu == 5:
@@ -88,7 +86,7 @@ class TitleScene(base.SceneBase):
                 # Up arrow.
                 elif event.key == pygame.K_UP:
                     # Play the menu sound effect.
-                    sound.play_sound("menu_change.wav")
+                    self.sound.play_sound("menu_change.wav")
                     # Incriment the menu.
                     self.menu = self.menu - 1
                     if self.menu == -1:
@@ -109,7 +107,7 @@ class TitleScene(base.SceneBase):
                         if self.menu_rects[x].collidepoint(mpos):
                             # New game.
                             if x == 0:
-                                sound.stop_music()
+                                self.sound.stop_music()
                                 # Switch to the main game scene.
                                 self.SwitchToScene("GameScene")
                             # Load game.
@@ -122,7 +120,7 @@ class TitleScene(base.SceneBase):
                                 pass
                             # Roll credits.
                             elif x == 3:
-                                sound.stop_music()
+                                self.sound.stop_music()
                                 # Switch to the credits scene.
                                 self.SwitchToScene("CreditsScene")
                             # Exit the game.

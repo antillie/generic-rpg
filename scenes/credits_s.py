@@ -6,12 +6,9 @@ import os
 import webbrowser
 import virtualscreen
 import cache
-import sound
 import base
 import colors
 import utils
-
-sound = sound.JukeBox()
 
 class Credit:
     # Used for scrolling text on the credits screen.
@@ -29,9 +26,11 @@ class Credit:
 # The credits screen.
 class CreditsScene(base.SceneBase):
     
-    def __init__(self, song="hervioleteyes.mp3"):
+    def __init__(self, sound, song="hervioleteyes.mp3"):
         base.SceneBase.__init__(self)
         self.song = song
+        self.name = "CreditsScene"
+        self.sound = sound
         
         # Starting point for the credits scroll, just off screen.
         self.x = 588
@@ -40,7 +39,7 @@ class CreditsScene(base.SceneBase):
     # Handles user input passed from the main engine.
     def ProcessInput(self, events, pressed_keys):
         # Play the credits theme.
-        sound.play_music(self.song)
+        self.sound.play_music(self.song)
         
         for event in events:
             # Keyboard input.
@@ -48,7 +47,7 @@ class CreditsScene(base.SceneBase):
                     # Enter or Escape key returns to title screen.
                     if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER or event.key == pygame.K_ESCAPE:
                         self.x = 588
-                        sound.stop_music()
+                        self.sound.stop_music()
                         self.SwitchToScene("TitleScene")
             # Mouse click.
             elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -61,7 +60,7 @@ class CreditsScene(base.SceneBase):
                             webbrowser.open(self.credit_urls[x], new=2)
                             return
                     self.x = 588
-                    sound.stop_music()
+                    self.sound.stop_music()
                     self.SwitchToScene("TitleScene")
             
     # Internal game logic.

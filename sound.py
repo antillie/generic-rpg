@@ -24,7 +24,7 @@ class JukeBox:
             pygame.mixer.music.set_volume(self.music_volume)
             pygame.mixer.music.play(-1)
             self.music_playing = True
-    
+        
     def stop_music(self):
         pygame.mixer.music.stop()
         self.music_playing = False
