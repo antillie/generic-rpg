@@ -74,15 +74,19 @@ class PartyScreen(base.SceneBase):
                     elif self.menu == 4:
                         # Not yet implimented.
                         pass
-                    # Close menu.
+                    # Save game.
                     elif self.menu == 5:
+                        # Not yet implimented.
+                        pass
+                    # Close menu.
+                    elif self.menu == 6:
                         self.SwitchToScene(self.previous_scene)
                     # Quit to title screen.
-                    elif self.menu == 6:
+                    elif self.menu == 7:
                         self.sound.stop_music()
                         self.SwitchToScene("TitleScene")
                     # Quit to desktop.
-                    elif self.menu == 7:
+                    elif self.menu == 8:
                         self.Terminate()
                 # Down arrow.
                 elif event.key == pygame.K_DOWN:
@@ -90,7 +94,7 @@ class PartyScreen(base.SceneBase):
                     self.sound.play_sound("menu_change.wav")
                     # Incriment the menu.
                     self.menu = self.menu + 1
-                    if self.menu == 8:
+                    if self.menu == 9:
                         # Loop the menu if we went past the end.
                         self.menu = 0
                 # Up arrow.
@@ -101,7 +105,7 @@ class PartyScreen(base.SceneBase):
                     self.menu = self.menu - 1
                     if self.menu == -1:
                         # Loop the menu if we went past the end.
-                        self.menu = 7
+                        self.menu = 8
             # Mouse moved.
             elif event.type == pygame.MOUSEMOTION:
                 mpos = pygame.mouse.get_pos()
@@ -135,15 +139,19 @@ class PartyScreen(base.SceneBase):
                             elif self.menu == 4:
                                 # Not yet implimented.
                                 pass
-                            # Close menu.
+                            # Save game.
                             elif self.menu == 5:
+                                # Not yet implimented.
+                                pass
+                            # Close menu.
+                            elif self.menu == 6:
                                 self.SwitchToScene(self.previous_scene)
                             # Quit to title screen.
-                            elif self.menu == 6:
+                            elif self.menu == 7:
                                 self.sound.stop_music()
                                 self.SwitchToScene("TitleScene")
                             # Quit to desktop.
-                            elif self.menu == 7:
+                            elif self.menu == 8:
                                 self.Terminate()
     # Internal game logic.
     def Update(self):
@@ -157,9 +165,11 @@ class PartyScreen(base.SceneBase):
         # Start with a blue screen.
         canvas.canvas.fill((0, 90, 170))
         
-        pygame.draw.rect(canvas.canvas, colors.white, pygame.Rect(800,10,214,264), 3)
+        menu_x = 1056
         
-        menu_x = 813
+        pygame.draw.rect(canvas.canvas, colors.white, pygame.Rect(menu_x,10,214,294), 3)
+        
+        menu_x = menu_x + 13
         
         # Menu entries.
         self.options = [
@@ -168,9 +178,10 @@ class PartyScreen(base.SceneBase):
             Option("Spells", (menu_x, 83), self.cache),
             Option("Equipment", (menu_x, 113), self.cache),
             Option("Change Job", (menu_x, 143), self.cache),
-            Option("Close Menu", (menu_x, 173), self.cache),
-            Option("Quit to Title", (menu_x, 203), self.cache),
-            Option("Quit to Desktop", (menu_x, 233), self.cache)
+            Option("Save Game", (menu_x, 173), self.cache),
+            Option("Close Menu", (menu_x, 203), self.cache),
+            Option("Quit to Title", (menu_x, 233), self.cache),
+            Option("Quit to Desktop", (menu_x, 263), self.cache)
             ]
         
         # Highlight the currently selected menu item.    

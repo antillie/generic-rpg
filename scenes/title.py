@@ -143,9 +143,9 @@ class TitleScene(base.SceneBase):
         
         # Title text.
         title = self.cache.get_font(["Immortal"], 70).render("Generic RPG Name",True,colors.white)
-        canvas.canvas.blit(title, [175, 60])
+        canvas.canvas.blit(title, [310, 60])
         
-        menu_x = 430
+        menu_x = 555
         
         # Menu entries.
         self.options = [

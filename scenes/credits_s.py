@@ -34,7 +34,7 @@ class CreditsScene(base.SceneBase):
         self.cache = cache
         
         # Starting point for the credits scroll, just off screen.
-        self.x = 588
+        self.x = 730
         self.y = 80
         
     # Handles user input passed from the main engine.
@@ -47,7 +47,7 @@ class CreditsScene(base.SceneBase):
             if event.type == pygame.KEYDOWN:
                     # Enter or Escape key returns to title screen.
                     if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER or event.key == pygame.K_ESCAPE:
-                        self.x = 588
+                        self.x = 730
                         self.sound.stop_music()
                         self.SwitchToScene("TitleScene")
             # Mouse click.
