@@ -59,7 +59,12 @@ class CreditsScene(base.SceneBase):
                         if self.credit_url_rects[x].collidepoint(mpos):
                             # Launch the default web browser for the URL.
                             webbrowser.open(self.credit_urls[x], new=2)
-            
+                    
+                    if self.x == -2400:
+                        self.x = 730
+                        self.sound.stop_music()
+                        self.SwitchToScene("TitleScene")
+                    
     # Internal game logic.
     def Update(self):
         pass
@@ -112,10 +117,13 @@ class CreditsScene(base.SceneBase):
             Credit("http://opengameart.org/content/simple-shield", (self.y, self.x + 1830), self.cache, url_size, colors.link_blue),
             Credit("GUI Sound Effects: Lokif", (self.y, self.x + 1900), self.cache),
             Credit("http://opengameart.org/content/gui-sound-effects", (self.y, self.x + 1930), self.cache, url_size, colors.link_blue),
-            Credit("Fonts used under Larabie Fonts Freeware Fonts EULA.", (self.y, self.x + 2000), self.cache),
-            Credit(font_eula, (self.y, self.x + 2030), self.cache, url_size, colors.link_blue),
-            Credit("Built with the Generic RPG engine written by George Markeloff.", (self.y, self.x + 2100), self.cache),
-            Credit("Thanks for playing!", (self.y + 410, self.x + 2600), self.cache)
+            Credit("Forest Battle Background (resized): Tamara Ramsay", (self.y, self.x + 2000), self.cache),
+            Credit("http://vectorgurl.com/", (self.y, self.x + 2030), self.cache, url_size, colors.link_blue),
+            Credit("http://opengameart.org/content/forest-background-art", (self.y, self.x + 2060), self.cache, url_size, colors.link_blue),
+            Credit("Fonts used under Larabie Fonts Freeware Fonts EULA.", (self.y, self.x + 2100), self.cache),
+            Credit(font_eula, (self.y, self.x + 2130), self.cache, url_size, colors.link_blue),
+            Credit("Built with the Generic RPG engine written by George Markeloff.", (self.y, self.x + 2200), self.cache),
+            Credit("Thanks for playing!", (self.y + 410, self.x + 2700), self.cache)
         ]
         
         url_pattern = []
@@ -146,5 +154,5 @@ class CreditsScene(base.SceneBase):
             self.credit_url_rects[x] = utils.scale_rect(self.credit_url_rects[x], real_w, real_h)
         
         # Move the credits up one pixel for the next frame.
-        if self.x > -2300:
+        if self.x > -2400:
             self.x = self.x - 1

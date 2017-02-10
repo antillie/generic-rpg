@@ -43,9 +43,12 @@ class GameScene(base.SceneBase):
         self.name = "GameScene"
         self.sound = sound
         self.cache = cache
+        self.battlebound = 0
+        
         # Player starting position.
         self.rect_x = 512
         self.rect_y = 288
+        
         # Load the map.
         path = os.path.dirname(os.path.realpath(__file__)) + "/maps/initial.tmx"
         path = path.replace('/', os.sep).replace("\\", os.sep)
@@ -66,8 +69,10 @@ class GameScene(base.SceneBase):
         
     # Handles user input passed from the main engine.
     def ProcessInput(self, events, pressed_keys):
-        # Play the town theme for now.
+        # Play the forest theme for now.
         self.sound.play_music(self.song)
+        
+        self.moved = False
         
         for event in events:
             if event.type == pygame.KEYDOWN:
@@ -80,28 +85,20 @@ class GameScene(base.SceneBase):
         
         # Look for keys being held down. Arrow keys or WASD for movment.
         if pressed_keys[pygame.K_UP] or pressed_keys[pygame.K_w]:
-            if self.rect_y < 200 or self.rect_y > 475:
-                self.rect_y = self.rect_y - 5
-            else:
-                self.rect_y = self.rect_y - 5
-            
+            self.rect_y = self.rect_y - 3
+            self.moved = True
         if pressed_keys[pygame.K_DOWN] or pressed_keys[pygame.K_s]:
-            if self.rect_y < 200 or self.rect_y > 475:
-                self.rect_y = self.rect_y + 5
-            else:
-                self.rect_y = self.rect_y + 5
-            
+            self.rect_y = self.rect_y + 3
+            self.moved = True
         if pressed_keys[pygame.K_LEFT] or pressed_keys[pygame.K_a]:
-            if self.rect_x < 380 or self.rect_x > 870:
-                self.rect_x = self.rect_x - 5
-            else:
-                self.rect_x = self.rect_x - 5
-            
+            self.rect_x = self.rect_x - 3
+            self.moved = True
         if pressed_keys[pygame.K_RIGHT] or pressed_keys[pygame.K_d]:
-            if self.rect_x < 380 or self.rect_x > 870:
-                self.rect_x = self.rect_x + 5
-            else:
-                self.rect_x = self.rect_x + 5
+            self.rect_x = self.rect_x + 3
+            self.moved = True
+            
+        if self.moved:
+            self.battlebound = self.battlebound + 3
             
         # Don't let the player walk off the top or bottom of the map.
         if self.rect_x < 0:
@@ -112,16 +109,27 @@ class GameScene(base.SceneBase):
         # Don't let the player walk off the left or right sides of the map.
         if self.rect_y < 0:
             self.rect_y = 0
-        elif self.rect_y > 1108:
-            self.rect_y = 1108
+        elif self.rect_y > 1104:
+            self.rect_y = 1104
         
     # Internal game logic.
     def Update(self):
         
         self.player.rect.top = self.rect_y
         self.player.rect.left = self.rect_x
-        
         self.all_sprites_list.update()
+        
+        # There is a 0.5% chance of a random battle every time the player moves past a certain distance.
+        if self.battlebound > 240:
+            if utils.rand_chance(5):
+                self.battlebound = 0
+                self.sound.stop_music()
+                self.SwitchToScene("BattleScreen")
+        
+        if self.battlebound > 1200:
+            self.battlebound = 0
+            self.sound.stop_music()
+            self.SwitchToScene("BattleScreen")
     
     # Draws things.
     def Render(self, screen, real_w, real_h):

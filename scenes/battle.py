@@ -32,20 +32,25 @@ class Option:
         self.active = True
         self.set_rend()
 
-# The party screen. Lets you save/quit, use items, change classes, ect...
-class PartyScreen(base.SceneBase):
+# The battle screen.
+class BattleScreen(base.SceneBase):
     
-    def __init__(self, sound, cache):
+    def __init__(self, sound, cache, background="forestbackground.png", song="awildcreatureappears.ogg"):
         base.SceneBase.__init__(self)
-        self.name = "PartyScreen"
+        self.name = "BattleScreen"
         self.previous_scene = None
-        self.menu = 0
+        self.menu = 5
+        self.song = song
         self.sound = sound
         self.cache = cache
         self.menu_rects = []
+        self.background = cache.get_image(background)
         
     # Handles user input passed from the main engine.
     def ProcessInput(self, events, pressed_keys):
+        # Play the battle theme.
+        self.sound.play_music(self.song)
+        
         for event in events:
             # Keyboard input.
             if event.type == pygame.KEYDOWN:
@@ -54,47 +59,37 @@ class PartyScreen(base.SceneBase):
                     self.SwitchToScene(self.previous_scene)
                 # Enter key.
                 elif event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
-                    # Status.
+                    # Attack.
                     if self.menu == 0:
                         # Not yet implimented.
                         pass
-                    # Inventory.
+                    # Special Move.
                     elif self.menu == 1:
                         # Not yet implimented.
                         pass
-                    # Spells.
+                    # Magic.
                     elif self.menu == 2:
                         # Not yet implimented.
                         pass
-                    # Equipment.
+                    # Use item.
                     elif self.menu == 3:
                         # Not yet implimented.
                         pass
-                    # Change Job.
+                    # Guard.
                     elif self.menu == 4:
                         # Not yet implimented.
                         pass
-                    # Save game.
+                    # End Battle.
                     elif self.menu == 5:
-                        # Not yet implimented.
-                        pass
-                    # Close menu.
-                    elif self.menu == 6:
-                        self.SwitchToScene(self.previous_scene)
-                    # Quit to title screen.
-                    elif self.menu == 7:
                         self.sound.stop_music()
-                        self.SwitchToScene("TitleScene")
-                    # Quit to desktop.
-                    elif self.menu == 8:
-                        self.Terminate()
+                        self.SwitchToScene(self.previous_scene)
                 # Down arrow.
                 elif event.key == pygame.K_DOWN:
                     # Play the menu sound effect.
                     self.sound.play_sound("menu_change.wav")
                     # Incriment the menu.
                     self.menu = self.menu + 1
-                    if self.menu == 9:
+                    if self.menu == 6:
                         # Loop the menu if we went past the end.
                         self.menu = 0
                 # Up arrow.
@@ -105,7 +100,7 @@ class PartyScreen(base.SceneBase):
                     self.menu = self.menu - 1
                     if self.menu == -1:
                         # Loop the menu if we went past the end.
-                        self.menu = 8
+                        self.menu = 5
             # Mouse moved.
             elif event.type == pygame.MOUSEMOTION:
                 mpos = pygame.mouse.get_pos()
@@ -119,40 +114,30 @@ class PartyScreen(base.SceneBase):
                     mpos = pygame.mouse.get_pos()
                     for x in range(len(self.menu_rects)):
                         if self.menu_rects[x].collidepoint(mpos):
-                            # Status.
+                            # Attack.
                             if self.menu == 0:
                                 # Not yet implimented.
                                 pass
-                            # Inventory.
+                            # Special Move.
                             elif self.menu == 1:
                                 # Not yet implimented.
                                 pass
-                            # Spells.
+                            # Magic.
                             elif self.menu == 2:
                                 # Not yet implimented.
                                 pass
-                            # Equipment.
+                            # Use item.
                             elif self.menu == 3:
                                 # Not yet implimented.
                                 pass
-                            # Change Job.
+                            # Guard.
                             elif self.menu == 4:
                                 # Not yet implimented.
                                 pass
-                            # Save game.
+                            # End Battle.
                             elif self.menu == 5:
-                                # Not yet implimented.
-                                pass
-                            # Close menu.
-                            elif self.menu == 6:
-                                self.SwitchToScene(self.previous_scene)
-                            # Quit to title screen.
-                            elif self.menu == 7:
                                 self.sound.stop_music()
-                                self.SwitchToScene("TitleScene")
-                            # Quit to desktop.
-                            elif self.menu == 8:
-                                self.Terminate()
+                                self.SwitchToScene(self.previous_scene)
     # Internal game logic.
     def Update(self):
         pass
@@ -163,25 +148,28 @@ class PartyScreen(base.SceneBase):
         canvas = virtualscreen.VirtualScreen(real_w, real_h)
         
         # Start with a blue screen.
-        canvas.canvas.fill(colors.menu_blue)
+        #canvas.canvas.fill((0, 90, 170))
+        
+        #self.background = cache.get_image("character.png")
+        
+        canvas.canvas.blit(self.background, (0, 0))
         
         menu_x = 1056
         
-        pygame.draw.rect(canvas.canvas, colors.white, pygame.Rect(menu_x,10,214,294), 3)
+        pygame.draw.rect(canvas.canvas, colors.white, pygame.Rect(menu_x - 3,7,220,206), 3)
+        
+        pygame.draw.rect(canvas.canvas, colors.menu_blue, pygame.Rect(menu_x,10,214,200), 0)
         
         menu_x = menu_x + 13
         
         # Menu entries.
         self.options = [
-            Option("Status", (menu_x, 23), self.cache),
-            Option("Inventory", (menu_x, 53), self.cache),
-            Option("Spells", (menu_x, 83), self.cache),
-            Option("Equipment", (menu_x, 113), self.cache),
-            Option("Change Job", (menu_x, 143), self.cache),
-            Option("Save Game", (menu_x, 173), self.cache),
-            Option("Close Menu", (menu_x, 203), self.cache),
-            Option("Quit to Title", (menu_x, 233), self.cache),
-            Option("Quit to Desktop", (menu_x, 263), self.cache)
+            Option("Attack", (menu_x, 23), self.cache),
+            Option("Special Move", (menu_x, 53), self.cache),
+            Option("Cast Spell", (menu_x, 83), self.cache),
+            Option("Use Item", (menu_x, 113), self.cache),
+            Option("Guard", (menu_x, 143), self.cache),
+            Option("End Battle", (menu_x, 173), self.cache),
             ]
         
         # Highlight the currently selected menu item.    

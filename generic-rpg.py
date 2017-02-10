@@ -15,6 +15,7 @@ import title
 import credits_s
 import gameinit
 import party_screen
+import battle
 
 # Global sound object that handles all audio output.
 sound = sound.JukeBox()
@@ -74,6 +75,7 @@ def run_game(width=1280, height=720, fps=60, fullscreen=False):
     CreditsScene = credits_s.CreditsScene(sound, cache)
     GameScene = gameinit.GameScene(sound, cache)
     PartyScreen = party_screen.PartyScreen(sound, cache)
+    BattleScreen = battle.BattleScreen(sound, cache)
     
     # Set the starting scene.
     active_scene = TitleScene
@@ -161,6 +163,9 @@ def run_game(width=1280, height=720, fps=60, fullscreen=False):
         if active_scene != None:
             if active_scene.name != "PartyScreen":
                 PartyScreen.previous_scene = active_scene.name
+            
+            if active_scene.name != "BattleScreen":
+                BattleScreen.previous_scene = active_scene.name
         
             # Pass the input to the active scene for processing.
             active_scene.ProcessInput(filtered_events, pressed_keys)
@@ -190,6 +195,9 @@ def run_game(width=1280, height=720, fps=60, fullscreen=False):
             elif next_scene == "PartyScreen":
                 PartyScreen.next = "PartyScreen"
                 active_scene = PartyScreen
+            elif next_scene == "BattleScreen":
+                BattleScreen.next = "BattleScreen"
+                active_scene = BattleScreen
             elif next_scene == None:
                 active_scene = None
         
