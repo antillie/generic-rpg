@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Template class for scenes. Things like the title screen, loading screen, towns, world map, dungeons, menus, ect...
-class SceneBase:
+class SceneBase():
     def __init__(self):
         self.next = self
     

@@ -147,11 +147,6 @@ class BattleScreen(base.SceneBase):
         # Create our staticly sized virtual screen so we can draw stuff on it.
         canvas = virtualscreen.VirtualScreen(real_w, real_h)
         
-        # Start with a blue screen.
-        #canvas.canvas.fill((0, 90, 170))
-        
-        #self.background = cache.get_image("character.png")
-        
         canvas.canvas.blit(self.background, (0, 0))
         
         menu_x = 1056
