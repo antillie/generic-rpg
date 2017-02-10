@@ -30,13 +30,13 @@ class GameScene(base.SceneBase):
                     self.SwitchToScene("PartyScreen")
                 
         if pressed_keys[pygame.K_UP]:
-            self.rect_y = self.rect_y - 3
+            self.rect_y = self.rect_y - 5
         if pressed_keys[pygame.K_DOWN]:
-            self.rect_y = self.rect_y + 3
+            self.rect_y = self.rect_y + 5
         if pressed_keys[pygame.K_LEFT]:
-            self.rect_x = self.rect_x - 3
+            self.rect_x = self.rect_x - 5
         if pressed_keys[pygame.K_RIGHT]:
-            self.rect_x = self.rect_x + 3
+            self.rect_x = self.rect_x + 5
                 
         if self.rect_x < 0:
             self.rect_x = 0
