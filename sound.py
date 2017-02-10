@@ -18,6 +18,12 @@ class JukeBox:
     
     def play_music(self, song):
         if self.music_playing == False:
+            
+            if song == "forest.mp3":
+                self.music_volume = 0.8
+            else:
+                self.music_volume = 0.2
+            
             song_path = os.path.dirname(os.path.realpath(__file__)) + "/sound/music/" + song
             song_path = song_path.replace("/", os.sep).replace("\\", os.sep)
             pygame.mixer.music.load(song_path)

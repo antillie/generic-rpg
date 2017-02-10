@@ -23,7 +23,7 @@ sound = sound.JukeBox()
 cache = cache.CacheEngine()
 
 # Main engine. Sets up the window, handles screen modes/sizes, manages scene changes, and forwards player input to the active scene.
-def run_game(width=1024, height=576, fps=60, fullscreen=False):
+def run_game(width=1280, height=720, fps=60, fullscreen=False):
     # Initialize the engine and get information about the user's display.
     pygame.init()
     screen_info = pygame.display.Info()

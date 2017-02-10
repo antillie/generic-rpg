@@ -35,7 +35,7 @@ class Car(pygame.sprite.Sprite):
 # The actual game. Different versions of this class will need to load maps, characters, dialog, and detect interactions between objects on the screen. Each area will be its own class.
 class GameScene(base.SceneBase):
     
-    def __init__(self, sound, cache, song="plesantcreekloop.mp3"):
+    def __init__(self, sound, cache, song="forest.mp3"):
         base.SceneBase.__init__(self)
         self.song = song
         self.name = "GameScene"
@@ -49,7 +49,7 @@ class GameScene(base.SceneBase):
         self.tmx_data = pytmx.util_pygame.load_pygame(path)
         self.map_data = pyscroll.TiledMapData(self.tmx_data)
         
-        screen_size = (1024, 576)
+        screen_size = (1280, 720)
         map_layer = pyscroll.BufferedRenderer(self.map_data, screen_size)
         
         self.group = pyscroll.PyscrollGroup(map_layer=map_layer)
@@ -70,25 +70,53 @@ class GameScene(base.SceneBase):
                 # Escape key pulls up the party screen.
                 if event.key == pygame.K_ESCAPE:
                     self.SwitchToScene("PartyScreen")
+                if event.key == pygame.K_RETURN:
+                    print("x: " + str(self.rect_x))
+                    print("y: " + str(self.rect_y))
                 
         if pressed_keys[pygame.K_UP]:
-            self.rect_y = self.rect_y - 3
+            
+            if self.rect_y < 200 or self.rect_y > 475:
+            
+                self.rect_y = self.rect_y - 5
+            else:
+                self.rect_y = self.rect_y - 2
+            
+            
         if pressed_keys[pygame.K_DOWN]:
-            self.rect_y = self.rect_y + 3
+            
+            if self.rect_y < 200 or self.rect_y > 475:
+            
+                self.rect_y = self.rect_y + 5
+            else:
+                self.rect_y = self.rect_y + 2
+            
         if pressed_keys[pygame.K_LEFT]:
-            self.rect_x = self.rect_x - 3
+            
+            if self.rect_x < 380 or self.rect_x > 870:
+            
+                self.rect_x = self.rect_x - 5
+            else:
+                self.rect_x = self.rect_x - 2
+            
         if pressed_keys[pygame.K_RIGHT]:
-            self.rect_x = self.rect_x + 3
+            
+            if self.rect_x < 380 or self.rect_x > 870:
+            
+                self.rect_x = self.rect_x + 5
+            else:
+                self.rect_x = self.rect_x + 2
+            
                 
         if self.rect_x < 0:
             self.rect_x = 0
         if self.rect_y < 0:
             self.rect_y = 0
         
-        if self.rect_x > 992:
-            self.rect_x = 992
-        if self.rect_y > 528:
-            self.rect_y = 528
+        if self.rect_x > 1248:
+            self.rect_x = 1248
+        if self.rect_y > 672:
+            self.rect_y = 672
         
     # Internal game logic.
     def Update(self):
