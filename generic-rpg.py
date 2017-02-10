@@ -22,7 +22,7 @@ sound = sound.JukeBox()
 # Global cache object that handles all image and font object caching.
 cache = cache.CacheEngine()
 
-# Main engine. Sets up the window, handles rendering, manages scene changes, and forwards player input to the active scene.
+# Main engine. Sets up the window, handles screen modes/sizes, manages scene changes, and forwards player input to the active scene.
 def run_game(width=1024, height=576, fps=60, fullscreen=False):
     # Initialize the engine and get information about the user's display.
     pygame.init()
