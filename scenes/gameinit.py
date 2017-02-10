@@ -13,22 +13,24 @@ import utils
 class Car(pygame.sprite.Sprite):
     #This class represents a car. It derives from the "Sprite" class in Pygame.
     
-    def __init__(self, color=colors.brown, width=32, height=48):
-        # Call the parent class (Sprite) constructor
+    def __init__(self, cache, color=colors.brown, width=32, height=48):
+        # Call the parent class constructor.
         super(Car, self).__init__()
         
         # Pass in the color of the car, and its x and y position, width and height.
-        # Set the background color and set it to be transparent
         self.image = pygame.Surface([width, height])
-        self.image.fill(colors.brown)
-        self.image.set_colorkey(colors.brown)
- 
-        # Draw the car (a rectangle!)
-        pygame.draw.rect(self.image, colors.brown, [0, 0, width, height])
+        self.image.fill(colors.white)
+        self.image.set_colorkey(colors.white)
         
-        # Instead we could load a proper pciture of a car...
-        # self.image = pygame.image.load("car.png").convert_alpha()
- 
+        # Load the image.
+        person = cache.get_alpha_image("character.png")
+        
+        # Blit the part of the image that we want to our surface.
+        self.image.blit(person, (0, 0), (0, 0, 32, 48))
+        
+        # Draw the character.
+        pygame.draw.rect(self.image, colors.brown, [512, 288, width, height])
+        
         # Fetch the rectangle object that has the dimensions of the image.
         self.rect = self.image.get_rect()
 
@@ -41,23 +43,25 @@ class GameScene(base.SceneBase):
         self.name = "GameScene"
         self.sound = sound
         self.cache = cache
+        # Player starting position.
         self.rect_x = 512
         self.rect_y = 288
-        
+        # Load the map.
         path = os.path.dirname(os.path.realpath(__file__)) + "/maps/initial.tmx"
         path = path.replace('/', os.sep).replace("\\", os.sep)
         self.tmx_data = pytmx.util_pygame.load_pygame(path)
         self.map_data = pyscroll.TiledMapData(self.tmx_data)
         
+        # Initialize the map view.
         screen_size = (1280, 720)
         map_layer = pyscroll.BufferedRenderer(self.map_data, screen_size)
-        
         self.group = pyscroll.PyscrollGroup(map_layer=map_layer)
         
-        self.player = Car()
-        
+        # Create the player object.
+        self.player = Car(self.cache)
+        # Initialize the sprites group.
         self.all_sprites_list = pygame.sprite.Group()
-        
+        # Then add the player object to it.
         self.all_sprites_list.add(self.player)
         
     # Handles user input passed from the main engine.
@@ -73,50 +77,43 @@ class GameScene(base.SceneBase):
                 if event.key == pygame.K_RETURN:
                     print("x: " + str(self.rect_x))
                     print("y: " + str(self.rect_y))
-                
-        if pressed_keys[pygame.K_UP]:
-            
+        
+        # Look for keys being held down. Arrow keys or WASD for movment.
+        if pressed_keys[pygame.K_UP] or pressed_keys[pygame.K_w]:
             if self.rect_y < 200 or self.rect_y > 475:
-            
                 self.rect_y = self.rect_y - 5
             else:
-                self.rect_y = self.rect_y - 2
+                self.rect_y = self.rect_y - 5
             
-            
-        if pressed_keys[pygame.K_DOWN]:
-            
+        if pressed_keys[pygame.K_DOWN] or pressed_keys[pygame.K_s]:
             if self.rect_y < 200 or self.rect_y > 475:
-            
                 self.rect_y = self.rect_y + 5
             else:
-                self.rect_y = self.rect_y + 2
+                self.rect_y = self.rect_y + 5
             
-        if pressed_keys[pygame.K_LEFT]:
-            
+        if pressed_keys[pygame.K_LEFT] or pressed_keys[pygame.K_a]:
             if self.rect_x < 380 or self.rect_x > 870:
-            
                 self.rect_x = self.rect_x - 5
             else:
-                self.rect_x = self.rect_x - 2
+                self.rect_x = self.rect_x - 5
             
-        if pressed_keys[pygame.K_RIGHT]:
-            
+        if pressed_keys[pygame.K_RIGHT] or pressed_keys[pygame.K_d]:
             if self.rect_x < 380 or self.rect_x > 870:
-            
                 self.rect_x = self.rect_x + 5
             else:
-                self.rect_x = self.rect_x + 2
+                self.rect_x = self.rect_x + 5
             
-                
+        # Don't let the player walk off the top or bottom of the map.
         if self.rect_x < 0:
             self.rect_x = 0
+        elif self.rect_x > 2016:
+            self.rect_x = 2016
+        
+        # Don't let the player walk off the left or right sides of the map.
         if self.rect_y < 0:
             self.rect_y = 0
-        
-        if self.rect_x > 1248:
-            self.rect_x = 1248
-        if self.rect_y > 672:
-            self.rect_y = 672
+        elif self.rect_y > 1108:
+            self.rect_y = 1108
         
     # Internal game logic.
     def Update(self):
@@ -132,19 +129,12 @@ class GameScene(base.SceneBase):
         # Create our staticly sized virtual screen so we can draw stuff on it.
         canvas = virtualscreen.VirtualScreen(real_w, real_h)
         
-        scaled_w = self.player.rect.center[0] * 1.6
-        scaled_h = self.player.rect.center[1] * 1.6
-        new_center = (scaled_w, scaled_h)
-        
-        self.group.center(new_center)
-        
+        # Move the map view along with the player.
+        self.group.center(self.player.rect.center)
         self.group.add(self.player)
         
+        # Draw the scolled view.
         self.group.draw(canvas.canvas)
-        
-        self.all_sprites_list.draw(canvas.canvas)
-        
-        pygame.draw.rect(canvas.canvas, colors.brown, self.player.rect)
         
         # Draw the upscaled virtual screen to actual screen.
         screen.blit(canvas.render(), (0, 0))

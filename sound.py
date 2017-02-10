@@ -11,7 +11,7 @@ _sound_library = {}
 class JukeBox:
     # Default volume levels.
     music_volume = 0.2
-    fx_volume = 1.0
+    fx_volume = 0.3
     
     def __init__(self):
         self.music_playing = False
@@ -43,6 +43,6 @@ class JukeBox:
             path = os.path.dirname(os.path.realpath(__file__)) + "/sound/" + sound
             canonicalized_path = path.replace("/", os.sep).replace("\\", os.sep)
             sound_fx = pygame.mixer.Sound(canonicalized_path)
+            sound_fx.set_volume(self.fx_volume)
             _sound_library[sound] = sound_fx
-        sound_fx.set_volume(self.fx_volume)
         sound_fx.play()

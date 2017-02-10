@@ -59,10 +59,6 @@ class CreditsScene(base.SceneBase):
                         if self.credit_url_rects[x].collidepoint(mpos):
                             # Launch the default web browser for the URL.
                             webbrowser.open(self.credit_urls[x], new=2)
-                            return
-                    self.x = 588
-                    self.sound.stop_music()
-                    self.SwitchToScene("TitleScene")
             
     # Internal game logic.
     def Update(self):
@@ -78,7 +74,7 @@ class CreditsScene(base.SceneBase):
         
         url_size = 19
         
-        font_eula = os.path.dirname(os.path.realpath(__file__)) + "/fonts/fonts_license.html"
+        font_eula = os.path.dirname(os.path.realpath(__file__)) + "/../fonts/fonts_license.html"
         font_eula = font_eula.replace('/', os.sep).replace('\\', os.sep)
         
         # List of credit entries and their starting positions.
@@ -91,7 +87,9 @@ class CreditsScene(base.SceneBase):
             Credit("Credits Music - Her Violet Eyes, By: tgfcoder", (self.y, self.x + 400), self.cache),
             Credit("https://twitter.com/tgfcoder", (self.y, self.x + 430), self.cache, url_size, colors.link_blue),
             Credit("Battle Theme - A Wild Creature Appears, By: Aaron Parsons", (self.y, self.x + 500), self.cache),
+            Credit("http://opengameart.org/content/a-wild-creature-appears", (self.y, self.x + 530), self.cache, url_size, colors.link_blue),
             Credit("Boss Theme - Battle of the Void, By: Marcelo Fernandez", (self.y, self.x + 600), self.cache),
+            Credit("http://opengameart.org/content/battle-of-the-void", (self.y, self.x + 630), self.cache, url_size, colors.link_blue),
             Credit("Forest Theme - Forest, By: syncopika", (self.y, self.x + 700), self.cache),
             Credit("https://greenbearmusic.bandcamp.com/track/forest", (self.y, self.x + 730), self.cache, url_size, colors.link_blue),
             Credit("Town Theme - Plesant Creek, By: Matthew Pablo", (self.y, self.x + 800), self.cache),
@@ -101,11 +99,23 @@ class CreditsScene(base.SceneBase):
             Credit("Character Class Design: George Markeloff", (self.y, self.x + 1100), self.cache),
             Credit("Story: George Markeloff", (self.y, self.x + 1200), self.cache),
             Credit("Dialog: George Markeloff", (self.y, self.x + 1300), self.cache),
-            Credit("Audio and art assets licensed under CC-BY 3.0/4.0", (self.y, self.x + 1400), self.cache),
-            Credit("https://creativecommons.org/licenses/by/3.0/", (self.y, self.x + 1430), self.cache, url_size, colors.link_blue),
-            Credit("Fonts used under Larabie Fonts Freeware Fonts EULA.", (self.y, self.x + 1500), self.cache),
-            Credit(font_eula, (self.y, self.x + 1530), self.cache, url_size, colors.link_blue),
-            Credit("Written in Python using the Pygame engine.", (self.y, self.x + 1600), self.cache)
+            Credit("Wood Tileset: Jetrel, Daniel Cook, Bertram and Zabin", (self.y, self.x + 1400), self.cache),
+            Credit("http://opengameart.org/content/2d-lost-garden-tileset-transition-to-jetrels-wood-tileset", (self.y, self.x + 1430), self.cache, url_size, colors.link_blue),
+            Credit("Snow Tilset: Daniel Cook, Jetrel, yd, and Zabin.", (self.y, self.x + 1500), self.cache),
+            Credit("ttp://opengameart.org/content/2d-lost-garden-zelda-style-tiles-winter-theme-with-additions", (self.y, self.x + 1530), self.cache, url_size, colors.link_blue),
+            Credit("Mountain Landscape Tileset: Daniel Cook, Jetrel, Bertram, Zabin, Saphy", (self.y, self.x + 1600), self.cache),
+            Credit("http://opengameart.org/content/2d-lost-garden-zelda-style-tiles-resized-to-32x32-with-additions", (self.y, self.x + 1630), self.cache, url_size, colors.link_blue),
+            Credit("Most audio and art assets licensed under CC-BY 3.0/4.0", (self.y, self.x + 1700), self.cache),
+            Credit("https://creativecommons.org/licenses/by/3.0/", (self.y, self.x + 1730), self.cache, url_size, colors.link_blue),
+            Credit("https://creativecommons.org/licenses/by/4.0/", (self.y, self.x + 1760), self.cache, url_size, colors.link_blue),
+            Credit("Window Icon: MrReynevan2", (self.y, self.x + 1800), self.cache),
+            Credit("http://opengameart.org/content/simple-shield", (self.y, self.x + 1830), self.cache, url_size, colors.link_blue),
+            Credit("GUI Sound Effects: Lokif", (self.y, self.x + 1900), self.cache),
+            Credit("http://opengameart.org/content/gui-sound-effects", (self.y, self.x + 1930), self.cache, url_size, colors.link_blue),
+            Credit("Fonts used under Larabie Fonts Freeware Fonts EULA.", (self.y, self.x + 2000), self.cache),
+            Credit(font_eula, (self.y, self.x + 2030), self.cache, url_size, colors.link_blue),
+            Credit("Built with the Generic RPG engine written by George Markeloff.", (self.y, self.x + 2100), self.cache),
+            Credit("Thanks for playing!", (self.y + 410, self.x + 2600), self.cache)
         ]
         
         url_pattern = []
@@ -136,4 +146,5 @@ class CreditsScene(base.SceneBase):
             self.credit_url_rects[x] = utils.scale_rect(self.credit_url_rects[x], real_w, real_h)
         
         # Move the credits up one pixel for the next frame.
-        self.x = self.x - 1
+        if self.x > -2300:
+            self.x = self.x - 1

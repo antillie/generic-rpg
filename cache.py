@@ -46,3 +46,13 @@ class CacheEngine:
                 image = pygame.image.load(canonicalized_path).convert()
                 _image_library[path] = image
             return image
+    
+    def get_alpha_image(self, path):
+            global _image_library
+            image = _image_library.get(path)
+            if image == None:
+                temp_path = os.path.dirname(os.path.realpath(__file__)) + "/images/" + path
+                canonicalized_path = temp_path.replace("/", os.sep).replace("\\", os.sep)
+                image = pygame.image.load(canonicalized_path).convert_alpha()
+                _image_library[path] = image
+            return image
