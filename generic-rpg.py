@@ -209,5 +209,5 @@ def run_game(width=1280, height=720, fps=60, fullscreen=False):
         
     print("Thanks for playing!")
 
-# Start the game with; window width, window height, FPS limit, and starting scene. Window width and height are ignored in fullscreen mode.
+# Start the game.
 run_game()
