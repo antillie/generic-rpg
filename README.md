@@ -45,5 +45,3 @@ The transistions module is Copyright (c) 2014 by Death_Miner and is licensed und
 Full license terms are in the module itself.
 
 Tested on Windows and Linux. But any platform that has Python 2.7 and the needed libraries should work.
-
-License yet to be determined.
