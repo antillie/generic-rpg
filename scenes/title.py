@@ -58,6 +58,7 @@ class TitleScene(base.SceneBase):
                     # New game.
                     if self.menu == 0:
                         self.sound.stop_music()
+                        self.menu = 1
                         # Switch to the main game scene.
                         self.SwitchToScene("GameScene")
                     # Load game.
@@ -66,11 +67,13 @@ class TitleScene(base.SceneBase):
                         pass
                     # Game options.
                     elif self.menu == 2:
-                        # Not yet implimented.
-                        pass
+                        # Just resets the display mode.
+                        self.sound.play_sound("menu_thwump.wav")
+                        self.SwitchToScene("DummyScreen")
                     # Roll credits.
                     elif self.menu == 3:
                         self.sound.stop_music()
+                        self.menu = 1
                         # Switch to the credits scene.
                         self.SwitchToScene("CreditsScene")
                     # Exit the game.
@@ -110,6 +113,7 @@ class TitleScene(base.SceneBase):
                             # New game.
                             if self.menu == 0:
                                 self.sound.stop_music()
+                                self.menu = 1
                                 # Switch to the main game scene.
                                 self.SwitchToScene("GameScene")
                             # Load game.
@@ -118,11 +122,13 @@ class TitleScene(base.SceneBase):
                                 pass
                             # Game options.
                             elif self.menu == 2:
-                                # Not yet implimented.
-                                pass
+                                # Just resets the display mode.
+                                self.sound.play_sound("menu_thwump.wav")
+                                self.SwitchToScene("DummyScreen")
                             # Roll credits.
                             elif self.menu == 3:
                                 self.sound.stop_music()
+                                self.menu = 1
                                 # Switch to the credits scene.
                                 self.SwitchToScene("CreditsScene")
                             # Exit the game.
@@ -151,7 +157,7 @@ class TitleScene(base.SceneBase):
         self.options = [
             Option("New Game", (menu_x, 300), self.cache),
             Option("Load Game", (menu_x, 330), self.cache),
-            Option("Game Options", (menu_x, 360), self.cache),
+            Option("Reset Display", (menu_x, 360), self.cache),
             Option("Credits", (menu_x, 390), self.cache),
             Option("Exit", (menu_x, 420), self.cache)
             ]

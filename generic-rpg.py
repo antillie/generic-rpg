@@ -16,6 +16,7 @@ import credits_s
 import gameinit
 import party_screen
 import battle
+import dummy
 
 # Global sound object that handles all audio output.
 sound = sound.JukeBox()
@@ -85,6 +86,7 @@ class Engine:
         self.GameScene = gameinit.GameScene(sound, cache)
         self.PartyScreen = party_screen.PartyScreen(sound, cache)
         self.BattleScreen = battle.BattleScreen(sound, cache)
+        self.DummyScreen = dummy.DummyScreen(sound, cache)
         
         # Set the starting scene.
         active_scene = self.TitleScene
@@ -195,6 +197,12 @@ class Engine:
                 if next_scene == "TitleScene" and self.previous_scene  == "PartyScreen":
                     self.reset_game()
                 
+                if next_scene == "TitleScene" and self.previous_scene  == "DummyScreen":
+                    width=1280
+                    height=720
+                    fullscreen=False
+                    screen = pygame.display.set_mode((width, height), pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.RESIZABLE)
+                
                 # Change the active scene to whichever scene should be next.
                 if next_scene == "TitleScene":
                     self.TitleScene.next = "TitleScene"
@@ -211,9 +219,13 @@ class Engine:
                 elif next_scene == "BattleScreen":
                     self.BattleScreen.next = "BattleScreen"
                     active_scene = self.BattleScreen
+                elif next_scene == "DummyScreen":
+                    self.DummyScreen.next = "DummyScreen"
+                    active_scene = self.DummyScreen
                 elif next_scene == None:
                     active_scene = None
-                
+            
+            if active_scene != None:
                 # Store the current scene to be refrenced as the previous scene during the next loop iteration.
                 self.previous_scene  = active_scene.name
             

@@ -126,7 +126,7 @@ class GameScene(base.SceneBase):
                 self.sound.stop_music()
                 self.SwitchToScene("BattleScreen")
         
-        if self.battlebound > 1200:
+        if self.battlebound > 1600:
             self.battlebound = 0
             self.sound.stop_music()
             self.SwitchToScene("BattleScreen")
