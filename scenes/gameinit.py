@@ -23,16 +23,30 @@ class Car(pygame.sprite.Sprite):
         self.image.set_colorkey(colors.white)
         
         # Load the image.
-        person = cache.get_alpha_image("character.png")
+        self.person = cache.get_alpha_image("character.png")
         
         # Blit the part of the image that we want to our surface.
-        self.image.blit(person, (0, 0), (0, 0, 32, 48))
+        self.image.blit(self.person, (0, 0), (0, 0, 32, 48))
         
         # Draw the character.
         pygame.draw.rect(self.image, colors.brown, [512, 288, width, height])
         
         # Fetch the rectangle object that has the dimensions of the image.
         self.rect = self.image.get_rect()
+        
+    def update_image(self, direction):
+        if direction == "up":
+            self.image.fill(colors.white)
+            self.image.blit(self.person, (0, 0), (0, 144, 32, 48))
+        if direction == "down":
+            self.image.fill(colors.white)
+            self.image.blit(self.person, (0, 0), (0, 0, 32, 48))
+        if direction == "left":
+            self.image.fill(colors.white)
+            self.image.blit(self.person, (0, 0), (0, 48, 32, 48))
+        if direction == "right":
+            self.image.fill(colors.white)
+            self.image.blit(self.person, (0, 0), (0, 96, 32, 48))
 
 # The actual game. Different versions of this class will need to load maps, characters, dialog, and detect interactions between objects on the screen. Each area will be its own class.
 class GameScene(base.SceneBase):
@@ -88,15 +102,19 @@ class GameScene(base.SceneBase):
         if pressed_keys[pygame.K_UP] or pressed_keys[pygame.K_w]:
             self.rect_y = self.rect_y - 3
             self.moved = True
+            self.player.update_image("up")
         if pressed_keys[pygame.K_DOWN] or pressed_keys[pygame.K_s]:
             self.rect_y = self.rect_y + 3
             self.moved = True
+            self.player.update_image("down")
         if pressed_keys[pygame.K_LEFT] or pressed_keys[pygame.K_a]:
             self.rect_x = self.rect_x - 3
             self.moved = True
+            self.player.update_image("left")
         if pressed_keys[pygame.K_RIGHT] or pressed_keys[pygame.K_d]:
             self.rect_x = self.rect_x + 3
             self.moved = True
+            self.player.update_image("right")
             
         if self.moved:
             self.battlebound = self.battlebound + 3
