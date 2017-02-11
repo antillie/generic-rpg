@@ -110,7 +110,7 @@ class Engine:
                     if event.key == pygame.K_F4 and alt_pressed:
                         quit_attempt = True
                     # User pressed ALT+Enter.
-                    if event.key == pygame.K_RETURN and alt_pressed:
+                    elif event.key == pygame.K_RETURN and alt_pressed:
                         # Toggle between fullscreen and windowed mode.
                         if fullscreen:
                             fullscreen = False
@@ -119,7 +119,7 @@ class Engine:
                             fullscreen = True
                             screen = pygame.display.set_mode((screen_info.current_w, screen_info.current_h), pygame.FULLSCREEN|pygame.HWSURFACE|pygame.DOUBLEBUF)
                     # User pressed F11.
-                    if event.key == pygame.K_F11:
+                    elif event.key == pygame.K_F11:
                         # Toggle between fullscreen and windowed mode.
                         if fullscreen:
                             fullscreen = False
@@ -127,6 +127,9 @@ class Engine:
                         else:
                             fullscreen = True
                             screen = pygame.display.set_mode((screen_info.current_w, screen_info.current_h), pygame.FULLSCREEN|pygame.HWSURFACE|pygame.DOUBLEBUF)
+                    else:
+                        # Queue the input to be sent to the active scene.
+                        filtered_events.append(event)
                 # Only listen for resize events in windowed mode.
                 elif not fullscreen:
                     if event.type == pygame.VIDEORESIZE:
@@ -167,10 +170,7 @@ class Engine:
                     # Close the program.
                     print("Thanks for playing!")
                     exit()
-                else:
-                    # Queue the input to be sent to the active scene.
-                    filtered_events.append(event)
-            
+                
             # No active scene means that we are done.
             if active_scene != None:
                 if active_scene.name != "PartyScreen":
