@@ -47,6 +47,7 @@ class CacheEngine:
                 _image_library[path] = image
             return image
     
+    # For getting images with transparency.
     def get_alpha_image(self, path):
             global _image_library
             image = _image_library.get(path)
@@ -56,3 +57,12 @@ class CacheEngine:
                 image = pygame.image.load(canonicalized_path).convert_alpha()
                 _image_library[path] = image
             return image
+    
+    # Special function for animated character sprites, returns a surface instead of an image object.
+    def get_char_sprite(self, path, x_start, y_start, width, height):
+        image = self.get_alpha_image(path)
+        surface = pygame.Surface((width, height))
+        surface.fill([0,0,0])
+        surface.set_colorkey([0,0,0])
+        surface.blit(image, (0, 0), (x_start, y_start, width, height))
+        return surface

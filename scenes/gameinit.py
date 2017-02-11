@@ -9,6 +9,7 @@ import pyscroll
 import pytmx.util_pygame
 import os
 import utils
+import pyganim
 
 class Car(pygame.sprite.Sprite):
     #This class represents a car. It derives from the "Sprite" class in Pygame.
@@ -19,8 +20,8 @@ class Car(pygame.sprite.Sprite):
         
         # Pass in the color of the car, and its x and y position, width and height.
         self.image = pygame.Surface([width, height])
-        self.image.fill(colors.white)
-        self.image.set_colorkey(colors.white)
+        self.image.fill(colors.black)
+        self.image.set_colorkey(colors.black)
         
         # Load the image.
         self.person = cache.get_alpha_image("character.png")
@@ -34,19 +35,63 @@ class Car(pygame.sprite.Sprite):
         # Fetch the rectangle object that has the dimensions of the image.
         self.rect = self.image.get_rect()
         
+        self.front_standing = cache.get_char_sprite("character.png", 0, 0, 32, 48)
+        self.back_standing = cache.get_char_sprite("character.png", 0, 144, 32, 48)
+        self.left_standing = cache.get_char_sprite("character.png", 0, 48, 32, 48)
+        self.right_standing = cache.get_char_sprite("character.png", 0, 96, 32, 48)
+        
+        self.animObjs = {}
+
+        anim_speed = 0.15
+        
+        goingUpimagesAndDurations = [
+            (cache.get_char_sprite("character.png", 0, 144, 32, 48), anim_speed),
+            (cache.get_char_sprite("character.png", 32, 144, 32, 48), anim_speed),
+            (cache.get_char_sprite("character.png", 64, 144, 32, 48), anim_speed),
+            (cache.get_char_sprite("character.png", 96, 144, 32, 48), anim_speed)
+        ]
+        
+        goingDownimagesAndDurations = [
+            (cache.get_char_sprite("character.png", 0, 0, 32, 48), anim_speed),
+            (cache.get_char_sprite("character.png", 32, 0, 32, 48), anim_speed),
+            (cache.get_char_sprite("character.png", 64, 0, 32, 48), anim_speed),
+            (cache.get_char_sprite("character.png", 96, 0, 32, 48), anim_speed)
+        ]
+        
+        goingLeftimagesAndDurations = [
+            (cache.get_char_sprite("character.png", 0, 48, 32, 48), anim_speed),
+            (cache.get_char_sprite("character.png", 32, 48, 32, 48), anim_speed),
+            (cache.get_char_sprite("character.png", 64, 48, 32, 48), anim_speed),
+            (cache.get_char_sprite("character.png", 96, 48, 32, 48), anim_speed)
+        ]
+        
+        goingRightimagesAndDurations = [
+            (cache.get_char_sprite("character.png", 0, 96, 32, 48), anim_speed),
+            (cache.get_char_sprite("character.png", 32, 96, 32, 48), anim_speed),
+            (cache.get_char_sprite("character.png", 64, 96, 32, 48), anim_speed),
+            (cache.get_char_sprite("character.png", 96, 96, 32, 48), anim_speed)
+        ]
+        
+        self.animObjs["front_walk"] = pyganim.PygAnimation(goingDownimagesAndDurations)
+        self.animObjs["back_walk"] = pyganim.PygAnimation(goingUpimagesAndDurations)
+        self.animObjs["left_walk"] = pyganim.PygAnimation(goingLeftimagesAndDurations)
+        self.animObjs["right_walk"] = pyganim.PygAnimation(goingRightimagesAndDurations)
+        
+        self.moveConductor = pyganim.PygConductor(self.animObjs)
+        
     def update_image(self, direction):
         if direction == "up":
-            self.image.fill(colors.white)
-            self.image.blit(self.person, (0, 0), (0, 144, 32, 48))
+            self.image.fill(colors.black)
+            self.animObjs["back_walk"].blit(self.image, (0, 0))
         if direction == "down":
-            self.image.fill(colors.white)
-            self.image.blit(self.person, (0, 0), (0, 0, 32, 48))
+            self.image.fill(colors.black)
+            self.animObjs["front_walk"].blit(self.image, (0, 0))
         if direction == "left":
-            self.image.fill(colors.white)
-            self.image.blit(self.person, (0, 0), (0, 48, 32, 48))
+            self.image.fill(colors.black)
+            self.animObjs["left_walk"].blit(self.image, (0, 0))
         if direction == "right":
-            self.image.fill(colors.white)
-            self.image.blit(self.person, (0, 0), (0, 96, 32, 48))
+            self.image.fill(colors.black)
+            self.animObjs["right_walk"].blit(self.image, (0, 0))
 
 # The actual game. Different versions of this class will need to load maps, characters, dialog, and detect interactions between objects on the screen. Each area will be its own class.
 class GameScene(base.SceneBase):
@@ -118,6 +163,9 @@ class GameScene(base.SceneBase):
             
         if self.moved:
             self.battlebound = self.battlebound + 3
+            self.player.moveConductor.play()
+        else:
+            self.player.moveConductor.stop()
             
         # Don't let the player walk off the top or bottom of the map.
         if self.rect_x < 0:
