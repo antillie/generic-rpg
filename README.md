@@ -5,7 +5,6 @@ This is more of a framework/game engine at this point than an actual game.
 Although it runs fine and you can move around there isn't anything to actually play yet.
 
 System requirments:
-
     Python 2.7 with libraries:
         (These can be installed with pip.)
         pygame
