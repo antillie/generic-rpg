@@ -37,13 +37,14 @@ class Car(pygame.sprite.Sprite):
 # The actual game. Different versions of this class will need to load maps, characters, dialog, and detect interactions between objects on the screen. Each area will be its own class.
 class GameScene(base.SceneBase):
     
-    def __init__(self, sound, cache, song="forest.mp3"):
+    def __init__(self, sound, cache, transition, song="forest.mp3"):
         base.SceneBase.__init__(self)
         self.song = song
         self.name = "GameScene"
         self.sound = sound
         self.cache = cache
         self.battlebound = 0
+        self.transition = transition
         
         # Player starting position.
         self.rect_x = 512
@@ -124,11 +125,15 @@ class GameScene(base.SceneBase):
             if utils.rand_chance(5):
                 self.battlebound = 0
                 self.sound.stop_music()
+                self.sound.play_music("awildcreatureappears.ogg")
+                self.transition.run("fadeOutUp")
                 self.SwitchToScene("BattleScreen")
         
         if self.battlebound > 1600:
             self.battlebound = 0
             self.sound.stop_music()
+            self.transition.run("fadeOutUp")
+            self.sound.play_music("awildcreatureappears.ogg")
             self.SwitchToScene("BattleScreen")
     
     # Draws things.

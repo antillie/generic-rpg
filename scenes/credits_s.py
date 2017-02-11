@@ -26,12 +26,13 @@ class Credit:
 # The credits screen.
 class CreditsScene(base.SceneBase):
     
-    def __init__(self, sound, cache, song="hervioleteyes.mp3"):
+    def __init__(self, sound, cache, transition, song="hervioleteyes.mp3"):
         base.SceneBase.__init__(self)
         self.song = song
         self.name = "CreditsScene"
         self.sound = sound
         self.cache = cache
+        self.transition = transition
         
         # Starting point for the credits scroll, just off screen.
         self.x = 730
@@ -48,6 +49,7 @@ class CreditsScene(base.SceneBase):
                     # Enter or Escape key returns to title screen.
                     if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER or event.key == pygame.K_ESCAPE:
                         self.x = 730
+                        self.transition.run("fadeOutDown")
                         self.sound.stop_music()
                         self.SwitchToScene("TitleScene")
             # Mouse click.
@@ -62,6 +64,7 @@ class CreditsScene(base.SceneBase):
                     
                     if self.x == -2500:
                         self.x = 730
+                        self.transition.run("fadeOutDown")
                         self.sound.stop_music()
                         self.SwitchToScene("TitleScene")
                     

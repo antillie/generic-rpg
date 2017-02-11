@@ -35,12 +35,11 @@ class Option:
 # The battle screen.
 class BattleScreen(base.SceneBase):
     
-    def __init__(self, sound, cache, background="forestbackground.png", song="awildcreatureappears.ogg"):
+    def __init__(self, sound, cache, transition, background="forestbackground.png"):
         base.SceneBase.__init__(self)
         self.name = "BattleScreen"
         self.previous_scene = None
         self.menu = 5
-        self.song = song
         self.sound = sound
         self.cache = cache
         self.menu_rects = []
@@ -48,9 +47,6 @@ class BattleScreen(base.SceneBase):
         
     # Handles user input passed from the main engine.
     def ProcessInput(self, events, pressed_keys):
-        # Play the battle theme.
-        self.sound.play_music(self.song)
-        
         for event in events:
             # Keyboard input.
             if event.type == pygame.KEYDOWN:

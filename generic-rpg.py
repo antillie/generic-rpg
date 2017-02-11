@@ -28,11 +28,10 @@ cache = cache.CacheEngine()
 # Main engine.
 class Engine:
     
-    def reset_game(self):
-        self.GameScene = gameinit.GameScene(sound, cache)
-        self.BattleScreen = battle.BattleScreen(sound, cache)
-        self.PartyScreen = party_screen.PartyScreen(sound, cache)
-        
+    def reset_game(self, transition):
+        self.GameScene = gameinit.GameScene(sound, cache, transition)
+        self.BattleScreen = battle.BattleScreen(sound, cache, transition)
+        self.PartyScreen = party_screen.PartyScreen(sound, cache, transition)
         
     # Sets up the window, handles screen modes/sizes, manages scene changes, and forwards player input to the active scene.
     def run(self, width=1280, height=720, fps=60, fullscreen=False):
@@ -73,12 +72,12 @@ class Engine:
         if fullscreen:
             # Fullscreen mode.
             screen = pygame.display.set_mode((screen_info.current_w, screen_info.current_h), pygame.FULLSCREEN|pygame.HWSURFACE|pygame.DOUBLEBUF)
-            transitions.init(screen, screen_info.current_w, screen_info.current_h, [0, 0, 0])
+            transition = transitions.Transition(screen, screen_info.current_w, screen_info.current_h, [0, 0, 0])
             
         else:
             # Windowed mode.
             screen = pygame.display.set_mode((width, height), pygame.RESIZABLE|pygame.HWSURFACE|pygame.DOUBLEBUF)
-            transitions.init(screen, width, height, [0, 0, 0])
+            transition = transitions.Transition(screen, width, height, [0, 0, 0])
         
         
         
@@ -87,12 +86,12 @@ class Engine:
         pygame.display.set_caption("Generic RPG")
         
         # Initialize scenes and pass them all the sound and cache objects.
-        self.TitleScene = title.TitleScene(sound, cache)
-        self.CreditsScene = credits_s.CreditsScene(sound, cache)
-        self.GameScene = gameinit.GameScene(sound, cache)
-        self.PartyScreen = party_screen.PartyScreen(sound, cache)
-        self.BattleScreen = battle.BattleScreen(sound, cache)
-        self.DummyScreen = dummy.DummyScreen(sound, cache)
+        self.TitleScene = title.TitleScene(sound, cache, transition)
+        self.CreditsScene = credits_s.CreditsScene(sound, cache, transition)
+        self.GameScene = gameinit.GameScene(sound, cache, transition)
+        self.PartyScreen = party_screen.PartyScreen(sound, cache, transition)
+        self.BattleScreen = battle.BattleScreen(sound, cache, transition)
+        self.DummyScreen = dummy.DummyScreen(sound, cache, transition)
         
         # Set the starting scene.
         active_scene = self.TitleScene
@@ -121,21 +120,33 @@ class Engine:
                         if fullscreen:
                             fullscreen = False
                             screen = pygame.display.set_mode((width, height), pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.RESIZABLE)
+                            transition = transitions.Transition(screen, width, height, [0, 0, 0])
                         else:
                             fullscreen = True
                             screen = pygame.display.set_mode((screen_info.current_w, screen_info.current_h), pygame.FULLSCREEN|pygame.HWSURFACE|pygame.DOUBLEBUF)
+                            transition = transitions.Transition(screen, screen_info.current_w, screen_info.current_h, [0, 0, 0])
                     # User pressed F11.
                     elif event.key == pygame.K_F11:
                         # Toggle between fullscreen and windowed mode.
                         if fullscreen:
                             fullscreen = False
                             screen = pygame.display.set_mode((width, height), pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.RESIZABLE)
+                            transition = transitions.Transition(screen, width, height, [0, 0, 0])
                         else:
                             fullscreen = True
                             screen = pygame.display.set_mode((screen_info.current_w, screen_info.current_h), pygame.FULLSCREEN|pygame.HWSURFACE|pygame.DOUBLEBUF)
+                            transition = transitions.Transition(screen, screen_info.current_w, screen_info.current_h, [0, 0, 0])
                     else:
                         # Queue the input to be sent to the active scene.
                         filtered_events.append(event)
+                
+                # Mouse motion.
+                elif event.type == pygame.MOUSEMOTION:
+                    filtered_events.append(event)
+                # Mouse clicks.
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    filtered_events.append(event)
+                
                 # Only listen for resize events in windowed mode.
                 elif not fullscreen:
                     if event.type == pygame.VIDEORESIZE:
@@ -187,9 +198,8 @@ class Engine:
                     self.BattleScreen.previous_scene = active_scene.name
                 
                 
-                
-                if transitions.updateScreen() == False:
-                
+                # If a transition is playing let it finish before we continue.
+                if transition.updateScreen() == False:
                     # Pass the input to the active scene for processing.
                     active_scene.ProcessInput(filtered_events, pressed_keys)
                     # Have the active scene run its internal game logic.
@@ -205,19 +215,9 @@ class Engine:
                     # Get the next scene that sould be active.
                     next_scene = active_scene.next
                     
-                    
-                    #self.previous_scene  = active_scene.name
-
-                    if next_scene != active_scene.name:
-                        if not "TitleScene" in str(next_scene):
-                            print("next: " + str(next_scene))
-                            print("active_scene.name: " + str(active_scene.name))
-                            transitions.run("fadeOutDown")
-
-                    
                     # If we are changing from the party screen to the title screen then we need to reset the state of the game.
                     if next_scene == "TitleScene" and self.previous_scene  == "PartyScreen":
-                        self.reset_game()
+                        self.reset_game(transition)
                     
                     if next_scene == "TitleScene" and self.previous_scene  == "DummyScreen":
                         width=1280

@@ -35,13 +35,14 @@ class Option:
 # The party screen. Lets you save/quit, use items, change classes, ect...
 class PartyScreen(base.SceneBase):
     
-    def __init__(self, sound, cache):
+    def __init__(self, sound, cache, transition):
         base.SceneBase.__init__(self)
         self.name = "PartyScreen"
         self.previous_scene = None
         self.menu = 0
         self.sound = sound
         self.cache = cache
+        self.transition = transition
         self.menu_rects = []
         
     # Handles user input passed from the main engine.
@@ -83,6 +84,7 @@ class PartyScreen(base.SceneBase):
                         self.SwitchToScene(self.previous_scene)
                     # Quit to title screen.
                     elif self.menu == 7:
+                        self.transition.run("fadeOutDown")
                         self.sound.stop_music()
                         self.SwitchToScene("TitleScene")
                     # Quit to desktop.
@@ -148,6 +150,7 @@ class PartyScreen(base.SceneBase):
                                 self.SwitchToScene(self.previous_scene)
                             # Quit to title screen.
                             elif self.menu == 7:
+                                self.transition.run("fadeOutDown")
                                 self.sound.stop_music()
                                 self.SwitchToScene("TitleScene")
                             # Quit to desktop.

@@ -6,7 +6,7 @@ import base
 # Dummy scene for resetting the window size.
 class DummyScreen(base.SceneBase):
     
-    def __init__(self, sound, cache):
+    def __init__(self, sound, cache, transition):
         base.SceneBase.__init__(self)
         self.name = "DummyScreen"
         self.sound = sound

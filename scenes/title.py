@@ -35,7 +35,7 @@ class Option:
 # Main title screen. You can start/load a game, view the credits, or close the program from here.
 class TitleScene(base.SceneBase):
     
-    def __init__(self, sound, cache, song="enchantedfestivalloop.mp3"):
+    def __init__(self, sound, cache, transition, song="enchantedfestivalloop.mp3"):
         base.SceneBase.__init__(self)
         self.song = song
         self.menu = 1
