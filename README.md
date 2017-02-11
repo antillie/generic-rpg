@@ -26,13 +26,13 @@ Controls:
     
     Game world:
         Move with the arrow keys or WASD
-        
+    
+    Fullscreen mode toggle:
+        F11 or ALT+ENTER
+    
     Escape pull up the party screen from the game world.
     Escape and Enter exit the credits screen.
     
-    Fullscreen mode toggle:
-    F11 or ALT+ENTER
-
 Uses creative commons art and sound assets. Mostly CC-BY. Some CC-BY-SA.
 (https://creativecommons.org/licenses/)
 Artists and specific asset details are listed in the credits screen.
