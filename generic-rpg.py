@@ -17,6 +17,7 @@ import gameinit
 import party_screen
 import battle
 import dummy
+import transitions
 
 # Global sound object that handles all audio output.
 sound = sound.JukeBox()
@@ -72,9 +73,14 @@ class Engine:
         if fullscreen:
             # Fullscreen mode.
             screen = pygame.display.set_mode((screen_info.current_w, screen_info.current_h), pygame.FULLSCREEN|pygame.HWSURFACE|pygame.DOUBLEBUF)
+            transitions.init(screen, screen_info.current_w, screen_info.current_h, [0, 0, 0])
+            
         else:
             # Windowed mode.
             screen = pygame.display.set_mode((width, height), pygame.RESIZABLE|pygame.HWSURFACE|pygame.DOUBLEBUF)
+            transitions.init(screen, width, height, [0, 0, 0])
+        
+        
         
         # Initilize the internal clock and set the window title.
         clock = pygame.time.Clock()
@@ -179,53 +185,67 @@ class Engine:
                 
                 if active_scene.name != "BattleScreen":
                     self.BattleScreen.previous_scene = active_scene.name
-            
-                # Pass the input to the active scene for processing.
-                active_scene.ProcessInput(filtered_events, pressed_keys)
-                # Have the active scene run its internal game logic.
-                active_scene.Update()
-                # Tell the active scene to render itself to the display buffer.
-                if fullscreen:
-                    # Fullscreen mode.
-                    active_scene.Render(screen, screen_info.current_w, screen_info.current_h)
-                else:
-                    # Windowed mode.
-                    active_scene.Render(screen, width, height)
+                
+                
+                
+                if transitions.updateScreen() == False:
+                
+                    # Pass the input to the active scene for processing.
+                    active_scene.ProcessInput(filtered_events, pressed_keys)
+                    # Have the active scene run its internal game logic.
+                    active_scene.Update()
+                    # Tell the active scene to render itself to the display buffer.
+                    if fullscreen:
+                        # Fullscreen mode.
+                        active_scene.Render(screen, screen_info.current_w, screen_info.current_h)
+                    else:
+                        # Windowed mode.
+                        active_scene.Render(screen, width, height)
+                        
+                    # Get the next scene that sould be active.
+                    next_scene = active_scene.next
                     
-                # Get the next scene that sould be active.
-                next_scene = active_scene.next
-                
-                # If we are changing from the party screen to the title screen then we need to reset the state of the game.
-                if next_scene == "TitleScene" and self.previous_scene  == "PartyScreen":
-                    self.reset_game()
-                
-                if next_scene == "TitleScene" and self.previous_scene  == "DummyScreen":
-                    width=1280
-                    height=720
-                    fullscreen=False
-                    screen = pygame.display.set_mode((width, height), pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.RESIZABLE)
-                
-                # Change the active scene to whichever scene should be next.
-                if next_scene == "TitleScene":
-                    self.TitleScene.next = "TitleScene"
-                    active_scene = self.TitleScene
-                elif next_scene == "CreditsScene":
-                    self.CreditsScene.next = "CreditsScene"
-                    active_scene = self.CreditsScene
-                elif next_scene == "GameScene":
-                    self.GameScene.next = "GameScene"
-                    active_scene = self.GameScene
-                elif next_scene == "PartyScreen":
-                    self.PartyScreen.next = "PartyScreen"
-                    active_scene = self.PartyScreen
-                elif next_scene == "BattleScreen":
-                    self.BattleScreen.next = "BattleScreen"
-                    active_scene = self.BattleScreen
-                elif next_scene == "DummyScreen":
-                    self.DummyScreen.next = "DummyScreen"
-                    active_scene = self.DummyScreen
-                elif next_scene == None:
-                    active_scene = None
+                    
+                    #self.previous_scene  = active_scene.name
+
+                    if next_scene != active_scene.name:
+                        if not "TitleScene" in str(next_scene):
+                            print("next: " + str(next_scene))
+                            print("active_scene.name: " + str(active_scene.name))
+                            transitions.run("fadeOutDown")
+
+                    
+                    # If we are changing from the party screen to the title screen then we need to reset the state of the game.
+                    if next_scene == "TitleScene" and self.previous_scene  == "PartyScreen":
+                        self.reset_game()
+                    
+                    if next_scene == "TitleScene" and self.previous_scene  == "DummyScreen":
+                        width=1280
+                        height=720
+                        fullscreen=False
+                        screen = pygame.display.set_mode((width, height), pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.RESIZABLE)
+                    
+                    # Change the active scene to whichever scene should be next.
+                    if next_scene == "TitleScene":
+                        self.TitleScene.next = "TitleScene"
+                        active_scene = self.TitleScene
+                    elif next_scene == "CreditsScene":
+                        self.CreditsScene.next = "CreditsScene"
+                        active_scene = self.CreditsScene
+                    elif next_scene == "GameScene":
+                        self.GameScene.next = "GameScene"
+                        active_scene = self.GameScene
+                    elif next_scene == "PartyScreen":
+                        self.PartyScreen.next = "PartyScreen"
+                        active_scene = self.PartyScreen
+                    elif next_scene == "BattleScreen":
+                        self.BattleScreen.next = "BattleScreen"
+                        active_scene = self.BattleScreen
+                    elif next_scene == "DummyScreen":
+                        self.DummyScreen.next = "DummyScreen"
+                        active_scene = self.DummyScreen
+                    elif next_scene == None:
+                        active_scene = None
             
             if active_scene != None:
                 # Store the current scene to be refrenced as the previous scene during the next loop iteration.
