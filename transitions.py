@@ -10,7 +10,7 @@
 # Adds the ability to do transitions on pygame games
 # v0.0.1
 # By Death_Miner
-#Copyright (c) 2014 Death_Miner
+# Copyright (c) 2014 Death_Miner
 # MIT License
 
 #The MIT License (MIT)
@@ -32,6 +32,8 @@
 #LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
+
+# This version has been modified to be an importable class object.
 
 import pygame
 import time
@@ -79,7 +81,7 @@ inited = False
 
 class Transition:
 
-    def __init__(self, i_screen, i_window_width, i_window_height, i_background_color = [0, 0, 0]):
+    def __init__(self, i_screen, i_window_width, i_window_height, i_background_color=[0, 0, 0]):
         global screen, window_width, window_height, background_color, inited
         screen = i_screen
         window_width = i_window_width
