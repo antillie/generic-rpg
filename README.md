@@ -30,7 +30,7 @@ Controls:
     Fullscreen mode toggle:
         F11 or ALT+ENTER
     
-    Escape pull up the party screen from the game world.
+    Escape pulls up the party screen from the game world.
     Escape and Enter exit the credits screen.
     
 Uses creative commons art and sound assets. Mostly CC-BY. Some CC-BY-SA.
