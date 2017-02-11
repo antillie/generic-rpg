@@ -50,11 +50,8 @@ class BattleScreen(base.SceneBase):
         for event in events:
             # Keyboard input.
             if event.type == pygame.KEYDOWN:
-                # Escape key closes the menu.
-                if event.key == pygame.K_ESCAPE:
-                    self.SwitchToScene(self.previous_scene)
                 # Enter key.
-                elif event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
+                if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
                     # Attack.
                     if self.menu == 0:
                         # Not yet implimented.

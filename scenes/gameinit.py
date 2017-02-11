@@ -11,20 +11,30 @@ import os
 import utils
 import pyganim
 
-class Car(pygame.sprite.Sprite):
-    #This class represents a car. It derives from the "Sprite" class in Pygame.
+# All characters are instances of this class.
+class Character(pygame.sprite.Sprite):
     
-    def __init__(self, cache, color=colors.brown, width=32, height=48):
+    def __init__(self, cache, direction, width=32, height=48):
         # Call the parent class constructor.
-        super(Car, self).__init__()
+        super(Character, self).__init__()
+        self.direction = direction
         
-        # Pass in the color of the car, and its x and y position, width and height.
+        # Start with a black surface the size of our sprite.
         self.image = pygame.Surface([width, height])
         self.image.fill(colors.black)
         self.image.set_colorkey(colors.black)
         
-        # Load the image.
-        self.person = cache.get_alpha_image("character.png")
+        # Load the starting image.
+        if self.direction == "up":
+            self.person = cache.get_char_sprite("character.png", 0, 144, 32, 48)
+        elif self.direction == "down":
+            self.person = cache.get_char_sprite("character.png", 0, 0, 32, 48)
+        elif self.direction == "left":
+            self.person = cache.get_char_sprite("character.png", 0, 48, 32, 48)
+        elif self.direction == "right":
+            self.person = cache.get_char_sprite("character.png", 0, 96, 32, 48)
+        else:
+            raise Exception("You must pass in a direction for the character to be facing.")
         
         # Blit the part of the image that we want to our surface.
         self.image.blit(self.person, (0, 0), (0, 0, 32, 48))
@@ -80,16 +90,17 @@ class Car(pygame.sprite.Sprite):
         self.moveConductor = pyganim.PygConductor(self.animObjs)
         
     def update_image(self, direction):
-        if direction == "up":
+        self.direction = direction
+        if self.direction == "up":
             self.image.fill(colors.black)
             self.animObjs["back_walk"].blit(self.image, (0, 0))
-        if direction == "down":
+        if self.direction == "down":
             self.image.fill(colors.black)
             self.animObjs["front_walk"].blit(self.image, (0, 0))
-        if direction == "left":
+        if self.direction == "left":
             self.image.fill(colors.black)
             self.animObjs["left_walk"].blit(self.image, (0, 0))
-        if direction == "right":
+        if self.direction == "right":
             self.image.fill(colors.black)
             self.animObjs["right_walk"].blit(self.image, (0, 0))
 
@@ -121,7 +132,7 @@ class GameScene(base.SceneBase):
         self.group = pyscroll.PyscrollGroup(map_layer=map_layer)
         
         # Create the player object.
-        self.player = Car(self.cache)
+        self.player = Character(self.cache, "down")
         # Initialize the sprites group.
         self.all_sprites_list = pygame.sprite.Group()
         # Then add the player object to it.
