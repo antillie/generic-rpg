@@ -33,15 +33,19 @@ Controls:
     Escape pulls up the party screen from the game world.
     Escape and Enter exit the credits screen.
     
+Tested on Windows and Linux. But any platform that has Python 2.7 and the needed libraries should work.
+
 Uses creative commons art and sound assets. Mostly CC-BY. Some CC-BY-SA.
 (https://creativecommons.org/licenses/)
 Artists and specific asset details are listed in the credits screen.
 
-The python code is Copyright (c) 2017 by George Markeloff and is licensed under the GNU GPL version 3 unless noted otherwise.
+The python code is Copyright (c) 2017 by George Markeloff and licensed under the GNU GPL version 3 unless noted otherwise.
 See LICENSE.txt for the full license terms.
 
 The transistions module is Copyright (c) 2014 by Death_Miner and is licensed under the MIT license.
 (https://github.com/DeathMiner/Pygame-Transitions)
 Full license terms are in the module itself.
 
-Tested on Windows and Linux. But any platform that has Python 2.7 and the needed libraries should work.
+The pyganim module is Copyright (c) 2011 by Al Sweigart and is licensed under the "Simplified BSD" license.
+(http://inventwithpython.com/pyganim/)
+Full license terms are in the module itself.

@@ -33,6 +33,7 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
+# George's note:
 # This version has been modified to be an importable class object.
 
 import pygame
