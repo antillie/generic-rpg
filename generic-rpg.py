@@ -173,6 +173,7 @@ class Engine:
                 
             # No active scene means that we are done.
             if active_scene != None:
+                # Let the context dependant scenes know what their previous scene was.
                 if active_scene.name != "PartyScreen":
                     self.PartyScreen.previous_scene = active_scene.name
                 
