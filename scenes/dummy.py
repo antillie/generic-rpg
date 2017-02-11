@@ -1,9 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import pygame
 import base
-import colors
 
 # Dummy scene for resetting the window size.
 class DummyScreen(base.SceneBase):
@@ -18,12 +16,10 @@ class DummyScreen(base.SceneBase):
     def ProcessInput(self, events, pressed_keys):
         self.SwitchToScene("TitleScene")
         
-    # Internal game logic.
+    # Nothing to do.
     def Update(self):
         pass
     
-    # Draws a black screen.
+    # Don't bother drawing anything.
     def Render(self, screen, real_w, real_h):
-        screen.fill(colors.black)
-        
-        
+        pass

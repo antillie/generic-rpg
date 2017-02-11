@@ -165,6 +165,7 @@ class Engine:
                     ini_file.close()
                     
                     # Close the program.
+                    print("Thanks for playing!")
                     exit()
                 else:
                     # Queue the input to be sent to the active scene.
@@ -234,8 +235,6 @@ class Engine:
             
             # Increment the internal game state at the desired FPS limit.
             clock.tick(fps)
-        
-        print("Thanks for playing!")
 
 # Make an instance of our game engine.
 game = Engine()
