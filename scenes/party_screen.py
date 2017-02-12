@@ -6,31 +6,7 @@ import virtualscreen
 import base
 import colors
 import utils
-
-# Used for entries in the menu.
-class Option:
-    
-    active = False
-    
-    def __init__(self, text, pos, cache, font=["Immortal"]):
-        self.text = text
-        self.pos = pos
-        self.font = font
-        self.cache = cache
-        self.set_rend()
-        
-    def set_rend(self):
-        self.rend = self.cache.get_font(self.font, 20).render(self.text, True, self.get_color())
-        
-    def get_color(self):
-        if self.active:
-            return colors.off_yellow
-        else:
-            return colors.white
-            
-    def select(self):
-        self.active = True
-        self.set_rend()
+import formatting
 
 # The party screen. Lets you save/quit, use items, change classes, ect...
 class PartyScreen(base.SceneBase):
@@ -180,15 +156,15 @@ class PartyScreen(base.SceneBase):
         
         # Menu entries.
         self.options = [
-            Option("Status", (menu_x, 23), self.cache),
-            Option("Inventory", (menu_x, 53), self.cache),
-            Option("Spells", (menu_x, 83), self.cache),
-            Option("Equipment", (menu_x, 113), self.cache),
-            Option("Change Job", (menu_x, 143), self.cache),
-            Option("Save Game", (menu_x, 173), self.cache),
-            Option("Close Menu", (menu_x, 203), self.cache),
-            Option("Quit to Title", (menu_x, 233), self.cache),
-            Option("Quit to Desktop", (menu_x, 263), self.cache)
+            formatting.MenuOption("Status", (menu_x, 23), self.cache),
+            formatting.MenuOption("Inventory", (menu_x, 53), self.cache),
+            formatting.MenuOption("Spells", (menu_x, 83), self.cache),
+            formatting.MenuOption("Equipment", (menu_x, 113), self.cache),
+            formatting.MenuOption("Change Job", (menu_x, 143), self.cache),
+            formatting.MenuOption("Save Game", (menu_x, 173), self.cache),
+            formatting.MenuOption("Close Menu", (menu_x, 203), self.cache),
+            formatting.MenuOption("Quit to Title", (menu_x, 233), self.cache),
+            formatting.MenuOption("Quit to Desktop", (menu_x, 263), self.cache)
             ]
         
         # Highlight the currently selected menu item.    

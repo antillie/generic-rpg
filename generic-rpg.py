@@ -12,6 +12,7 @@ import cache
 import sound
 import gamedata
 sys.path.append("scenes")
+sys.path.append("scenes/resources")
 import title
 import credits_s
 import gameinit

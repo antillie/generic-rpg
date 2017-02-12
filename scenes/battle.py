@@ -6,31 +6,7 @@ import virtualscreen
 import base
 import colors
 import utils
-
-# Used for entries in the menu.
-class Option:
-    
-    active = False
-    
-    def __init__(self, text, pos, cache, font=["Immortal"]):
-        self.text = text
-        self.pos = pos
-        self.font = font
-        self.cache = cache
-        self.set_rend()
-        
-    def set_rend(self):
-        self.rend = self.cache.get_font(self.font, 20).render(self.text, True, self.get_color())
-        
-    def get_color(self):
-        if self.active:
-            return colors.off_yellow
-        else:
-            return colors.white
-            
-    def select(self):
-        self.active = True
-        self.set_rend()
+import formatting
 
 # The battle screen.
 class BattleScreen(base.SceneBase):
@@ -155,12 +131,12 @@ class BattleScreen(base.SceneBase):
         
         # Menu entries.
         self.options = [
-            Option("Attack", (menu_x, 23), self.cache),
-            Option("Special Move", (menu_x, 53), self.cache),
-            Option("Cast Spell", (menu_x, 83), self.cache),
-            Option("Use Item", (menu_x, 113), self.cache),
-            Option("Guard", (menu_x, 143), self.cache),
-            Option("End Battle", (menu_x, 173), self.cache),
+            formatting.MenuOption("Attack", (menu_x, 23), self.cache),
+            formatting.MenuOption("Special Move", (menu_x, 53), self.cache),
+            formatting.MenuOption("Cast Spell", (menu_x, 83), self.cache),
+            formatting.MenuOption("Use Item", (menu_x, 113), self.cache),
+            formatting.MenuOption("Guard", (menu_x, 143), self.cache),
+            formatting.MenuOption("End Battle", (menu_x, 173), self.cache),
             ]
         
         # Highlight the currently selected menu item.    

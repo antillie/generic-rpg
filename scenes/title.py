@@ -6,31 +6,7 @@ import virtualscreen
 import base
 import colors
 import utils
-
-# Used for entries in the menu.
-class Option:
-    
-    active = False
-    
-    def __init__(self, text, pos, cache, font=["Immortal"]):
-        self.text = text
-        self.pos = pos
-        self.font = font
-        self.cache = cache
-        self.set_rend()
-        
-    def set_rend(self):
-        self.rend = self.cache.get_font(self.font, 20).render(self.text, True, self.get_color())
-        
-    def get_color(self):
-        if self.active:
-            return colors.off_yellow
-        else:
-            return colors.grey
-            
-    def select(self):
-        self.active = True
-        self.set_rend()
+import formatting
 
 # Main title screen. You can start/load a game, view the credits, or close the program from here.
 class TitleScene(base.SceneBase):
@@ -158,11 +134,11 @@ class TitleScene(base.SceneBase):
         
         # Menu entries.
         self.options = [
-            Option("New Game", (menu_x, 300), self.cache),
-            Option("Load Game", (menu_x, 330), self.cache),
-            Option("Reset Display", (menu_x, 360), self.cache),
-            Option("Credits", (menu_x, 390), self.cache),
-            Option("Exit", (menu_x, 420), self.cache)
+            formatting.MenuOption("New Game", (menu_x, 300), self.cache),
+            formatting.MenuOption("Load Game", (menu_x, 330), self.cache),
+            formatting.MenuOption("Reset Display", (menu_x, 360), self.cache),
+            formatting.MenuOption("Credits", (menu_x, 390), self.cache),
+            formatting.MenuOption("Exit", (menu_x, 420), self.cache)
             ]
         
         # Highlight the currently selected menu item.    
