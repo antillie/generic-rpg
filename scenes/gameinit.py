@@ -107,14 +107,13 @@ class Character(pygame.sprite.Sprite):
 # The actual game. Different versions of this class will need to load maps, characters, dialog, and detect interactions between objects on the screen. Each area will be its own class.
 class GameScene(base.SceneBase):
     
-    def __init__(self, sound, cache, transition, song="forest.mp3"):
-        base.SceneBase.__init__(self)
+    def __init__(self, sound, cache, transition, gamedata, song="forest.mp3"):
         self.song = song
-        self.name = "GameScene"
         self.sound = sound
         self.cache = cache
         self.battlebound = 0
         self.transition = transition
+        self.gamedata = gamedata
         
         # Player starting position.
         self.rect_x = 512
@@ -149,10 +148,8 @@ class GameScene(base.SceneBase):
             if event.type == pygame.KEYDOWN:
                 # Escape key pulls up the party screen.
                 if event.key == pygame.K_ESCAPE:
-                    self.SwitchToScene("PartyScreen")
-                if event.key == pygame.K_RETURN:
-                    print("x: " + str(self.rect_x))
-                    print("y: " + str(self.rect_y))
+                    self.gamedata.next_scene = "PartyScreen"
+                    self.gamedata.previous_scene = "GameScene"
         
         # Look for keys being held down. Arrow keys or WASD for movment.
         if pressed_keys[pygame.K_UP] or pressed_keys[pygame.K_w]:
@@ -204,14 +201,16 @@ class GameScene(base.SceneBase):
                 self.sound.stop_music()
                 self.sound.play_music("awildcreatureappears.ogg")
                 self.transition.run("fadeOutUp")
-                self.SwitchToScene("BattleScreen")
-        
+                self.gamedata.next_scene = "BattleScreen"
+                self.gamedata.previous_scene = "GameScene"
+                    
         if self.battlebound > 1600:
             self.battlebound = 0
             self.sound.stop_music()
             self.transition.run("fadeOutUp")
             self.sound.play_music("awildcreatureappears.ogg")
-            self.SwitchToScene("BattleScreen")
+            self.gamedata.next_scene = "BattleScreen"
+            self.gamedata.previous_scene = "GameScene"
     
     # Draws things.
     def Render(self, screen, real_w, real_h):

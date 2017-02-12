@@ -35,14 +35,13 @@ class Option:
 # The party screen. Lets you save/quit, use items, change classes, ect...
 class PartyScreen(base.SceneBase):
     
-    def __init__(self, sound, cache, transition):
-        base.SceneBase.__init__(self)
-        self.name = "PartyScreen"
+    def __init__(self, sound, cache, transition, gamedata):
         self.previous_scene = None
         self.menu = 0
         self.sound = sound
         self.cache = cache
         self.transition = transition
+        self.gamedata = gamedata
         self.menu_rects = []
         
     # Handles user input passed from the main engine.
@@ -52,7 +51,8 @@ class PartyScreen(base.SceneBase):
             if event.type == pygame.KEYDOWN:
                 # Escape key closes the menu.
                 if event.key == pygame.K_ESCAPE:
-                    self.SwitchToScene(self.previous_scene)
+                    self.gamedata.next_scene = self.gamedata.previous_scene
+                    self.gamedata.previous_scene = "PartyScreen"
                 # Enter key.
                 elif event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
                     # Status.
@@ -81,15 +81,17 @@ class PartyScreen(base.SceneBase):
                         pass
                     # Close menu.
                     elif self.menu == 6:
-                        self.SwitchToScene(self.previous_scene)
+                        self.gamedata.next_scene = self.gamedata.previous_scene
+                        self.gamedata.previous_scene = "PartyScreen"
                     # Quit to title screen.
                     elif self.menu == 7:
                         self.transition.run("fadeOutDown")
                         self.sound.stop_music()
-                        self.SwitchToScene("TitleScene")
+                        self.gamedata.next_scene = "TitleScene"
+                        self.gamedata.previous_scene = "PartyScreen"
                     # Quit to desktop.
                     elif self.menu == 8:
-                        self.Terminate()
+                        self.gamedata.next_scene = None
                 # Down arrow.
                 elif event.key == pygame.K_DOWN:
                     # Play the menu sound effect.
@@ -147,15 +149,17 @@ class PartyScreen(base.SceneBase):
                                 pass
                             # Close menu.
                             elif self.menu == 6:
-                                self.SwitchToScene(self.previous_scene)
+                                self.gamedata.next_scene = self.gamedata.previous_scene
+                                self.gamedata.previous_scene = "PartyScreen"
                             # Quit to title screen.
                             elif self.menu == 7:
                                 self.transition.run("fadeOutDown")
                                 self.sound.stop_music()
-                                self.SwitchToScene("TitleScene")
+                                self.gamedata.next_scene = "TitleScene"
+                                self.gamedata.previous_scene = "PartyScreen"
                             # Quit to desktop.
                             elif self.menu == 8:
-                                self.Terminate()
+                                self.gamedata.next_scene = None
     # Internal game logic.
     def Update(self):
         pass

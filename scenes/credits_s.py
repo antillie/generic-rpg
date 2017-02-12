@@ -26,13 +26,12 @@ class Credit:
 # The credits screen.
 class CreditsScene(base.SceneBase):
     
-    def __init__(self, sound, cache, transition, song="hervioleteyes.mp3"):
-        base.SceneBase.__init__(self)
+    def __init__(self, sound, cache, transition, gamedata, song="hervioleteyes.mp3"):
         self.song = song
-        self.name = "CreditsScene"
         self.sound = sound
         self.cache = cache
         self.transition = transition
+        self.gamedata = gamedata
         
         # Starting point for the credits scroll, just off screen.
         self.x = 730
@@ -51,7 +50,8 @@ class CreditsScene(base.SceneBase):
                         self.x = 730
                         self.transition.run("fadeOutDown")
                         self.sound.stop_music()
-                        self.SwitchToScene("TitleScene")
+                        self.gamedata.next_scene = "TitleScene"
+                        self.gamedata.previous_scene = "CreditsScene"
             # Mouse click.
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 # Left click.
@@ -66,7 +66,8 @@ class CreditsScene(base.SceneBase):
                         self.x = 730
                         self.transition.run("fadeOutDown")
                         self.sound.stop_music()
-                        self.SwitchToScene("TitleScene")
+                        self.gamedata.next_scene = "TitleScene"
+                        self.gamedata.previous_scene = "CreditsScene"
                     
     # Internal game logic.
     def Update(self):

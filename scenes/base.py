@@ -3,20 +3,12 @@
 
 # Template class for scenes. Things like the title screen, loading screen, towns, world map, dungeons, menus, ect...
 class SceneBase():
-    def __init__(self):
-        self.next = self
-    
+        
     def ProcessInput(self, events, pressed_keys):
-        print("uh-oh, you didn't override this in the child class")
+        raise Exception("process input function not overridden")
 
     def Update(self):
-        print("uh-oh, you didn't override this in the child class")
+        raise Exception("update function not overridden")
 
     def Render(self, screen):
-        print("uh-oh, you didn't override this in the child class")
-
-    def SwitchToScene(self, next_scene):
-        self.next = next_scene
-    
-    def Terminate(self):
-        self.SwitchToScene(None)
+        raise Exception("render function not overridden")

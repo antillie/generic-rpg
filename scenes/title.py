@@ -35,16 +35,15 @@ class Option:
 # Main title screen. You can start/load a game, view the credits, or close the program from here.
 class TitleScene(base.SceneBase):
     
-    def __init__(self, sound, cache, transition, song="enchantedfestivalloop.mp3"):
-        base.SceneBase.__init__(self)
+    def __init__(self, sound, cache, transition, gamedata, song="enchantedfestivalloop.mp3"):
         self.song = song
         self.menu = 1
         # Initialise the menu rects list.
         self.menu_rects = []
-        self.name = "TitleScene"
         self.sound = sound
         self.menu_rects = []
         self.cache = cache
+        self.gamedata = gamedata
         
     # Handles user input passed from the main engine.
     def ProcessInput(self, events, pressed_keys):
@@ -60,7 +59,8 @@ class TitleScene(base.SceneBase):
                         self.sound.stop_music()
                         self.menu = 1
                         # Switch to the main game scene.
-                        self.SwitchToScene("GameScene")
+                        self.gamedata.next_scene = "GameScene"
+                        self.gamedata.previous_scene = "TitleScene"
                     # Load game.
                     elif self.menu == 1:
                         # Not yet implimented.
@@ -69,16 +69,17 @@ class TitleScene(base.SceneBase):
                     elif self.menu == 2:
                         # Just resets the display mode.
                         self.sound.play_sound("menu_thwump.wav")
-                        self.SwitchToScene("DummyScreen")
+                        self.gamedata.reset_display = True
                     # Roll credits.
                     elif self.menu == 3:
                         self.sound.stop_music()
                         self.menu = 1
                         # Switch to the credits scene.
-                        self.SwitchToScene("CreditsScene")
+                        self.gamedata.next_scene = "CreditsScene"
+                        self.gamedata.previous_scene = "TitleScene"
                     # Exit the game.
                     elif self.menu == 4:
-                        self.Terminate()
+                        self.gamedata.next_scene = None
                 # Down arrow.
                 elif event.key == pygame.K_DOWN:
                     # Play the menu sound effect.
@@ -115,7 +116,8 @@ class TitleScene(base.SceneBase):
                                 self.sound.stop_music()
                                 self.menu = 1
                                 # Switch to the main game scene.
-                                self.SwitchToScene("GameScene")
+                                self.gamedata.next_scene = "GameScene"
+                                self.gamedata.previous_scene = "TitleScene"
                             # Load game.
                             elif self.menu == 1:
                                 # Not yet implimented.
@@ -124,16 +126,17 @@ class TitleScene(base.SceneBase):
                             elif self.menu == 2:
                                 # Just resets the display mode.
                                 self.sound.play_sound("menu_thwump.wav")
-                                self.SwitchToScene("DummyScreen")
+                                self.gamedata.reset_display = True
                             # Roll credits.
                             elif self.menu == 3:
                                 self.sound.stop_music()
                                 self.menu = 1
                                 # Switch to the credits scene.
-                                self.SwitchToScene("CreditsScene")
+                                self.gamedata.next_scene = "CreditsScene"
+                                self.gamedata.previous_scene = "TitleScene"
                             # Exit the game.
                             elif self.menu == 4:
-                                self.Terminate()
+                                self.gamedata.next_scene = None
                 
     # Internal game logic. Doesn't really apply to the main menu.
     def Update(self):

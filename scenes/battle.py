@@ -35,14 +35,13 @@ class Option:
 # The battle screen.
 class BattleScreen(base.SceneBase):
     
-    def __init__(self, sound, cache, transition, background="forestbackground.png"):
-        base.SceneBase.__init__(self)
-        self.name = "BattleScreen"
+    def __init__(self, sound, cache, transition, gamedata, background="forestbackground.png"):
         self.previous_scene = None
         self.menu = 5
         self.sound = sound
         self.cache = cache
         self.menu_rects = []
+        self.gamedata = gamedata
         self.background = cache.get_image(background)
         
     # Handles user input passed from the main engine.
@@ -75,7 +74,8 @@ class BattleScreen(base.SceneBase):
                     # End Battle.
                     elif self.menu == 5:
                         self.sound.stop_music()
-                        self.SwitchToScene(self.previous_scene)
+                        self.gamedata.next_scene = self.gamedata.previous_scene
+                        self.gamedata.previous_scene = "BattleScreen"
                 # Down arrow.
                 elif event.key == pygame.K_DOWN:
                     # Play the menu sound effect.
@@ -130,7 +130,10 @@ class BattleScreen(base.SceneBase):
                             # End Battle.
                             elif self.menu == 5:
                                 self.sound.stop_music()
-                                self.SwitchToScene(self.previous_scene)
+                                self.SwitchToScene(self.gamedata.previous_scene)
+                                # New scene system.
+                                self.gamedata.next_scene = self.gamedata.previous_scene
+                                self.gamedata.previous_scene = "BattleScreen"
     # Internal game logic.
     def Update(self):
         pass
