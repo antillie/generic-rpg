@@ -10,6 +10,7 @@ import os
 import sys
 import cache
 import sound
+sys.path.append("gamedata")
 import gamedata
 sys.path.append("scenes")
 sys.path.append("scenes/resources")
@@ -26,16 +27,13 @@ sound = sound.JukeBox()
 # Global cache object that handles all image and font object caching.
 cache = cache.CacheEngine()
 
-# Global game data object that stores everything about the current game session. Characters, story progress, scene progression, quests, ect...
-gamedata = gamedata.GameData()
-
 # Main engine.
 class Engine:
     
     def reset_game(self, transition):
-        self.GameScene = gameinit.GameScene(sound, cache, transition, gamedata)
-        self.BattleScreen = battle.BattleScreen(sound, cache, transition, gamedata)
-        self.PartyScreen = party_screen.PartyScreen(sound, cache, transition, gamedata)
+        self.GameScene = gameinit.GameScene(sound, cache, transition, self.gamedata)
+        self.BattleScreen = battle.BattleScreen(sound, cache, transition, self.gamedata)
+        self.PartyScreen = party_screen.PartyScreen(sound, cache, transition, self.gamedata)
         
     # Sets up the window, handles screen modes/sizes, manages scene changes, and forwards player input to the active scene.
     def run(self, width=1280, height=720, fps=60, fullscreen=False):
@@ -86,12 +84,15 @@ class Engine:
         clock = pygame.time.Clock()
         pygame.display.set_caption("Generic RPG")
         
+        # Game data object that stores everything about the current game session. Characters, story progress, scene progression, quests, ect...
+        self.gamedata = gamedata.GameData(cache)
+        
         # Initialize scenes and pass them all the sound and cache objects.
-        self.TitleScene = title.TitleScene(sound, cache, transition, gamedata)
-        self.CreditsScene = credits_s.CreditsScene(sound, cache, transition, gamedata)
-        self.GameScene = gameinit.GameScene(sound, cache, transition, gamedata)
-        self.PartyScreen = party_screen.PartyScreen(sound, cache, transition, gamedata)
-        self.BattleScreen = battle.BattleScreen(sound, cache, transition, gamedata)
+        self.TitleScene = title.TitleScene(sound, cache, transition, self.gamedata)
+        self.CreditsScene = credits_s.CreditsScene(sound, cache, transition, self.gamedata)
+        self.GameScene = gameinit.GameScene(sound, cache, transition, self.gamedata)
+        self.PartyScreen = party_screen.PartyScreen(sound, cache, transition, self.gamedata)
+        self.BattleScreen = battle.BattleScreen(sound, cache, transition, self.gamedata)
         
         # Set the starting scene.
         active_scene = self.TitleScene
@@ -205,12 +206,12 @@ class Engine:
                         active_scene.Render(screen, width, height)
                     
                     # If we are changing from the party screen to the title screen then we need to reset the state of the game.
-                    if gamedata.next_scene == "TitleScene" and gamedata.previous_scene  == "PartyScreen":
+                    if self.gamedata.next_scene == "TitleScene" and self.gamedata.previous_scene  == "PartyScreen":
                         self.reset_game(transition)
                     
                     # Reset the display to the defaults if requested by the user.
-                    if gamedata.reset_display:
-                        gamedata.reset_display = False
+                    if self.gamedata.reset_display:
+                        self.gamedata.reset_display = False
                         width=1280
                         height=720
                         fullscreen=False
@@ -218,17 +219,17 @@ class Engine:
                         transition = transitions.Transition(screen, width, height, [0, 0, 0])
                     
                     # Change the active scene to whichever scene should be next.
-                    if gamedata.next_scene == "TitleScene":
+                    if self.gamedata.next_scene == "TitleScene":
                         active_scene = self.TitleScene
-                    elif gamedata.next_scene == "CreditsScene":
+                    elif self.gamedata.next_scene == "CreditsScene":
                         active_scene = self.CreditsScene
-                    elif gamedata.next_scene == "GameScene":
+                    elif self.gamedata.next_scene == "GameScene":
                         active_scene = self.GameScene
-                    elif gamedata.next_scene == "PartyScreen":
+                    elif self.gamedata.next_scene == "PartyScreen":
                         active_scene = self.PartyScreen
-                    elif gamedata.next_scene == "BattleScreen":
+                    elif self.gamedata.next_scene == "BattleScreen":
                         active_scene = self.BattleScreen
-                    elif gamedata.next_scene == None:
+                    elif self.gamedata.next_scene == None:
                         active_scene = None
             
             # Draw the updated display buffer on the screen.

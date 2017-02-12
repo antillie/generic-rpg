@@ -14,95 +14,106 @@ import pyganim
 # This class represents the player character.
 class Hero(pygame.sprite.Sprite):
     
+    # Init builds everything.
     def __init__(self, cache, direction, width=32, height=48):
         # Call the parent class constructor.
         super(Hero, self).__init__()
         self.direction = direction
         
-        # Start with a black surface the size of our sprite.
+        # Start with a transparant surface the size of our sprite and make a rect for it.
         self.image = pygame.Surface([width, height])
         self.image.fill(colors.black)
         self.image.set_colorkey(colors.black)
-        
-        # Load the starting image.
-        if self.direction == "up":
-            self.person = cache.get_char_sprite("character.png", 0, 144, 32, 48)
-        elif self.direction == "down":
-            self.person = cache.get_char_sprite("character.png", 0, 0, 32, 48)
-        elif self.direction == "left":
-            self.person = cache.get_char_sprite("character.png", 0, 48, 32, 48)
-        elif self.direction == "right":
-            self.person = cache.get_char_sprite("character.png", 0, 96, 32, 48)
-        else:
-            raise Exception("You must pass in a direction for the character to be facing.")
-        
-        # Blit the part of the image that we want to our surface.
-        self.image.blit(self.person, (0, 0), (0, 0, 32, 48))
-        
-        # Draw the character.
-        pygame.draw.rect(self.image, colors.brown, [512, 288, width, height])
-        
-        # Fetch the rectangle object that has the dimensions of the image.
         self.rect = self.image.get_rect()
         
+        # Set the standing still images.
         self.front_standing = cache.get_char_sprite("character.png", 0, 0, 32, 48)
         self.back_standing = cache.get_char_sprite("character.png", 0, 144, 32, 48)
         self.left_standing = cache.get_char_sprite("character.png", 0, 48, 32, 48)
         self.right_standing = cache.get_char_sprite("character.png", 0, 96, 32, 48)
         
-        self.animObjs = {}
-
+        # Draw the starting image.
+        if self.direction == "up":
+            self.image.blit(self.back_standing, (0, 0))
+        elif self.direction == "down":
+            self.image.blit(self.front_standing, (0, 0))
+        elif self.direction == "left":
+            self.image.blit(self.left_standing, (0, 0))
+        elif self.direction == "right":
+            self.image.blit(self.right_standing, (0, 0))
+        else:
+            raise Exception("You must pass in a valid direction for the character to be facing.")
+        
+        # Set the walking animation speed. (in seconds)
         anim_speed = 0.15
         
-        goingUpimagesAndDurations = [
-            (cache.get_char_sprite("character.png", 0, 144, 32, 48), anim_speed),
-            (cache.get_char_sprite("character.png", 32, 144, 32, 48), anim_speed),
-            (cache.get_char_sprite("character.png", 64, 144, 32, 48), anim_speed),
-            (cache.get_char_sprite("character.png", 96, 144, 32, 48), anim_speed)
+        # Define the still images to use for each frame of the animation.
+        # Format: Image file, top left corner of the part of the file that we want (in x, y format), character width, character height.
+        goingUpImages = [
+            (cache.get_char_sprite("character.png", 0, 144, width, height), anim_speed),
+            (cache.get_char_sprite("character.png", 32, 144, width, height), anim_speed),
+            (cache.get_char_sprite("character.png", 64, 144, width, height), anim_speed),
+            (cache.get_char_sprite("character.png", 96, 144, width, height), anim_speed)
+        ]
+        goingDownImages = [
+            (cache.get_char_sprite("character.png", 0, 0, width, height), anim_speed),
+            (cache.get_char_sprite("character.png", 32, 0, width, height), anim_speed),
+            (cache.get_char_sprite("character.png", 64, 0, width, height), anim_speed),
+            (cache.get_char_sprite("character.png", 96, 0, width, height), anim_speed)
+        ]
+        goingLeftImages = [
+            (cache.get_char_sprite("character.png", 0, 48, width, height), anim_speed),
+            (cache.get_char_sprite("character.png", 32, 48, width, height), anim_speed),
+            (cache.get_char_sprite("character.png", 64, 48, width, height), anim_speed),
+            (cache.get_char_sprite("character.png", 96, 48, width, height), anim_speed)
+        ]
+        goingRightImages = [
+            (cache.get_char_sprite("character.png", 0, 96, width, height), anim_speed),
+            (cache.get_char_sprite("character.png", 32, 96, width, height), anim_speed),
+            (cache.get_char_sprite("character.png", 64, 96, width, height), anim_speed),
+            (cache.get_char_sprite("character.png", 96, 96, width, height), anim_speed)
         ]
         
-        goingDownimagesAndDurations = [
-            (cache.get_char_sprite("character.png", 0, 0, 32, 48), anim_speed),
-            (cache.get_char_sprite("character.png", 32, 0, 32, 48), anim_speed),
-            (cache.get_char_sprite("character.png", 64, 0, 32, 48), anim_speed),
-            (cache.get_char_sprite("character.png", 96, 0, 32, 48), anim_speed)
-        ]
+        # Create a dictionary to hold the animation objects.
+        self.animObjs = {}
+        self.animObjs["front_walk"] = pyganim.PygAnimation(goingDownImages)
+        self.animObjs["back_walk"] = pyganim.PygAnimation(goingUpImages)
+        self.animObjs["left_walk"] = pyganim.PygAnimation(goingLeftImages)
+        self.animObjs["right_walk"] = pyganim.PygAnimation(goingRightImages)
         
-        goingLeftimagesAndDurations = [
-            (cache.get_char_sprite("character.png", 0, 48, 32, 48), anim_speed),
-            (cache.get_char_sprite("character.png", 32, 48, 32, 48), anim_speed),
-            (cache.get_char_sprite("character.png", 64, 48, 32, 48), anim_speed),
-            (cache.get_char_sprite("character.png", 96, 48, 32, 48), anim_speed)
-        ]
-        
-        goingRightimagesAndDurations = [
-            (cache.get_char_sprite("character.png", 0, 96, 32, 48), anim_speed),
-            (cache.get_char_sprite("character.png", 32, 96, 32, 48), anim_speed),
-            (cache.get_char_sprite("character.png", 64, 96, 32, 48), anim_speed),
-            (cache.get_char_sprite("character.png", 96, 96, 32, 48), anim_speed)
-        ]
-        
-        self.animObjs["front_walk"] = pyganim.PygAnimation(goingDownimagesAndDurations)
-        self.animObjs["back_walk"] = pyganim.PygAnimation(goingUpimagesAndDurations)
-        self.animObjs["left_walk"] = pyganim.PygAnimation(goingLeftimagesAndDurations)
-        self.animObjs["right_walk"] = pyganim.PygAnimation(goingRightimagesAndDurations)
-        
+        # Create the conductor object that will do the actual animation.
         self.moveConductor = pyganim.PygConductor(self.animObjs)
-        
+    
+    # Displays the walking animation on the screen.
     def update_image(self, direction):
-        self.direction = direction
-        if self.direction == "up":
-            self.image.fill(colors.black)
-            self.animObjs["back_walk"].blit(self.image, (0, 0))
-        if self.direction == "down":
-            self.image.fill(colors.black)
-            self.animObjs["front_walk"].blit(self.image, (0, 0))
-        if self.direction == "left":
-            self.image.fill(colors.black)
-            self.animObjs["left_walk"].blit(self.image, (0, 0))
-        if self.direction == "right":
-            self.image.fill(colors.black)
-            self.animObjs["right_walk"].blit(self.image, (0, 0))
+        
+        if direction == None:
+            if self.direction == "up":
+                self.image.fill(colors.black)
+                self.image.blit(self.back_standing, (0, 0))
+            if self.direction == "down":
+                self.image.fill(colors.black)
+                self.image.blit(self.front_standing, (0, 0))
+            if self.direction == "left":
+                self.image.fill(colors.black)
+                self.image.blit(self.left_standing, (0, 0))
+            if self.direction == "right":
+                self.image.fill(colors.black)
+                self.image.blit(self.right_standing, (0, 0))
+        else:
+            self.direction = direction
+            if self.direction == "up":
+                self.image.fill(colors.black)
+                self.animObjs["back_walk"].blit(self.image, (0, 0))
+            if self.direction == "down":
+                self.image.fill(colors.black)
+                self.animObjs["front_walk"].blit(self.image, (0, 0))
+            if self.direction == "left":
+                self.image.fill(colors.black)
+                self.animObjs["left_walk"].blit(self.image, (0, 0))
+            if self.direction == "right":
+                self.image.fill(colors.black)
+                self.animObjs["right_walk"].blit(self.image, (0, 0))
 
 # The actual game. Different versions of this class will need to load maps, characters, dialog, and detect interactions between objects on the screen. Each area will be its own class.
 class GameScene(base.SceneBase):
@@ -131,7 +142,8 @@ class GameScene(base.SceneBase):
         self.group = pyscroll.PyscrollGroup(map_layer=map_layer)
         
         # Create the player object.
-        self.player = Hero(self.cache, "down")
+        #self.player = Hero(self.cache, "down")
+        self.player = self.gamedata.hero
         # Initialize the sprites group.
         self.all_sprites_list = pygame.sprite.Group()
         # Then add the player object to it.
@@ -174,6 +186,7 @@ class GameScene(base.SceneBase):
             self.player.moveConductor.play()
         else:
             self.player.moveConductor.stop()
+            self.player.update_image(None)
             
         # Don't let the player walk off the top or bottom of the map.
         if self.rect_x < 0:
