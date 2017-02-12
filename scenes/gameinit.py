@@ -9,111 +9,7 @@ import pyscroll
 import pytmx.util_pygame
 import os
 import utils
-import pyganim
-
-# This class represents the player character.
-class Hero(pygame.sprite.Sprite):
-    
-    # Init builds everything.
-    def __init__(self, cache, direction, width=32, height=48):
-        # Call the parent class constructor.
-        super(Hero, self).__init__()
-        self.direction = direction
-        
-        # Start with a transparant surface the size of our sprite and make a rect for it.
-        self.image = pygame.Surface([width, height])
-        self.image.fill(colors.black)
-        self.image.set_colorkey(colors.black)
-        self.rect = self.image.get_rect()
-        
-        # Set the standing still images.
-        self.front_standing = cache.get_char_sprite("character.png", 0, 0, 32, 48)
-        self.back_standing = cache.get_char_sprite("character.png", 0, 144, 32, 48)
-        self.left_standing = cache.get_char_sprite("character.png", 0, 48, 32, 48)
-        self.right_standing = cache.get_char_sprite("character.png", 0, 96, 32, 48)
-        
-        # Draw the starting image.
-        if self.direction == "up":
-            self.image.blit(self.back_standing, (0, 0))
-        elif self.direction == "down":
-            self.image.blit(self.front_standing, (0, 0))
-        elif self.direction == "left":
-            self.image.blit(self.left_standing, (0, 0))
-        elif self.direction == "right":
-            self.image.blit(self.right_standing, (0, 0))
-        else:
-            raise Exception("You must pass in a valid direction for the character to be facing.")
-        
-        # Set the walking animation speed. (in seconds)
-        anim_speed = 0.15
-        
-        # Define the still images to use for each frame of the animation.
-        # Format: Image file, top left corner of the part of the file that we want (in x, y format), character width, character height.
-        goingUpImages = [
-            (cache.get_char_sprite("character.png", 0, 144, width, height), anim_speed),
-            (cache.get_char_sprite("character.png", 32, 144, width, height), anim_speed),
-            (cache.get_char_sprite("character.png", 64, 144, width, height), anim_speed),
-            (cache.get_char_sprite("character.png", 96, 144, width, height), anim_speed)
-        ]
-        goingDownImages = [
-            (cache.get_char_sprite("character.png", 0, 0, width, height), anim_speed),
-            (cache.get_char_sprite("character.png", 32, 0, width, height), anim_speed),
-            (cache.get_char_sprite("character.png", 64, 0, width, height), anim_speed),
-            (cache.get_char_sprite("character.png", 96, 0, width, height), anim_speed)
-        ]
-        goingLeftImages = [
-            (cache.get_char_sprite("character.png", 0, 48, width, height), anim_speed),
-            (cache.get_char_sprite("character.png", 32, 48, width, height), anim_speed),
-            (cache.get_char_sprite("character.png", 64, 48, width, height), anim_speed),
-            (cache.get_char_sprite("character.png", 96, 48, width, height), anim_speed)
-        ]
-        goingRightImages = [
-            (cache.get_char_sprite("character.png", 0, 96, width, height), anim_speed),
-            (cache.get_char_sprite("character.png", 32, 96, width, height), anim_speed),
-            (cache.get_char_sprite("character.png", 64, 96, width, height), anim_speed),
-            (cache.get_char_sprite("character.png", 96, 96, width, height), anim_speed)
-        ]
-        
-        # Create a dictionary to hold the animation objects.
-        self.animObjs = {}
-        self.animObjs["front_walk"] = pyganim.PygAnimation(goingDownImages)
-        self.animObjs["back_walk"] = pyganim.PygAnimation(goingUpImages)
-        self.animObjs["left_walk"] = pyganim.PygAnimation(goingLeftImages)
-        self.animObjs["right_walk"] = pyganim.PygAnimation(goingRightImages)
-        
-        # Create the conductor object that will do the actual animation.
-        self.moveConductor = pyganim.PygConductor(self.animObjs)
-    
-    # Displays the walking animation on the screen.
-    def update_image(self, direction):
-        
-        if direction == None:
-            if self.direction == "up":
-                self.image.fill(colors.black)
-                self.image.blit(self.back_standing, (0, 0))
-            if self.direction == "down":
-                self.image.fill(colors.black)
-                self.image.blit(self.front_standing, (0, 0))
-            if self.direction == "left":
-                self.image.fill(colors.black)
-                self.image.blit(self.left_standing, (0, 0))
-            if self.direction == "right":
-                self.image.fill(colors.black)
-                self.image.blit(self.right_standing, (0, 0))
-        else:
-            self.direction = direction
-            if self.direction == "up":
-                self.image.fill(colors.black)
-                self.animObjs["back_walk"].blit(self.image, (0, 0))
-            if self.direction == "down":
-                self.image.fill(colors.black)
-                self.animObjs["front_walk"].blit(self.image, (0, 0))
-            if self.direction == "left":
-                self.image.fill(colors.black)
-                self.animObjs["left_walk"].blit(self.image, (0, 0))
-            if self.direction == "right":
-                self.image.fill(colors.black)
-                self.animObjs["right_walk"].blit(self.image, (0, 0))
+import smoke
 
 # The actual game. Different versions of this class will need to load maps, characters, dialog, and detect interactions between objects on the screen. Each area will be its own class.
 class GameScene(base.SceneBase):
@@ -142,12 +38,15 @@ class GameScene(base.SceneBase):
         self.group = pyscroll.PyscrollGroup(map_layer=map_layer)
         
         # Create the player object.
-        #self.player = Hero(self.cache, "down")
         self.player = self.gamedata.hero
         # Initialize the sprites group.
         self.all_sprites_list = pygame.sprite.Group()
         # Then add the player object to it.
         self.all_sprites_list.add(self.player)
+        
+        self.smoke_particles = []
+        for number in range(300):
+            self.smoke_particles.append(smoke.Particle(225, 575, (60, 60, 60), 100, 1))
         
     # Handles user input passed from the main engine.
     def ProcessInput(self, events, pressed_keys):
@@ -162,24 +61,49 @@ class GameScene(base.SceneBase):
                 if event.key == pygame.K_ESCAPE:
                     self.gamedata.next_scene = "PartyScreen"
                     self.gamedata.previous_scene = "GameScene"
+                if event.key == pygame.K_RETURN:
+                    print(self.rect_y)
         
         # Look for keys being held down. Arrow keys or WASD for movment.
         if pressed_keys[pygame.K_UP] or pressed_keys[pygame.K_w]:
             self.rect_y = self.rect_y - 3
             self.moved = True
             self.player.update_image("up")
+            
+            if self.rect_y > 330 and self.rect_y < 770:
+                for particle in self.smoke_particles:
+                    particle.y = particle.y + 3
+                    particle.sy = particle.sy + 3
+                
         if pressed_keys[pygame.K_DOWN] or pressed_keys[pygame.K_s]:
             self.rect_y = self.rect_y + 3
             self.moved = True
             self.player.update_image("down")
+            
+            if self.rect_y > 330 and self.rect_y < 770:
+                for particle in self.smoke_particles:
+                    particle.y = particle.y - 3
+                    particle.sy = particle.sy - 3
+            
         if pressed_keys[pygame.K_LEFT] or pressed_keys[pygame.K_a]:
             self.rect_x = self.rect_x - 3
             self.moved = True
             self.player.update_image("left")
+            
+            if self.rect_x > 625 and self.rect_x < 1400:
+                for particle in self.smoke_particles:
+                    particle.x = particle.x + 3
+                    particle.sx = particle.sx + 3
+            
         if pressed_keys[pygame.K_RIGHT] or pressed_keys[pygame.K_d]:
             self.rect_x = self.rect_x + 3
             self.moved = True
             self.player.update_image("right")
+            
+            if self.rect_x > 625 and self.rect_x < 1400:
+                for particle in self.smoke_particles:
+                    particle.x = particle.x - 3
+                    particle.sx = particle.sx - 3
             
         if self.moved:
             self.battlebound = self.battlebound + 3
@@ -235,8 +159,18 @@ class GameScene(base.SceneBase):
         self.group.center(self.player.rect.center)
         self.group.add(self.player)
         
+        
+        
+        
+            
         # Draw the scolled view.
         self.group.draw(canvas.canvas)
         
+        for particle in self.smoke_particles:
+            particle.move()
+            pygame.draw.rect(canvas.canvas, particle.color, pygame.Rect(particle.x, particle.y, 1, 1))
+            
         # Draw the upscaled virtual screen to actual screen.
         screen.blit(canvas.render(), (0, 0))
+        
+        
