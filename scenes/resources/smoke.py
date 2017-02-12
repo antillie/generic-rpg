@@ -14,7 +14,7 @@ class Particle():
         self.drift = drift
         
     def move(self):
-        if self.y < self.sy - self.height:
+        if self.y < random.randint((self.sy - self.height -20 ), (self.sy - self.height + 20)):
             self.x=self.sx
             self.y=self.sy
         else:

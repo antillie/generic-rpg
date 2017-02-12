@@ -45,8 +45,8 @@ class GameScene(base.SceneBase):
         self.all_sprites_list.add(self.player)
         
         self.smoke_particles = []
-        for number in range(300):
-            self.smoke_particles.append(smoke.Particle(225, 575, (60, 60, 60), 100, 1))
+        for number in range(400):
+            self.smoke_particles.append(smoke.Particle(220, 575, (50, 50, 50), 100, 1))
         
     # Handles user input passed from the main engine.
     def ProcessInput(self, events, pressed_keys):
@@ -70,7 +70,7 @@ class GameScene(base.SceneBase):
             self.moved = True
             self.player.update_image("up")
             
-            if self.rect_y > 330 and self.rect_y < 770:
+            if self.rect_y >= 335 and self.rect_y <= 770:
                 for particle in self.smoke_particles:
                     particle.y = particle.y + 3
                     particle.sy = particle.sy + 3
@@ -80,7 +80,7 @@ class GameScene(base.SceneBase):
             self.moved = True
             self.player.update_image("down")
             
-            if self.rect_y > 330 and self.rect_y < 770:
+            if self.rect_y >= 335 and self.rect_y <= 770:
                 for particle in self.smoke_particles:
                     particle.y = particle.y - 3
                     particle.sy = particle.sy - 3
