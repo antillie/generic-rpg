@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# For backwards compatibility with Python 2.
+# Use the modern print function.
 from __future__ import print_function
 
 # Import modules.
@@ -76,13 +76,10 @@ class Engine:
             # Fullscreen mode.
             screen = pygame.display.set_mode((screen_info.current_w, screen_info.current_h), pygame.FULLSCREEN|pygame.HWSURFACE|pygame.DOUBLEBUF)
             transition = transitions.Transition(screen, screen_info.current_w, screen_info.current_h, [0, 0, 0])
-            
         else:
             # Windowed mode.
             screen = pygame.display.set_mode((width, height), pygame.RESIZABLE|pygame.HWSURFACE|pygame.DOUBLEBUF)
             transition = transitions.Transition(screen, width, height, [0, 0, 0])
-        
-        
         
         # Initilize the internal clock and set the window title.
         clock = pygame.time.Clock()

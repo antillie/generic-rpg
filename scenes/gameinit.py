@@ -11,12 +11,12 @@ import os
 import utils
 import pyganim
 
-# All characters are instances of this class.
-class Character(pygame.sprite.Sprite):
+# This class represents the player character.
+class Hero(pygame.sprite.Sprite):
     
     def __init__(self, cache, direction, width=32, height=48):
         # Call the parent class constructor.
-        super(Character, self).__init__()
+        super(Hero, self).__init__()
         self.direction = direction
         
         # Start with a black surface the size of our sprite.
@@ -131,7 +131,7 @@ class GameScene(base.SceneBase):
         self.group = pyscroll.PyscrollGroup(map_layer=map_layer)
         
         # Create the player object.
-        self.player = Character(self.cache, "down")
+        self.player = Hero(self.cache, "down")
         # Initialize the sprites group.
         self.all_sprites_list = pygame.sprite.Group()
         # Then add the player object to it.
