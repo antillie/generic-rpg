@@ -18,6 +18,7 @@ class PartyScreen(base.SceneBase):
         self.cache = cache
         self.transition = transition
         self.gamedata = gamedata
+        self.menu_rects = []
         
     # Handles user input passed from the main engine.
     def ProcessInput(self, events, pressed_keys):
@@ -29,7 +30,7 @@ class PartyScreen(base.SceneBase):
                     self.gamedata.next_scene = self.gamedata.previous_scene
                     self.gamedata.previous_scene = "PartyScreen"
                 # Enter key.
-                elif event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
+                elif event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER or event.key == K_SPACE:
                     # Status.
                     if self.menu == 0:
                         # Not yet implimented.
@@ -67,8 +68,8 @@ class PartyScreen(base.SceneBase):
                     # Quit to desktop.
                     elif self.menu == 8:
                         self.gamedata.next_scene = None
-                # Down arrow.
-                elif event.key == pygame.K_DOWN:
+                # Down arrow or S.
+                elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
                     # Play the menu sound effect.
                     self.sound.play_sound("menu_change.wav")
                     # Incriment the menu.
@@ -76,8 +77,8 @@ class PartyScreen(base.SceneBase):
                     if self.menu == 9:
                         # Loop the menu if we went past the end.
                         self.menu = 0
-                # Up arrow.
-                elif event.key == pygame.K_UP:
+                # Up arrow or W.
+                elif event.key == pygame.K_UP or event.key == pygame.K_w:
                     # Play the menu sound effect.
                     self.sound.play_sound("menu_change.wav")
                     # Incriment the menu.

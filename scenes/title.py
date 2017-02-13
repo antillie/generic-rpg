@@ -17,6 +17,7 @@ class TitleScene(base.SceneBase):
         self.sound = sound
         self.cache = cache
         self.gamedata = gamedata
+        self.menu_rects = []
         
     # Handles user input passed from the main engine.
     def ProcessInput(self, events, pressed_keys):
@@ -26,7 +27,7 @@ class TitleScene(base.SceneBase):
             # Keyboard input.
             if event.type == pygame.KEYDOWN:
                 # Enter key.
-                if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
+                if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER or event.key == K_SPACE:
                     # New game.
                     if self.menu == 0:
                         self.sound.stop_music()
@@ -53,8 +54,8 @@ class TitleScene(base.SceneBase):
                     # Exit the game.
                     elif self.menu == 4:
                         self.gamedata.next_scene = None
-                # Down arrow.
-                elif event.key == pygame.K_DOWN:
+                # Down arrow or S.
+                elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
                     # Play the menu sound effect.
                     self.sound.play_sound("menu_change.wav")
                     # Incriment the menu.
@@ -62,8 +63,8 @@ class TitleScene(base.SceneBase):
                     if self.menu == 5:
                         # Loop the menu if we went past the end.
                         self.menu = 0
-                # Up arrow.
-                elif event.key == pygame.K_UP:
+                # Up arrow or W.
+                elif event.key == pygame.K_UP or event.key == pygame.K_w:
                     # Play the menu sound effect.
                     self.sound.play_sound("menu_change.wav")
                     # Incriment the menu.
