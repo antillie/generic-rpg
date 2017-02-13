@@ -43,14 +43,19 @@ class GameScene(base.SceneBase):
         self.all_sprites_list = pygame.sprite.Group()
         # Then add the player object to it.
         self.all_sprites_list.add(self.player)
-        
-        self.smoke_particles = []
-        for number in range(400):
-            self.smoke_particles.append(smoke.Particle(220, 575, (50, 50, 50), 100, 1))
             
         self.pre_x = []
         self.pre_y = []
         
+        self.smoke_particles = []
+        for number in range(400):
+            self.smoke_particles.append(smoke.Particle(220, 575, (50, 50, 50), 100, 1))
+    
+    def make_smoke(self, startx, starty):
+        self.smoke_particles = []
+        for number in range(400):
+            self.smoke_particles.append(smoke.Particle(startx, starty, (50, 50, 50), 100, 1))
+    
     # Handles user input passed from the main engine.
     def ProcessInput(self, events, pressed_keys):
         # Play the forest theme for now.
@@ -74,10 +79,10 @@ class GameScene(base.SceneBase):
             self.player.update_image("up")
             self.pre_y.append(self.rect_y)
             
-            if self.rect_y >= 335 and self.rect_y <= 770:
-                for particle in self.smoke_particles:
-                    particle.y = particle.y + 3
-                    particle.sy = particle.sy + 3
+            #if self.rect_y >= 335 and self.rect_y <= 770:
+            #    for particle in self.smoke_particles:
+            #        particle.y = particle.y + 3
+            #        particle.sy = particle.sy + 3
                 
         if pressed_keys[pygame.K_DOWN] or pressed_keys[pygame.K_s]:
             self.rect_y = self.rect_y + 3
@@ -85,10 +90,10 @@ class GameScene(base.SceneBase):
             self.player.update_image("down")
             self.pre_y.append(self.rect_y)
             
-            if self.rect_y >= 335 and self.rect_y <= 770:
-                for particle in self.smoke_particles:
-                    particle.y = particle.y - 3
-                    particle.sy = particle.sy - 3
+            #if self.rect_y >= 335 and self.rect_y <= 770:
+            #    for particle in self.smoke_particles:
+            #        particle.y = particle.y - 3
+            #        particle.sy = particle.sy - 3
             
         if pressed_keys[pygame.K_LEFT] or pressed_keys[pygame.K_a]:
             self.rect_x = self.rect_x - 3
@@ -96,10 +101,10 @@ class GameScene(base.SceneBase):
             self.player.update_image("left")
             self.pre_x.append(self.rect_x)
             
-            if self.rect_x > 625 and self.rect_x < 1400:
-                for particle in self.smoke_particles:
-                    particle.x = particle.x + 3
-                    particle.sx = particle.sx + 3
+            #if self.rect_x > 625 and self.rect_x < 1400:
+            #    for particle in self.smoke_particles:
+            #        particle.x = particle.x + 3
+            #        particle.sx = particle.sx + 3
             
         if pressed_keys[pygame.K_RIGHT] or pressed_keys[pygame.K_d]:
             self.rect_x = self.rect_x + 3
@@ -107,10 +112,10 @@ class GameScene(base.SceneBase):
             self.player.update_image("right")
             self.pre_x.append(self.rect_x)
             
-            if self.rect_x > 625 and self.rect_x < 1400:
-                for particle in self.smoke_particles:
-                    particle.x = particle.x - 3
-                    particle.sx = particle.sx - 3
+            #if self.rect_x > 625 and self.rect_x < 1400:
+            #    for particle in self.smoke_particles:
+            #        particle.x = particle.x - 3
+            #        particle.sx = particle.sx - 3
         
         if self.moved:
             self.battlebound = self.battlebound + 3
@@ -124,11 +129,16 @@ class GameScene(base.SceneBase):
             # The name of the object layer in the TMX file we are interested in. There could be more than one.
             if layer.name == "Meta":
                 for obj in layer:
+                    
+                    if obj.name == "FireObject":
+                        self.fire = pygame.Rect(obj.x, obj.y, obj.width, obj.height)
+                        if self.moved:
+                            self.make_smoke(self.fire.centerx, self.fire.centery)
+                            
                     # Rect that represents the bottom half of the player sprite.
                     player_feet = pygame.Rect(self.player.rect.left, self.player.rect.top + 16, 32, 24)
                     
                     if pygame.Rect(obj.x, obj.y, obj.width, obj.height).colliderect(player_feet) == True:
-                        #if obj.name == "FireObject" or obj.name == "RockObject": # Optional, useful if you want different colidable objects to do different things.
                         # Move the player back to where they were before the collision.
                         self.rect_x = self.pre_x[-3]
                         self.rect_y = self.pre_y[-3]
