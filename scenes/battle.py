@@ -120,11 +120,8 @@ class BattleScreen(base.SceneBase):
         canvas.canvas.blit(self.background, (0, 0))
         
         menu_x = 1056
-        
         pygame.draw.rect(canvas.canvas, colors.white, pygame.Rect(menu_x - 3,7,220,206), 3)
-        
         pygame.draw.rect(canvas.canvas, colors.menu_blue, pygame.Rect(menu_x,10,214,200), 0)
-        
         menu_x = menu_x + 13
         
         # Menu entries.

@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import colors
-import utils
 
 # Used for entries in menus.
 class MenuOption:

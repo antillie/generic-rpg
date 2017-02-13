@@ -10,6 +10,7 @@ import pytmx.util_pygame
 import os
 import utils
 import campfire
+import dialog
 
 # An area in the game. Different variations of this class will need to load different maps, characters, battles, dialog, ect. Each area will be its own class (and .py file).
 class GameScene(base.SceneBase):
@@ -21,6 +22,13 @@ class GameScene(base.SceneBase):
         self.battlebound = 0
         self.transition = transition
         self.gamedata = gamedata
+        
+        # Create our staticly sized virtual screen so we can draw stuff on it.
+        self.canvas = virtualscreen.VirtualScreen(gamedata.current_w, gamedata.current_h)
+        
+        # Create a dialog object.
+        self.dialog = dialog.Dialog(cache, self.canvas, gamedata)
+        self.dialog_toggle = False
         
         # Make an animated campfire instance.
         self.campfire = campfire.Campfire(cache)
@@ -77,6 +85,12 @@ class GameScene(base.SceneBase):
                 if event.key == pygame.K_ESCAPE:
                     self.gamedata.next_scene = "PartyScreen"
                     self.gamedata.previous_scene = "GameScene"
+                elif event.key in (pygame.K_RETURN, pygame.K_KP_ENTER, pygame.K_SPACE):
+                    if not self.dialog_toggle:
+                        self.dialog_toggle = True
+                    else:
+                        self.dialog_toggle = False
+                    
         
         # Look for keys being held down. Arrow keys or WASD for movment.
         if pressed_keys[pygame.K_UP] or pressed_keys[pygame.K_w]:
@@ -196,9 +210,6 @@ class GameScene(base.SceneBase):
     # Draws things.
     def Render(self, screen, real_w, real_h):
         
-        # Create our staticly sized virtual screen so we can draw stuff on it.
-        canvas = virtualscreen.VirtualScreen(real_w, real_h)
-        
         # Move the map view along with the player.
         self.group.center(self.player.rect.center)
         
@@ -208,9 +219,12 @@ class GameScene(base.SceneBase):
         self.group.add(self.campfire)
         
         # Draw the scolled view.
-        self.group.draw(canvas.canvas)
+        self.group.draw(self.canvas.canvas)
+        
+        if self.dialog_toggle:
+            self.dialog.render("The Hero", "bla bla bla",)
             
         # Draw the upscaled virtual screen to actual screen.
-        screen.blit(canvas.render(), (0, 0))
+        screen.blit(self.canvas.render(), (0, 0))
         
         

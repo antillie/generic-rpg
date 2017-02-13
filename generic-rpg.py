@@ -76,17 +76,18 @@ class Engine:
             # Fullscreen mode.
             screen = pygame.display.set_mode((screen_info.current_w, screen_info.current_h), pygame.FULLSCREEN|pygame.HWSURFACE|pygame.DOUBLEBUF)
             transition = transitions.Transition(screen, screen_info.current_w, screen_info.current_h, [0, 0, 0])
+            # Game data object that stores everything about the current game session. Characters, dialog, story progress, scene progression, quests, ect...
+            self.gamedata = gamedata.GameData(cache, screen_info.current_w, screen_info.current_h)
         else:
             # Windowed mode.
             screen = pygame.display.set_mode((width, height), pygame.RESIZABLE|pygame.HWSURFACE|pygame.DOUBLEBUF)
             transition = transitions.Transition(screen, width, height, [0, 0, 0])
+            # Game data object that stores everything about the current game session. Characters, dialog, story progress, scene progression, quests, ect...
+            self.gamedata = gamedata.GameData(cache, width, height)
         
         # Initilize the internal clock and set the window title.
         clock = pygame.time.Clock()
         pygame.display.set_caption("Generic RPG")
-        
-        # Game data object that stores everything about the current game session. Characters, dialog, story progress, scene progression, quests, ect...
-        self.gamedata = gamedata.GameData(cache)
         
         # Initialize scenes and pass them all the sound, cache, transition, and gamedata objects.
         self.TitleScene = title.TitleScene(sound, cache, transition, self.gamedata)
