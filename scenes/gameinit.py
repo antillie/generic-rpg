@@ -47,6 +47,9 @@ class GameScene(base.SceneBase):
         self.smoke_particles = []
         for number in range(400):
             self.smoke_particles.append(smoke.Particle(220, 575, (50, 50, 50), 100, 1))
+            
+        self.pre_x = []
+        self.pre_y = []
         
     # Handles user input passed from the main engine.
     def ProcessInput(self, events, pressed_keys):
@@ -69,6 +72,7 @@ class GameScene(base.SceneBase):
             self.rect_y = self.rect_y - 3
             self.moved = True
             self.player.update_image("up")
+            self.pre_y.append(self.rect_y)
             
             if self.rect_y >= 335 and self.rect_y <= 770:
                 for particle in self.smoke_particles:
@@ -79,6 +83,7 @@ class GameScene(base.SceneBase):
             self.rect_y = self.rect_y + 3
             self.moved = True
             self.player.update_image("down")
+            self.pre_y.append(self.rect_y)
             
             if self.rect_y >= 335 and self.rect_y <= 770:
                 for particle in self.smoke_particles:
@@ -89,6 +94,7 @@ class GameScene(base.SceneBase):
             self.rect_x = self.rect_x - 3
             self.moved = True
             self.player.update_image("left")
+            self.pre_x.append(self.rect_x)
             
             if self.rect_x > 625 and self.rect_x < 1400:
                 for particle in self.smoke_particles:
@@ -99,19 +105,40 @@ class GameScene(base.SceneBase):
             self.rect_x = self.rect_x + 3
             self.moved = True
             self.player.update_image("right")
+            self.pre_x.append(self.rect_x)
             
             if self.rect_x > 625 and self.rect_x < 1400:
                 for particle in self.smoke_particles:
                     particle.x = particle.x - 3
                     particle.sx = particle.sx - 3
-            
+        
         if self.moved:
             self.battlebound = self.battlebound + 3
             self.player.moveConductor.play()
         else:
             self.player.moveConductor.stop()
             self.player.update_image(None)
-            
+        
+        # Collision detection.
+        for layer in self.tmx_data.visible_layers:
+            # The name of the object layer in the TMX file we are interested in. There could be more than one.
+            if layer.name == "Meta":
+                for obj in layer:
+                    # Rect that represents the bottom half of the player sprite.
+                    player_feet = pygame.Rect(self.player.rect.left, self.player.rect.top + 16, 32, 24)
+                    
+                    if pygame.Rect(obj.x, obj.y, obj.width, obj.height).colliderect(player_feet) == True:
+                        #if obj.name == "FireObject" or obj.name == "RockObject": # Optional, useful if you want different colidable objects to do different things.
+                        # Move the player back to where they were before the collision.
+                        self.rect_x = self.pre_x[-3]
+                        self.rect_y = self.pre_y[-3]
+                        # Delete the colliding point in the trail.
+                        del self.pre_x[-1]
+                        del self.pre_y[-1]
+                        # Then add a new non colliding point.
+                        self.pre_x.append(self.rect_x)
+                        self.pre_y.append(self.rect_y)
+        
         # Don't let the player walk off the top or bottom of the map.
         if self.rect_x < 0:
             self.rect_x = 0
@@ -132,7 +159,7 @@ class GameScene(base.SceneBase):
         self.all_sprites_list.update()
         
         # There is a 0.5% chance of a random battle every time the player moves past a certain distance.
-        if self.battlebound > 240:
+        if self.battlebound > 250 and self.moved:
             if utils.rand_chance(5):
                 self.battlebound = 0
                 self.sound.stop_music()
@@ -141,7 +168,7 @@ class GameScene(base.SceneBase):
                 self.gamedata.next_scene = "BattleScreen"
                 self.gamedata.previous_scene = "GameScene"
                     
-        if self.battlebound > 1600:
+        if self.battlebound > 1800 and self.moved:
             self.battlebound = 0
             self.sound.stop_music()
             self.transition.run("fadeOutUp")
