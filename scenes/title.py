@@ -76,17 +76,15 @@ class TitleScene(base.SceneBase):
                         self.menu = 4
             # Mouse moved.
             elif event.type == pygame.MOUSEMOTION:
-                mpos = pygame.mouse.get_pos()
                 for x in range(len(self.menu_rects)):
-                    if self.menu_rects[x].collidepoint(mpos):
+                    if self.menu_rects[x].collidepoint(event.pos):
                         self.menu = x
             # Mouse click.
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 # Left click.
                 if event.button == 1:
-                    mpos = pygame.mouse.get_pos()
                     for x in range(len(self.menu_rects)):
-                        if self.menu_rects[x].collidepoint(mpos):
+                        if self.menu_rects[x].collidepoint(event.pos):
                             # New game.
                             if self.menu == 0:
                                 self.sound.stop_music()
