@@ -14,3 +14,5 @@ class GameData:
         self.cache = cache
         
         self.hero = hero.Hero(self.cache, "down")
+        
+        self.npc = hero.Hero(self.cache, "down")

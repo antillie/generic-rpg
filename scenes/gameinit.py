@@ -9,7 +9,6 @@ import pyscroll
 import pytmx.util_pygame
 import os
 import utils
-import smoke
 
 # The actual game. Different versions of this class will need to load maps, characters, dialog, and detect interactions between objects on the screen. Each area will be its own class.
 class GameScene(base.SceneBase):
@@ -43,18 +42,18 @@ class GameScene(base.SceneBase):
         self.all_sprites_list = pygame.sprite.Group()
         # Then add the player object to it.
         self.all_sprites_list.add(self.player)
-            
+        
+        self.npc = self.gamedata.npc
+        self.all_sprites_list.add(self.npc)
+        
+        self.npc.rect.top = 400
+        self.npc.rect.left = 300
+        
+        self.npc_move_counter = 0
+        self.npc_flag = "down"
+        
         self.pre_x = []
         self.pre_y = []
-        
-        self.smoke_particles = []
-        for number in range(400):
-            self.smoke_particles.append(smoke.Particle(220, 575, (50, 50, 50), 100, 1))
-    
-    def make_smoke(self, startx, starty):
-        self.smoke_particles = []
-        for number in range(400):
-            self.smoke_particles.append(smoke.Particle(startx, starty, (50, 50, 50), 100, 1))
     
     # Handles user input passed from the main engine.
     def ProcessInput(self, events, pressed_keys):
@@ -69,8 +68,6 @@ class GameScene(base.SceneBase):
                 if event.key == pygame.K_ESCAPE:
                     self.gamedata.next_scene = "PartyScreen"
                     self.gamedata.previous_scene = "GameScene"
-                if event.key == pygame.K_RETURN:
-                    print(self.rect_y)
         
         # Look for keys being held down. Arrow keys or WASD for movment.
         if pressed_keys[pygame.K_UP] or pressed_keys[pygame.K_w]:
@@ -78,45 +75,22 @@ class GameScene(base.SceneBase):
             self.moved = True
             self.player.update_image("up")
             self.pre_y.append(self.rect_y)
-            
-            #if self.rect_y >= 335 and self.rect_y <= 770:
-            #    for particle in self.smoke_particles:
-            #        particle.y = particle.y + 3
-            #        particle.sy = particle.sy + 3
-                
         if pressed_keys[pygame.K_DOWN] or pressed_keys[pygame.K_s]:
             self.rect_y = self.rect_y + 3
             self.moved = True
             self.player.update_image("down")
             self.pre_y.append(self.rect_y)
-            
-            #if self.rect_y >= 335 and self.rect_y <= 770:
-            #    for particle in self.smoke_particles:
-            #        particle.y = particle.y - 3
-            #        particle.sy = particle.sy - 3
-            
         if pressed_keys[pygame.K_LEFT] or pressed_keys[pygame.K_a]:
             self.rect_x = self.rect_x - 3
             self.moved = True
             self.player.update_image("left")
             self.pre_x.append(self.rect_x)
-            
-            #if self.rect_x > 625 and self.rect_x < 1400:
-            #    for particle in self.smoke_particles:
-            #        particle.x = particle.x + 3
-            #        particle.sx = particle.sx + 3
-            
         if pressed_keys[pygame.K_RIGHT] or pressed_keys[pygame.K_d]:
             self.rect_x = self.rect_x + 3
             self.moved = True
             self.player.update_image("right")
             self.pre_x.append(self.rect_x)
             
-            #if self.rect_x > 625 and self.rect_x < 1400:
-            #    for particle in self.smoke_particles:
-            #        particle.x = particle.x - 3
-            #        particle.sx = particle.sx - 3
-        
         if self.moved:
             self.battlebound = self.battlebound + 3
             self.player.moveConductor.play()
@@ -129,12 +103,6 @@ class GameScene(base.SceneBase):
             # The name of the object layer in the TMX file we are interested in. There could be more than one.
             if layer.name == "Meta":
                 for obj in layer:
-                    
-                    if obj.name == "FireObject":
-                        self.fire = pygame.Rect(obj.x, obj.y, obj.width, obj.height)
-                        if self.moved:
-                            self.make_smoke(self.fire.centerx, self.fire.centery)
-                            
                     # Rect that represents the bottom half of the player sprite.
                     player_feet = pygame.Rect(self.player.rect.left, self.player.rect.top + 16, 32, 24)
                     
@@ -148,6 +116,12 @@ class GameScene(base.SceneBase):
                         # Then add a new non colliding point.
                         self.pre_x.append(self.rect_x)
                         self.pre_y.append(self.rect_y)
+        
+        # Don't let the movement trail grow forever.
+        if len(self.pre_x) > 500:
+            del self.pre_x[:-250]
+        if len(self.pre_y) > 500:
+            del self.pre_y[:-250]
         
         # Don't let the player walk off the top or bottom of the map.
         if self.rect_x < 0:
@@ -164,6 +138,28 @@ class GameScene(base.SceneBase):
     # Internal game logic.
     def Update(self):
         
+        if self.npc_move_counter < 200 and self.npc_flag == "down":
+            
+            self.npc_move_counter = self.npc_move_counter + 1
+            
+            self.npc.rect.top =  self.npc.rect.top + 2
+            self.npc.update_image("down")
+            self.npc.moveConductor.play()
+            
+            if self.npc_move_counter == 200:
+                self.npc_flag = "up"
+            
+        if self.npc_flag == "up":
+            self.npc_move_counter = self.npc_move_counter - 1
+            
+            self.npc.rect.top =  self.npc.rect.top - 2
+            self.npc.update_image("up")
+            self.npc.moveConductor.play()
+            
+            if self.npc_move_counter == 0:
+                self.npc_flag = "down"
+                
+                
         self.player.rect.top = self.rect_y
         self.player.rect.left = self.rect_x
         self.all_sprites_list.update()
@@ -195,17 +191,10 @@ class GameScene(base.SceneBase):
         # Move the map view along with the player.
         self.group.center(self.player.rect.center)
         self.group.add(self.player)
+        self.group.add(self.npc)
         
-        
-        
-        
-            
         # Draw the scolled view.
         self.group.draw(canvas.canvas)
-        
-        for particle in self.smoke_particles:
-            particle.move()
-            pygame.draw.rect(canvas.canvas, particle.color, pygame.Rect(particle.x, particle.y, 1, 1))
             
         # Draw the upscaled virtual screen to actual screen.
         screen.blit(canvas.render(), (0, 0))
