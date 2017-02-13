@@ -16,7 +16,6 @@ class BattleScreen(base.SceneBase):
         self.menu = 5
         self.sound = sound
         self.cache = cache
-        self.menu_rects = []
         self.gamedata = gamedata
         self.background = cache.get_image(background)
         

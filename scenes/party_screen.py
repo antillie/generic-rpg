@@ -8,7 +8,7 @@ import colors
 import utils
 import formatting
 
-# The party screen. Lets you save/quit, use items, change classes, ect...
+# The party screen. Lets you save/quit, use items, change classes, ect.
 class PartyScreen(base.SceneBase):
     
     def __init__(self, sound, cache, transition, gamedata):
@@ -18,7 +18,6 @@ class PartyScreen(base.SceneBase):
         self.cache = cache
         self.transition = transition
         self.gamedata = gamedata
-        self.menu_rects = []
         
     # Handles user input passed from the main engine.
     def ProcessInput(self, events, pressed_keys):

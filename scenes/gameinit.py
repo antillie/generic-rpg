@@ -10,7 +10,7 @@ import pytmx.util_pygame
 import os
 import utils
 
-# The actual game. Different versions of this class will need to load maps, characters, dialog, and detect interactions between objects on the screen. Each area will be its own class.
+# An area in the game. Different variations of this class will need to load different maps, characters, battles, dialog, ect. Each area will be its own class (and .py file).
 class GameScene(base.SceneBase):
     
     def __init__(self, sound, cache, transition, gamedata, song="forest.mp3"):
@@ -177,8 +177,8 @@ class GameScene(base.SceneBase):
         if self.battlebound > 1800 and self.moved:
             self.battlebound = 0
             self.sound.stop_music()
-            self.transition.run("fadeOutUp")
             self.sound.play_music("awildcreatureappears.ogg")
+            self.transition.run("fadeOutUp")
             self.gamedata.next_scene = "BattleScreen"
             self.gamedata.previous_scene = "GameScene"
     
@@ -190,6 +190,8 @@ class GameScene(base.SceneBase):
         
         # Move the map view along with the player.
         self.group.center(self.player.rect.center)
+        
+        # Add the sprites in the area to the group so that they move properly with the scrolling map.
         self.group.add(self.player)
         self.group.add(self.npc)
         

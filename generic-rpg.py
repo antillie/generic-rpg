@@ -27,17 +27,18 @@ sound = sound.JukeBox()
 # Global cache object that handles all image and font object caching.
 cache = cache.CacheEngine()
 
-# Main engine.
+# Main engine. 91 octane minimum. Premium fuel recommended. See owners manual for details.
 class Engine:
     
     def reset_game(self, transition):
+        # Once things get going this will instead just need to reset the Gamdata object and maybe the starting area.
         self.GameScene = gameinit.GameScene(sound, cache, transition, self.gamedata)
         self.BattleScreen = battle.BattleScreen(sound, cache, transition, self.gamedata)
         self.PartyScreen = party_screen.PartyScreen(sound, cache, transition, self.gamedata)
         
     # Sets up the window, handles screen modes/sizes, manages scene changes, and forwards player input to the active scene.
     def run(self, width=1280, height=720, fps=60, fullscreen=False):
-        # Initialize the engine and get information about the user's display.
+        # Initialize the underlying pygame engine and get information about the user's display.
         pygame.init()
         screen_info = pygame.display.Info()
         
@@ -84,10 +85,10 @@ class Engine:
         clock = pygame.time.Clock()
         pygame.display.set_caption("Generic RPG")
         
-        # Game data object that stores everything about the current game session. Characters, story progress, scene progression, quests, ect...
+        # Game data object that stores everything about the current game session. Characters, dialog, story progress, scene progression, quests, ect...
         self.gamedata = gamedata.GameData(cache)
         
-        # Initialize scenes and pass them all the sound and cache objects.
+        # Initialize scenes and pass them all the sound, cache, transition, and gamedata objects.
         self.TitleScene = title.TitleScene(sound, cache, transition, self.gamedata)
         self.CreditsScene = credits_s.CreditsScene(sound, cache, transition, self.gamedata)
         self.GameScene = gameinit.GameScene(sound, cache, transition, self.gamedata)
@@ -155,6 +156,7 @@ class Engine:
                         width = event.size[0]
                         height = event.size[1]
                         screen = pygame.display.set_mode(event.size, pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.RESIZABLE)
+                        transition = transitions.Transition(screen, width, height, [0, 0, 0])
                 
                 # No active scene means that we are done.
                 if active_scene == None:
@@ -177,9 +179,9 @@ class Engine:
                     ini_file = open(location, "w")
                     ini_data = str(width) + "x" + str(height)
                     if fullscreen:
-                        ini_data = ini_data + "x" + "True"
+                        ini_data = ini_data + "xTrue"
                     else:
-                        ini_data = ini_data + "x" + "False"
+                        ini_data = ini_data + "xFalse"
                     # Write the data to our ini file.
                     ini_file.write(ini_data)
                     # Then close the file.

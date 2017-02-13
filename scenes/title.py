@@ -14,10 +14,7 @@ class TitleScene(base.SceneBase):
     def __init__(self, sound, cache, transition, gamedata, song="enchantedfestivalloop.mp3"):
         self.song = song
         self.menu = 1
-        # Initialise the menu rects list.
-        self.menu_rects = []
         self.sound = sound
-        self.menu_rects = []
         self.cache = cache
         self.gamedata = gamedata
         
@@ -41,7 +38,7 @@ class TitleScene(base.SceneBase):
                     elif self.menu == 1:
                         # Not yet implimented.
                         pass
-                    # Game options.
+                    # Reset display.
                     elif self.menu == 2:
                         # Just resets the display mode.
                         self.sound.play_sound("menu_thwump.wav")
