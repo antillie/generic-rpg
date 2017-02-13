@@ -62,7 +62,7 @@ class CreditsScene(base.SceneBase):
                             # Launch the default web browser for the URL.
                             webbrowser.open(self.credit_urls[x], new=2)
                     
-                    if self.x == -2600:
+                    if self.x == -2700:
                         self.x = 730
                         self.transition.run("fadeOutDown")
                         self.sound.stop_music()
@@ -130,8 +130,10 @@ class CreditsScene(base.SceneBase):
             Credit(font_eula, (self.y, self.x + 2230), self.cache, url_size, colors.link_blue),
             Credit("Character sprites created with Mack's sprite generator", (self.y, self.x + 2300), self.cache),
             Credit("http://www.geocities.jp/kurororo4/looseleaf/", (self.y, self.x + 2330), self.cache, url_size, colors.link_blue),
-            Credit("Built with the Generic RPG engine written by George Markeloff.", (self.y, self.x + 2400), self.cache),
-            Credit("Thanks for playing!", (self.y + 410, self.x + 2900), self.cache)
+            Credit("Animated campfire by Zabin and Jetrel", (self.y, self.x + 2400), self.cache),
+            Credit("http://opengameart.org/content/camp-fire-animation-for-rpgs-finished", (self.y, self.x + 2430), self.cache, url_size, colors.link_blue),
+            Credit("Built with the Generic RPG engine written by George Markeloff.", (self.y, self.x + 2500), self.cache),
+            Credit("Thanks for playing!", (self.y + 410, self.x + 3000), self.cache)
         ]
         
         url_pattern = []
@@ -162,5 +164,5 @@ class CreditsScene(base.SceneBase):
             self.credit_url_rects[x] = utils.scale_rect(self.credit_url_rects[x], real_w, real_h)
         
         # Move the credits up one pixel for the next frame.
-        if self.x > -2600:
+        if self.x > -2700:
             self.x = self.x - 1

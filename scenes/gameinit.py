@@ -9,6 +9,7 @@ import pyscroll
 import pytmx.util_pygame
 import os
 import utils
+import campfire
 
 # An area in the game. Different variations of this class will need to load different maps, characters, battles, dialog, ect. Each area will be its own class (and .py file).
 class GameScene(base.SceneBase):
@@ -20,6 +21,9 @@ class GameScene(base.SceneBase):
         self.battlebound = 0
         self.transition = transition
         self.gamedata = gamedata
+        
+        # Make an animated campfire instance.
+        self.campfire = campfire.Campfire(cache)
         
         # Player starting position.
         self.rect_x = 512
@@ -46,8 +50,13 @@ class GameScene(base.SceneBase):
         self.npc = self.gamedata.npc
         self.all_sprites_list.add(self.npc)
         
+        self.all_sprites_list.add(self.campfire)
+        
         self.npc.rect.top = 400
         self.npc.rect.left = 300
+        
+        self.campfire.rect.top = 900
+        self.campfire.rect.left = 500
         
         self.npc_move_counter = 0
         self.npc_flag = "down"
@@ -158,7 +167,9 @@ class GameScene(base.SceneBase):
             
             if self.npc_move_counter == 0:
                 self.npc_flag = "down"
-                
+        
+        self.campfire.update_image()
+        self.campfire.moveConductor.play()
                 
         self.player.rect.top = self.rect_y
         self.player.rect.left = self.rect_x
@@ -194,6 +205,7 @@ class GameScene(base.SceneBase):
         # Add the sprites in the area to the group so that they move properly with the scrolling map.
         self.group.add(self.player)
         self.group.add(self.npc)
+        self.group.add(self.campfire)
         
         # Draw the scolled view.
         self.group.draw(canvas.canvas)
