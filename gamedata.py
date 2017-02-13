@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import hero
+import npc
 
 # This class holds all data about the current game session. Story progress, characters, inventory, ect...
 class GameData:
@@ -15,4 +16,4 @@ class GameData:
         
         self.hero = hero.Hero(self.cache, "down")
         
-        self.npc = hero.Hero(self.cache, "down")
+        self.npc = npc.npc(self.cache, "down")
