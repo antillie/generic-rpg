@@ -25,8 +25,8 @@ class BattleScreen(base.SceneBase):
         for event in events:
             # Keyboard input.
             if event.type == pygame.KEYDOWN:
-                # Enter key.
-                if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER or event.key == K_SPACE:
+                # Enter key or space.
+                if event.key in (pygame.K_RETURN, pygame.K_KP_ENTER, pygame.K_SPACE):
                     # Attack.
                     if self.menu == 0:
                         # Not yet implimented.
@@ -53,7 +53,7 @@ class BattleScreen(base.SceneBase):
                         self.gamedata.next_scene = self.gamedata.previous_scene
                         self.gamedata.previous_scene = "BattleScreen"
                 # Down arrow or S.
-                elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
+                elif event.key in (pygame.K_DOWN, pygame.K_s):
                     # Play the menu sound effect.
                     self.sound.play_sound("menu_change.wav")
                     # Incriment the menu.
@@ -62,7 +62,7 @@ class BattleScreen(base.SceneBase):
                         # Loop the menu if we went past the end.
                         self.menu = 0
                 # Up arrow or W.
-                elif event.key == pygame.K_UP or event.key == pygame.K_w:
+                elif event.key in (pygame.K_UP, pygame.K_w):
                     # Play the menu sound effect.
                     self.sound.play_sound("menu_change.wav")
                     # Incriment the menu.

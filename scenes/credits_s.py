@@ -45,8 +45,8 @@ class CreditsScene(base.SceneBase):
         for event in events:
             # Keyboard input.
             if event.type == pygame.KEYDOWN:
-                    # Enter or Escape key returns to title screen.
-                    if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER or event.key == pygame.K_ESCAPE:
+                    # Enter or Escape or Spacebar returns to title screen.
+                    if event.key in (pygame.K_RETURN, pygame.K_KP_ENTER, pygame.K_SPACE, pygame.K_ESCAPE):
                         self.x = 730
                         self.transition.run("fadeOutDown")
                         self.sound.stop_music()
