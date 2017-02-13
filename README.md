@@ -35,7 +35,7 @@ Controls:
     
 Tested on Windows and Linux. But any platform that has Python 2.7 and the needed libraries should work.
 
-Uses creative commons art and sound assets. Mostly CC-BY. Some CC-BY-SA.
+Uses creative commons art and sound assets. Mostly CC-BY. Some CC-BY-SA. Some public domain.
 (https://creativecommons.org/licenses/)
 Artists and specific asset details are listed in the credits screen.
 
