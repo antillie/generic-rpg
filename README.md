@@ -22,10 +22,11 @@ System requirments:
 Controls:
     
     Menus:
-        Arrow keys and Enter or the mouse
+        Arrow keys or W/S and Enter/Space or the mouse
     
     Game world:
         Move with the arrow keys or WASD
+        Interact with Enter or Space
     
     Fullscreen mode toggle:
         F11 or ALT+ENTER
