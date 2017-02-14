@@ -260,9 +260,10 @@ class GameScene(base.SceneBase):
         self.group.center(self.player.rect.center)
         
         # Add the sprites in the area to the group so that they move properly with the scrolling map.
-        self.group.add(self.player)
+        
         self.group.add(self.npc)
         self.group.add(self.campfire)
+        self.group.add(self.player)
         
         # Draw the scolled view.
         self.group.draw(self.canvas.canvas)

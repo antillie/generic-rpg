@@ -32,10 +32,14 @@ class Dialog:
         
         # Turn the choices into menu entry objects.
         if choices[0] != "None":
+            
+            pygame.draw.rect(self.canvas.canvas, colors.white, pygame.Rect(1023, 508 , 250, 203), 3)
+            pygame.draw.rect(self.canvas.canvas, colors.menu_blue, pygame.Rect(1025, 510 , 246 ,199), 0)
+            
             options = []
             y = 520
             for x in range(len(choices)):
-                options.append(formatting.MenuOption(choices[x], (800, y), self.cache))
+                options.append(formatting.MenuOption(choices[x], (1035, y), self.cache))
                 y = y + 30
             
             # Highlight the selected option.

@@ -137,9 +137,9 @@ class npc(pygame.sprite.Sprite):
             ]
             
             options = [
-                "yes",
-                "no",
-                "maybe"
+                "Yes",
+                "No",
+                "Maybe"
             ]
             
             responses = [
