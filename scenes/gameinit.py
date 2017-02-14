@@ -34,7 +34,7 @@ class GameScene(base.SceneBase):
         
         # Player starting position.
         self.rect_x = 512
-        self.rect_y = 288
+        self.rect_y = 650
         
         # Load the map.
         path = os.path.dirname(os.path.realpath(__file__)) + "/maps/initial.tmx"
@@ -62,7 +62,7 @@ class GameScene(base.SceneBase):
         self.campfire = campfire.Campfire(cache)
         self.all_sprites_list.add(self.campfire)
         
-        self.npc.rect.top = 400
+        self.npc.rect.top = 450
         self.npc.rect.left = 300
         
         self.campfire.rect.top = 900
@@ -131,22 +131,26 @@ class GameScene(base.SceneBase):
                 self.rect_y = self.rect_y - 3
                 self.moved = True
                 self.player.update_image("up")
+                self.pre_x.append(self.rect_x)
                 self.pre_y.append(self.rect_y)
             if pressed_keys[pygame.K_DOWN] or pressed_keys[pygame.K_s]:
                 self.rect_y = self.rect_y + 3
                 self.moved = True
                 self.player.update_image("down")
+                self.pre_x.append(self.rect_x)
                 self.pre_y.append(self.rect_y)
             if pressed_keys[pygame.K_LEFT] or pressed_keys[pygame.K_a]:
                 self.rect_x = self.rect_x - 3
                 self.moved = True
                 self.player.update_image("left")
                 self.pre_x.append(self.rect_x)
+                self.pre_y.append(self.rect_y)
             if pressed_keys[pygame.K_RIGHT] or pressed_keys[pygame.K_d]:
                 self.rect_x = self.rect_x + 3
                 self.moved = True
                 self.player.update_image("right")
                 self.pre_x.append(self.rect_x)
+                self.pre_y.append(self.rect_y)
                 
         if self.moved:
             self.battlebound = self.battlebound + 3
