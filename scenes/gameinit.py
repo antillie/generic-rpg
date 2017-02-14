@@ -11,6 +11,7 @@ import os
 import utils
 import campfire
 import dialog
+import math
 
 # An area in the game. Different variations of this class will need to load different maps, characters, battles, dialog, ect. Each area will be its own class (and .py file).
 class GameScene(base.SceneBase):
@@ -72,6 +73,8 @@ class GameScene(base.SceneBase):
         
         self.pre_x = []
         self.pre_y = []
+        
+        self.response_flag = None
     
     # Handles user input passed from the main engine.
     def ProcessInput(self, events, pressed_keys):
@@ -88,34 +91,62 @@ class GameScene(base.SceneBase):
                     self.gamedata.previous_scene = "GameScene"
                 elif event.key in (pygame.K_RETURN, pygame.K_KP_ENTER, pygame.K_SPACE):
                     if self.gamedata.npc.dialog_toggle == None:
-                        self.gamedata.npc.dialog_toggle = "conversation1"
+                        # Collision/gamedata logic to detect the proper NPC and conversation goes here. Maybe a function call.
+                        dist = math.hypot((self.player.rect.center[0] - self.npc.rect.center[0]),(self.player.rect.center[1] - self.npc.rect.center[1]))
+                        if dist < 50: # Simple proximity detection.
+                            self.gamedata.npc.dialog_toggle = "conversation1"
                     else:
-                        if self.con_length > self.gamedata.npc.conversation_counter:
+                        # Allow the player to continue past the NPC's response to the dialog choice.
+                        if self.response_flag != None:
+                            self.gamedata.npc.dialog_toggle = None
+                            self.choice_flag = False
+                            self.gamedata.npc.conversation_counter = 0
+                            self.response_flag = None
+                            self.dialog.menu = 0
+                        # Dialog choice selection.
+                        elif self.choice_flag == True and self.gamedata.npc.conversation_counter == (self.con_length - 1):
+                            # Do something with the dialog choice here.
+                            self.response_flag = self.dialog.menu
+                        # Just increment through the conversation.
+                        elif self.con_length > self.gamedata.npc.conversation_counter:
                             self.gamedata.npc.conversation_counter = self.gamedata.npc.conversation_counter + 1
+                
+                # Single button hits, used for dialog.
+                if self.gamedata.npc.dialog_toggle != None and self.gamedata.npc.conversation_counter == (self.con_length - 1):
+                    # Down arrow or S.
+                    if event.key in (pygame.K_DOWN, pygame.K_s):
+                        self.dialog.menu = self.dialog.menu + 1
+                        if self.dialog.menu == len(self.choices):
+                            self.dialog.menu = 0
+                    # Up arrow or W.
+                    elif event.key in (pygame.K_UP, pygame.K_w):
+                        self.dialog.menu = self.dialog.menu - 1
+                        if self.dialog.menu == -1:
+                            self.dialog.menu = len(self.choices) - 1
                     
-        
-        # Look for keys being held down. Arrow keys or WASD for movment.
-        if pressed_keys[pygame.K_UP] or pressed_keys[pygame.K_w]:
-            self.rect_y = self.rect_y - 3
-            self.moved = True
-            self.player.update_image("up")
-            self.pre_y.append(self.rect_y)
-        if pressed_keys[pygame.K_DOWN] or pressed_keys[pygame.K_s]:
-            self.rect_y = self.rect_y + 3
-            self.moved = True
-            self.player.update_image("down")
-            self.pre_y.append(self.rect_y)
-        if pressed_keys[pygame.K_LEFT] or pressed_keys[pygame.K_a]:
-            self.rect_x = self.rect_x - 3
-            self.moved = True
-            self.player.update_image("left")
-            self.pre_x.append(self.rect_x)
-        if pressed_keys[pygame.K_RIGHT] or pressed_keys[pygame.K_d]:
-            self.rect_x = self.rect_x + 3
-            self.moved = True
-            self.player.update_image("right")
-            self.pre_x.append(self.rect_x)
-            
+        if self.gamedata.npc.dialog_toggle == None:
+            # Look for keys being held down. Arrow keys or WASD for movment.
+            if pressed_keys[pygame.K_UP] or pressed_keys[pygame.K_w]:
+                self.rect_y = self.rect_y - 3
+                self.moved = True
+                self.player.update_image("up")
+                self.pre_y.append(self.rect_y)
+            if pressed_keys[pygame.K_DOWN] or pressed_keys[pygame.K_s]:
+                self.rect_y = self.rect_y + 3
+                self.moved = True
+                self.player.update_image("down")
+                self.pre_y.append(self.rect_y)
+            if pressed_keys[pygame.K_LEFT] or pressed_keys[pygame.K_a]:
+                self.rect_x = self.rect_x - 3
+                self.moved = True
+                self.player.update_image("left")
+                self.pre_x.append(self.rect_x)
+            if pressed_keys[pygame.K_RIGHT] or pressed_keys[pygame.K_d]:
+                self.rect_x = self.rect_x + 3
+                self.moved = True
+                self.player.update_image("right")
+                self.pre_x.append(self.rect_x)
+                
         if self.moved:
             self.battlebound = self.battlebound + 3
             self.player.moveConductor.play()
@@ -163,30 +194,30 @@ class GameScene(base.SceneBase):
     # Internal game logic.
     def Update(self):
         
-        if self.npc_move_counter < 200 and self.npc_flag == "down":
-            
-            self.npc_move_counter = self.npc_move_counter + 1
-            
-            self.npc.rect.top =  self.npc.rect.top + 2
-            self.npc.update_image("down")
-            self.npc.moveConductor.play()
-            
-            if self.npc_move_counter == 200:
-                self.npc_flag = "up"
-            
-        if self.npc_flag == "up":
-            self.npc_move_counter = self.npc_move_counter - 1
-            
-            self.npc.rect.top =  self.npc.rect.top - 2
-            self.npc.update_image("up")
-            self.npc.moveConductor.play()
-            
-            if self.npc_move_counter == 0:
-                self.npc_flag = "down"
+        # The NPC should stop if you are talking to him.
+        if self.gamedata.npc.dialog_toggle == None:
+        
+            if self.npc_move_counter < 200 and self.npc_flag == "down":
+                self.npc_move_counter = self.npc_move_counter + 1
+                self.npc.rect.top =  self.npc.rect.top + 2
+                self.npc.update_image("down")
+                self.npc.moveConductor.play()
+                
+                if self.npc_move_counter == 200:
+                    self.npc_flag = "up"
+                
+            if self.npc_flag == "up":
+                self.npc_move_counter = self.npc_move_counter - 1
+                self.npc.rect.top =  self.npc.rect.top - 2
+                self.npc.update_image("up")
+                self.npc.moveConductor.play()
+                
+                if self.npc_move_counter == 0:
+                    self.npc_flag = "down"
         
         self.campfire.update_image()
         self.campfire.moveConductor.play()
-                
+        
         self.player.rect.top = self.rect_y
         self.player.rect.left = self.rect_x
         self.all_sprites_list.update()
@@ -210,9 +241,8 @@ class GameScene(base.SceneBase):
             self.gamedata.previous_scene = "GameScene"
         
         if self.gamedata.npc.dialog_toggle != None:
-            self.conversationdata, self.choice_flag, self.choices = self.gamedata.npc.get_dialog(self.gamedata.npc.dialog_toggle)
+            self.conversationdata, self.choice_flag, self.choices, self.responses = self.gamedata.npc.get_dialog(self.gamedata.npc.dialog_toggle)
             self.con_length = len(self.conversationdata)
-        
         
         if self.gamedata.npc.conversation_counter == self.con_length and self.gamedata.npc.dialog_toggle != None:
             self.gamedata.npc.conversation_counter = 0
@@ -224,7 +254,7 @@ class GameScene(base.SceneBase):
         # Create our staticly sized virtual screen so we can draw stuff on it.
         self.canvas = virtualscreen.VirtualScreen(real_w, real_h)
         # Re initialize the dialog object just in case the screen was resized.
-        self.dialog = dialog.Dialog(self.cache, self.canvas, self.gamedata)
+        self.dialog = dialog.Dialog(self.cache, self.canvas, self.gamedata, self.dialog.menu)
         
         # Move the map view along with the player.
         self.group.center(self.player.rect.center)
@@ -237,9 +267,11 @@ class GameScene(base.SceneBase):
         # Draw the scolled view.
         self.group.draw(self.canvas.canvas)
         
-        if self.choice_flag == True and self.gamedata.npc.conversation_counter == (self.con_length - 1):
-            
-            self.dialog.render(self.conversationdata[self.gamedata.npc.conversation_counter], self.choices)
+        if self.response_flag != None:
+            self.dialog.render(self.responses[self.dialog.menu])
+        
+        elif self.choice_flag == True and self.gamedata.npc.conversation_counter == (self.con_length - 1):
+            self.dialog.render(self.conversationdata[self.gamedata.npc.conversation_counter], self.choices, real_w, real_h)
             
         elif self.gamedata.npc.dialog_toggle != None:
             self.dialog.render(self.conversationdata[self.gamedata.npc.conversation_counter])

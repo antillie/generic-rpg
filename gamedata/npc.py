@@ -127,6 +127,7 @@ class npc(pygame.sprite.Sprite):
         else:
             raise Exception("You must pass in a valid direction for the character to be facing.")
     
+    # Holds all of the NPCs dialog and any corosponding dialog choices.
     def get_dialog(self, conversation_name):
         if conversation_name == "conversation1":
             conversation = [
@@ -141,7 +142,13 @@ class npc(pygame.sprite.Sprite):
                 "maybe"
             ]
             
-            return conversation, True, options
+            responses = [
+                "Well I hope so too.",
+                "I suppose not, but maybe someone else will find the engine useful.",
+                "Yeah, its pretty hard to predict the future."
+            ]
+            
+            return conversation, True, options, responses
             
         elif conversation_name == "conversation2":
             conversation = [
@@ -150,4 +157,6 @@ class npc(pygame.sprite.Sprite):
             
             options = [""]
             
-            return conversation, False, options
+            responses = [""]
+            
+            return conversation, False, options, responses
