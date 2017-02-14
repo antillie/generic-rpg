@@ -86,7 +86,7 @@ class GameScene(base.SceneBase):
         for event in events:
             if event.type == pygame.KEYDOWN:
                 # Escape key pulls up the party screen.
-                if event.key == pygame.K_ESCAPE:
+                if event.key == pygame.K_ESCAPE and self.gamedata.npc.dialog_toggle == None:
                     self.gamedata.next_scene = "PartyScreen"
                     self.gamedata.previous_scene = "GameScene"
                 elif event.key in (pygame.K_RETURN, pygame.K_KP_ENTER, pygame.K_SPACE):
