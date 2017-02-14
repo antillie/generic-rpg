@@ -113,7 +113,7 @@ class GameScene(base.SceneBase):
                             self.gamedata.npc.conversation_counter = self.gamedata.npc.conversation_counter + 1
                 
                 # Single button hits, used for dialog.
-                if self.gamedata.npc.dialog_toggle != None and self.gamedata.npc.conversation_counter == (self.con_length - 1):
+                if self.gamedata.npc.dialog_toggle != None and self.gamedata.npc.conversation_counter == (self.con_length - 1) and self.response_flag == None:
                     # Down arrow or S.
                     if event.key in (pygame.K_DOWN, pygame.K_s):
                         self.dialog.menu = self.dialog.menu + 1
