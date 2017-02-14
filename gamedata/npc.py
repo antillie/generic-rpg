@@ -132,15 +132,22 @@ class npc(pygame.sprite.Sprite):
             conversation = [
             "This is a pretty cool engine.",
             "Who knew that pygame was so capable?",
-            "Do you think anyone will make a game with this?",
-            "yes|no|maybe"
+            "Do you think anyone will make a game with this?"
             ]
             
-            return conversation, True
+            options = [
+                "yes",
+                "no",
+                "maybe"
+            ]
+            
+            return conversation, True, options
             
         elif conversation_name == "conversation2":
             conversation = [
             "This is comming along pretty well if you ask me."
             ]
             
-            return conversation, False
+            options = [""]
+            
+            return conversation, False, options

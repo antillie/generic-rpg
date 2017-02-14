@@ -28,6 +28,8 @@ class GameScene(base.SceneBase):
         
         # Create a dialog object.
         self.dialog = dialog.Dialog(cache, self.canvas, gamedata)
+        self.choice_flag = False
+        self.con_length = 0
         
         # Player starting position.
         self.rect_x = 512
@@ -88,7 +90,6 @@ class GameScene(base.SceneBase):
                     if self.gamedata.npc.dialog_toggle == None:
                         self.gamedata.npc.dialog_toggle = "conversation1"
                     else:
-                        self.con_length = len(self.conversationdata)
                         if self.con_length > self.gamedata.npc.conversation_counter:
                             self.gamedata.npc.conversation_counter = self.gamedata.npc.conversation_counter + 1
                     
@@ -209,14 +210,13 @@ class GameScene(base.SceneBase):
             self.gamedata.previous_scene = "GameScene"
         
         if self.gamedata.npc.dialog_toggle != None:
-            self.conversationdata, self.choice_flag = self.gamedata.npc.get_dialog(self.gamedata.npc.dialog_toggle)
+            self.conversationdata, self.choice_flag, self.choices = self.gamedata.npc.get_dialog(self.gamedata.npc.dialog_toggle)
+            self.con_length = len(self.conversationdata)
         
-        try:
-            if self.gamedata.npc.conversation_counter == self.con_length:
-                self.gamedata.npc.conversation_counter = 0
-                self.gamedata.npc.dialog_toggle = None
-        except:
-            pass
+        
+        if self.gamedata.npc.conversation_counter == self.con_length and self.gamedata.npc.dialog_toggle != None:
+            self.gamedata.npc.conversation_counter = 0
+            self.gamedata.npc.dialog_toggle = None
         
     # Draws things.
     def Render(self, screen, real_w, real_h):
@@ -237,12 +237,13 @@ class GameScene(base.SceneBase):
         # Draw the scolled view.
         self.group.draw(self.canvas.canvas)
         
-        if self.gamedata.npc.dialog_toggle == "conversation1":
+        if self.choice_flag == True and self.gamedata.npc.conversation_counter == (self.con_length - 1):
+            
+            self.dialog.render(self.conversationdata[self.gamedata.npc.conversation_counter], self.choices)
+            
+        elif self.gamedata.npc.dialog_toggle != None:
             self.dialog.render(self.conversationdata[self.gamedata.npc.conversation_counter])
             
-        
-        if self.choice_flag == True and self.gamedata.npc.conversation_counter == (self.con_length - 1):
-            pass
         
         # Draw the upscaled virtual screen to actual screen.
         screen.blit(self.canvas.render(), (0, 0))
