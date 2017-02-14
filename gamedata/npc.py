@@ -27,6 +27,10 @@ class npc(pygame.sprite.Sprite):
         self.left_standing = cache.get_char_sprite("npc.png", 0, 48, 32, 48)
         self.right_standing = cache.get_char_sprite("npc.png", 0, 96, 32, 48)
         
+        # Dialog information.
+        self.dialog_toggle = None
+        self.conversation_counter = 0
+        
         # Draw the starting image.
         if self.direction == "up":
             self.image.blit(self.back_standing, (0, 0))
@@ -122,3 +126,21 @@ class npc(pygame.sprite.Sprite):
             self.image.blit(self.right_standing, (0, 0))
         else:
             raise Exception("You must pass in a valid direction for the character to be facing.")
+    
+    def get_dialog(self, conversation_name):
+        if conversation_name == "conversation1":
+            conversation = [
+            "This is a pretty cool engine.",
+            "Who knew that pygame was so capable?",
+            "Do you think anyone will make a game with this?",
+            "yes|no|maybe"
+            ]
+            
+            return conversation, True
+            
+        elif conversation_name == "conversation2":
+            conversation = [
+            "This is comming along pretty well if you ask me."
+            ]
+            
+            return conversation, False

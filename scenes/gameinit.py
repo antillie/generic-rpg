@@ -28,10 +28,6 @@ class GameScene(base.SceneBase):
         
         # Create a dialog object.
         self.dialog = dialog.Dialog(cache, self.canvas, gamedata)
-        self.dialog_toggle = False
-        
-        # Make an animated campfire instance.
-        self.campfire = campfire.Campfire(cache)
         
         # Player starting position.
         self.rect_x = 512
@@ -55,9 +51,12 @@ class GameScene(base.SceneBase):
         # Then add the player object to it.
         self.all_sprites_list.add(self.player)
         
+        # Create an NPC sprite and add it to the group as well.
         self.npc = self.gamedata.npc
         self.all_sprites_list.add(self.npc)
         
+        # Make and add an animated campfire instance.
+        self.campfire = campfire.Campfire(cache)
         self.all_sprites_list.add(self.campfire)
         
         self.npc.rect.top = 400
@@ -86,10 +85,12 @@ class GameScene(base.SceneBase):
                     self.gamedata.next_scene = "PartyScreen"
                     self.gamedata.previous_scene = "GameScene"
                 elif event.key in (pygame.K_RETURN, pygame.K_KP_ENTER, pygame.K_SPACE):
-                    if not self.dialog_toggle:
-                        self.dialog_toggle = True
+                    if self.gamedata.npc.dialog_toggle == None:
+                        self.gamedata.npc.dialog_toggle = "conversation1"
                     else:
-                        self.dialog_toggle = False
+                        self.con_length = len(self.conversationdata)
+                        if self.con_length > self.gamedata.npc.conversation_counter:
+                            self.gamedata.npc.conversation_counter = self.gamedata.npc.conversation_counter + 1
                     
         
         # Look for keys being held down. Arrow keys or WASD for movment.
@@ -206,9 +207,24 @@ class GameScene(base.SceneBase):
             self.transition.run("fadeOutUp")
             self.gamedata.next_scene = "BattleScreen"
             self.gamedata.previous_scene = "GameScene"
-    
+        
+        if self.gamedata.npc.dialog_toggle != None:
+            self.conversationdata, self.choice_flag = self.gamedata.npc.get_dialog(self.gamedata.npc.dialog_toggle)
+        
+        try:
+            if self.gamedata.npc.conversation_counter == self.con_length:
+                self.gamedata.npc.conversation_counter = 0
+                self.gamedata.npc.dialog_toggle = None
+        except:
+            pass
+        
     # Draws things.
     def Render(self, screen, real_w, real_h):
+        
+        # Create our staticly sized virtual screen so we can draw stuff on it.
+        self.canvas = virtualscreen.VirtualScreen(real_w, real_h)
+        # Re initialize the dialog object just in case the screen was resized.
+        self.dialog = dialog.Dialog(self.cache, self.canvas, self.gamedata)
         
         # Move the map view along with the player.
         self.group.center(self.player.rect.center)
@@ -221,9 +237,13 @@ class GameScene(base.SceneBase):
         # Draw the scolled view.
         self.group.draw(self.canvas.canvas)
         
-        if self.dialog_toggle:
-            self.dialog.render("The Hero", "bla bla bla",)
+        if self.gamedata.npc.dialog_toggle == "conversation1":
+            self.dialog.render(self.conversationdata[self.gamedata.npc.conversation_counter])
             
+        
+        if self.choice_flag == True and self.gamedata.npc.conversation_counter == (self.con_length - 1):
+            pass
+        
         # Draw the upscaled virtual screen to actual screen.
         screen.blit(self.canvas.render(), (0, 0))
         
