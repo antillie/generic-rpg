@@ -89,6 +89,7 @@ class GameScene(base.SceneBase):
                 if event.key == pygame.K_ESCAPE and self.gamedata.npc.dialog_toggle == None:
                     self.gamedata.next_scene = "PartyScreen"
                     self.gamedata.previous_scene = "GameScene"
+                # Space and Enter interact with things.
                 elif event.key in (pygame.K_RETURN, pygame.K_KP_ENTER, pygame.K_SPACE):
                     if self.gamedata.npc.dialog_toggle == None:
                         # Collision/gamedata logic to detect the proper NPC and conversation goes here. Maybe a function call.
@@ -240,10 +241,12 @@ class GameScene(base.SceneBase):
             self.gamedata.next_scene = "BattleScreen"
             self.gamedata.previous_scene = "GameScene"
         
+        # Get the conversation data from the NPC object.
         if self.gamedata.npc.dialog_toggle != None:
             self.conversationdata, self.choice_flag, self.choices, self.responses = self.gamedata.npc.get_dialog(self.gamedata.npc.dialog_toggle)
             self.con_length = len(self.conversationdata)
         
+        # End the conversation if we hit the last element in the dialog list.
         if self.gamedata.npc.conversation_counter == self.con_length and self.gamedata.npc.dialog_toggle != None:
             self.gamedata.npc.conversation_counter = 0
             self.gamedata.npc.dialog_toggle = None
@@ -268,16 +271,18 @@ class GameScene(base.SceneBase):
         # Draw the scolled view.
         self.group.draw(self.canvas.canvas)
         
+        # Draw the response dialog if needed.
         if self.response_flag != None:
             self.dialog.render(self.responses[self.dialog.menu])
         
+        # Draw the dialog with a choice box if needed.
         elif self.choice_flag == True and self.gamedata.npc.conversation_counter == (self.con_length - 1):
             self.dialog.render(self.conversationdata[self.gamedata.npc.conversation_counter], self.choices, real_w, real_h)
-            
+        
+        # Draw the dialog on the screen.
         elif self.gamedata.npc.dialog_toggle != None:
             self.dialog.render(self.conversationdata[self.gamedata.npc.conversation_counter])
             
-        
         # Draw the upscaled virtual screen to actual screen.
         screen.blit(self.canvas.render(), (0, 0))
         
