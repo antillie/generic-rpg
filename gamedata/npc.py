@@ -47,7 +47,7 @@ class npc(pygame.sprite.Sprite):
         anim_speed = 0.15
         
         # Define the still images to use for each frame of the animation.
-        # Format: Image file, top left corner of the part of the file that we want (in x, y format), character width, character height.
+        # Format: Image file, top left corner of the part of the file that we want (in x, y format), character width, character height, animation speed.
         goingUpImages = [
             (cache.get_char_sprite("npc.png", 0, 144, width, height), anim_speed),
             (cache.get_char_sprite("npc.png", 32, 144, width, height), anim_speed),
