@@ -37,7 +37,7 @@ class WorldMap(base.SceneBase):
         # Initialize the map view.
         screen_size = (1280, 720)
         map_layer = pyscroll.BufferedRenderer(self.map_data, screen_size)
-        self.group = pyscroll.PyscrollGroup(map_layer=map_layer)
+        self.group = pyscroll.PyscrollGroup(map_layer=map_layer, default_layer=2)
         
         # Create the player object.
         self.player = self.gamedata.hero
