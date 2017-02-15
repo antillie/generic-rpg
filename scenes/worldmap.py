@@ -24,10 +24,6 @@ class WorldMap(base.SceneBase):
         # Create our staticly sized virtual screen so we can draw stuff on it.
         self.canvas = virtualscreen.VirtualScreen(gamedata.current_w, gamedata.current_h)
         
-        # Player starting position.
-        self.rect_x = 500
-        self.rect_y = 400
-        
         # Load the map.
         path = os.path.dirname(os.path.realpath(__file__)) + "/maps/world_map.tmx"
         path = path.replace('/', os.sep).replace("\\", os.sep)
@@ -65,29 +61,29 @@ class WorldMap(base.SceneBase):
         
         # Look for keys being held down. Arrow keys or WASD for movment.
         if pressed_keys[pygame.K_UP] or pressed_keys[pygame.K_w]:
-            self.rect_y = self.rect_y - 3
+            self.gamedata.worldpos_y = self.gamedata.worldpos_y - 3
             self.moved = True
             self.player.update_image("up")
-            self.pre_x.append(self.rect_x)
-            self.pre_y.append(self.rect_y)
+            self.pre_x.append(self.gamedata.worldpos_x)
+            self.pre_y.append(self.gamedata.worldpos_y)
         if pressed_keys[pygame.K_DOWN] or pressed_keys[pygame.K_s]:
-            self.rect_y = self.rect_y + 3
+            self.gamedata.worldpos_y = self.gamedata.worldpos_y + 3
             self.moved = True
             self.player.update_image("down")
-            self.pre_x.append(self.rect_x)
-            self.pre_y.append(self.rect_y)
+            self.pre_x.append(self.gamedata.worldpos_x)
+            self.pre_y.append(self.gamedata.worldpos_y)
         if pressed_keys[pygame.K_LEFT] or pressed_keys[pygame.K_a]:
-            self.rect_x = self.rect_x - 3
+            self.gamedata.worldpos_x = self.gamedata.worldpos_x - 3
             self.moved = True
             self.player.update_image("left")
-            self.pre_x.append(self.rect_x)
-            self.pre_y.append(self.rect_y)
+            self.pre_x.append(self.gamedata.worldpos_x)
+            self.pre_y.append(self.gamedata.worldpos_y)
         if pressed_keys[pygame.K_RIGHT] or pressed_keys[pygame.K_d]:
-            self.rect_x = self.rect_x + 3
+            self.gamedata.worldpos_x = self.gamedata.worldpos_x + 3
             self.moved = True
             self.player.update_image("right")
-            self.pre_x.append(self.rect_x)
-            self.pre_y.append(self.rect_y)
+            self.pre_x.append(self.gamedata.worldpos_x)
+            self.pre_y.append(self.gamedata.worldpos_y)
                 
         if self.moved:
             self.battlebound = self.battlebound + 3
@@ -106,14 +102,14 @@ class WorldMap(base.SceneBase):
                     
                     if pygame.Rect(obj.x, obj.y, obj.width, obj.height).colliderect(player_feet) == True:
                         # Move the player back to where they were before the collision.
-                        self.rect_x = self.pre_x[-4]
-                        self.rect_y = self.pre_y[-4]
+                        self.gamedata.worldpos_x = self.pre_x[-4]
+                        self.gamedata.worldpos_y = self.pre_y[-4]
                         # Delete the colliding point in the trail.
                         del self.pre_x[-1]
                         del self.pre_y[-1]
                         # Then add a new non colliding point.
-                        self.pre_x.append(self.rect_x)
-                        self.pre_y.append(self.rect_y)
+                        self.pre_x.append(self.gamedata.worldpos_x)
+                        self.pre_y.append(self.gamedata.worldpos_y)
             
             elif layer.name == "Exit":
                 for obj in layer:
@@ -123,7 +119,8 @@ class WorldMap(base.SceneBase):
                             self.sound.stop_music()
                             self.gamedata.next_scene = "GameScene"
                             self.gamedata.previous_scene = "WorldMap"
-                            self.rect_x = self.rect_x - 50
+                            self.gamedata.worldpos_x = 500
+                            self.gamedata.worldpos_y = 350
                             
         # Don't let the movement trail grow forever.
         if len(self.pre_x) > 500:
@@ -134,8 +131,8 @@ class WorldMap(base.SceneBase):
     # Internal game logic.
     def Update(self):
         
-        self.player.rect.top = self.rect_y
-        self.player.rect.left = self.rect_x
+        self.player.rect.top = self.gamedata.worldpos_y
+        self.player.rect.left = self.gamedata.worldpos_x
         self.all_sprites_list.update()
         
         # There is a 0.5% chance of a random battle every time the player moves past a certain distance.
@@ -147,7 +144,7 @@ class WorldMap(base.SceneBase):
                 self.transition.run("fadeOutUp")
                 self.gamedata.next_scene = "BattleScreen"
                 self.gamedata.previous_scene = "WorldMap"
-                if self.rect_y > 490:
+                if self.gamedata.worldpos_y > 490:
                     self.gamedata.battlebackground = "articlandscape.png"
                 else:
                     self.gamedata.battlebackground = "forestbackground.png"
@@ -159,7 +156,7 @@ class WorldMap(base.SceneBase):
             self.transition.run("fadeOutUp")
             self.gamedata.next_scene = "BattleScreen"
             self.gamedata.previous_scene = "GameScene"
-            if self.rect_y > 490:
+            if self.gamedata.worldpos_y > 490:
                 self.gamedata.battlebackground = "articlandscape.png"
             else:
                 self.gamedata.battlebackground = "forestbackground.png"

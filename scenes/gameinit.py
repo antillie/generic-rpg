@@ -186,12 +186,13 @@ class GameScene(base.SceneBase):
                     # Look for a collision.
                     if pygame.Rect(obj.x, obj.y, obj.width, obj.height).colliderect(player_feet) == True:
                         if obj.name == "WorldMap":
-                            self.gamedata.worldpos_x = 400
-                            self.gamedata.worldpos_y = 300
+                            self.gamedata.worldpos_x = 500
+                            self.gamedata.worldpos_y = 350
                             self.sound.stop_music()
                             self.gamedata.next_scene = "WorldMap"
                             self.gamedata.previous_scene = "GameScene"
-                            self.rect_x = self.rect_x + 50
+                            self.rect_x = 60
+                            self.rect_y = 700
         
         # Don't let the movement trail grow forever.
         if len(self.pre_x) > 500:
