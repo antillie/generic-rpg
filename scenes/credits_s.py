@@ -101,6 +101,7 @@ class CreditsScene(base.SceneBase):
             Credit("http://opengameart.org/content/battle-of-the-void", (self.y, self.x + 630), self.cache, url_size, colors.link_blue),
             Credit("Forest Theme - Forest, By: syncopika", (self.y, self.x + 700), self.cache),
             Credit("https://greenbearmusic.bandcamp.com/track/forest", (self.y, self.x + 730), self.cache, url_size, colors.link_blue),
+            Credit("http://opengameart.org/content/forest", (self.y, self.x + 760), self.cache, url_size, colors.link_blue),
             Credit("Town Theme - Plesant Creek, By: Matthew Pablo", (self.y, self.x + 800), self.cache),
             Credit("http://www.matthewpablo.com", (self.y, self.x + 830), self.cache, url_size, colors.link_blue),
             Credit("Combat System Design: George Markeloff", (self.y, self.x + 900), self.cache),
