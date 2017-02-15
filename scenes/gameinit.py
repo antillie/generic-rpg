@@ -200,13 +200,13 @@ class GameScene(base.SceneBase):
         if len(self.pre_y) > 500:
             del self.pre_y[:-250]
         
-        # Don't let the player walk off the top or bottom of the map.
+        # Don't let the player walk off the left or right sides of the map.
         if self.rect_x < 0:
             self.rect_x = 0
         elif self.rect_x > 2016:
             self.rect_x = 2016
         
-        # Don't let the player walk off the left or right sides of the map.
+        # Don't let the player walk off the top or bottom of the map.
         if self.rect_y < 0:
             self.rect_y = 0
         elif self.rect_y > 1104:
@@ -253,7 +253,8 @@ class GameScene(base.SceneBase):
                 self.gamedata.next_scene = "BattleScreen"
                 self.gamedata.previous_scene = "GameScene"
                 self.gamedata.battlebackground = "forestbackground.png"
-                    
+        
+        # Don't let the player walk too far without a battle.
         if self.battlebound > 1800 and self.moved:
             self.battlebound = 0
             self.sound.stop_music()
@@ -285,7 +286,6 @@ class GameScene(base.SceneBase):
         self.group.center(self.player.rect.center)
         
         # Add the sprites in the area to the group so that they move properly with the scrolling map.
-        
         self.group.add(self.npc)
         self.group.add(self.campfire)
         self.group.add(self.player)
