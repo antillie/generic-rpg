@@ -36,7 +36,7 @@ class WorldMap(base.SceneBase):
         self.group = pyscroll.PyscrollGroup(map_layer=map_layer, default_layer=2)
         
         # Create the player object.
-        self.player = self.gamedata.hero
+        self.player = self.gamedata.party_slots[0]
         # Initialize the sprites group.
         self.all_sprites_list = pygame.sprite.Group()
         # Then add the player object to it.

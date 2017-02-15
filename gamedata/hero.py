@@ -20,6 +20,7 @@ class Hero(pygame.sprite.Sprite):
         self.image.fill(colors.black)
         self.image.set_colorkey(colors.black)
         self.rect = self.image.get_rect()
+        # Quack quack!
         
         # Set the standing still images.
         self.front_standing = cache.get_char_sprite("character.png", 0, 0, 32, 48)

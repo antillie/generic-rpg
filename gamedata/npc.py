@@ -20,6 +20,7 @@ class npc(pygame.sprite.Sprite):
         self.image.fill(colors.black)
         self.image.set_colorkey(colors.black)
         self.rect = self.image.get_rect()
+        # Quack quack!
         
         # Set the standing still images.
         self.front_standing = cache.get_char_sprite("npc.png", 0, 0, 32, 48)
@@ -127,7 +128,7 @@ class npc(pygame.sprite.Sprite):
         else:
             raise Exception("You must pass in a valid direction for the character to be facing.")
     
-    # Holds all of the NPCs dialog and any corosponding dialog choices.
+    # Holds all of the NPC's dialog and any corosponding dialog choices.
     def get_dialog(self, conversation_name):
         if conversation_name == "conversation1":
             conversation = [

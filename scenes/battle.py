@@ -150,5 +150,13 @@ class BattleScreen(base.SceneBase):
         for x in range(len(self.menu_rects)):
             self.menu_rects[x] = utils.scale_rect(self.menu_rects[x], real_w, real_h)
         
+        x = 1100
+        y = 390
+        # Draw the party on the screen.
+        for character in self.gamedata.party_slots:
+            if character != None:
+                canvas.canvas.blit(character.left_standing, (x, y))
+                y = y + 60
+        
         # Draw the upscaled virtual screen to actual screen.
         screen.blit(canvas.render(), (0, 0))

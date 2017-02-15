@@ -48,7 +48,7 @@ class GameScene(base.SceneBase):
         self.group = pyscroll.PyscrollGroup(map_layer=map_layer, default_layer=2)
         
         # Create the player object.
-        self.player = self.gamedata.hero
+        self.player = self.gamedata.party_slots[0]
         # Initialize the sprites group.
         self.all_sprites_list = pygame.sprite.Group()
         # Then add the player object to it.
@@ -252,6 +252,7 @@ class GameScene(base.SceneBase):
                 self.transition.run("fadeOutUp")
                 self.gamedata.next_scene = "BattleScreen"
                 self.gamedata.previous_scene = "GameScene"
+                self.gamedata.battlebackground = "forestbackground.png"
                     
         if self.battlebound > 1800 and self.moved:
             self.battlebound = 0
@@ -260,6 +261,7 @@ class GameScene(base.SceneBase):
             self.transition.run("fadeOutUp")
             self.gamedata.next_scene = "BattleScreen"
             self.gamedata.previous_scene = "GameScene"
+            self.gamedata.battlebackground = "forestbackground.png"
         
         # Get the conversation data from the NPC object.
         if self.gamedata.npc.dialog_toggle != None:
