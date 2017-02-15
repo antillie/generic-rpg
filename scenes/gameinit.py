@@ -117,11 +117,13 @@ class GameScene(base.SceneBase):
                     # Down arrow or S.
                     if event.key in (pygame.K_DOWN, pygame.K_s):
                         self.dialog.menu = self.dialog.menu + 1
+                        self.sound.play_sound("menu_change.wav")
                         if self.dialog.menu == len(self.choices):
                             self.dialog.menu = 0
                     # Up arrow or W.
                     elif event.key in (pygame.K_UP, pygame.K_w):
                         self.dialog.menu = self.dialog.menu - 1
+                        self.sound.play_sound("menu_change.wav")
                         if self.dialog.menu == -1:
                             self.dialog.menu = len(self.choices) - 1
                     
