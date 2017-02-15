@@ -62,7 +62,7 @@ class CreditsScene(base.SceneBase):
                             # Launch the default web browser for the URL.
                             webbrowser.open(self.credit_urls[x], new=2)
                     
-                    if self.x == -2700:
+                    if self.x == -3000:
                         self.x = 730
                         self.transition.run("fadeOutDown")
                         self.sound.stop_music()
@@ -132,8 +132,14 @@ class CreditsScene(base.SceneBase):
             Credit("http://www.geocities.jp/kurororo4/looseleaf/", (self.y, self.x + 2330), self.cache, url_size, colors.link_blue),
             Credit("Animated campfire by Zabin and Jetrel", (self.y, self.x + 2400), self.cache),
             Credit("http://opengameart.org/content/camp-fire-animation-for-rpgs-finished", (self.y, self.x + 2430), self.cache, url_size, colors.link_blue),
-            Credit("Built with the Generic RPG engine written by George Markeloff.", (self.y, self.x + 2500), self.cache),
-            Credit("Thanks for playing!", (self.y + 410, self.x + 3000), self.cache)
+            Credit("Snow Battle Background (resized): Delfos", (self.y, self.x + 2500), self.cache),
+            Credit("http://opengameart.org/content/artic-landscape-background", (self.y, self.x + 2530), self.cache, url_size, colors.link_blue),
+            Credit("World Map Tileset: MrBeast", (self.y, self.x + 2600), self.cache),
+            Credit("http://opengameart.org/users/mrbeast", (self.y, self.x + 2630), self.cache, url_size, colors.link_blue),
+            Credit("World Map Theme - World Map, By: Aaron Krogh", (self.y, self.x + 2700), self.cache),
+            Credit("http://aaronkrogh.tumblr.com/", (self.y, self.x + 2730), self.cache, url_size, colors.link_blue),
+            Credit("Built with the Generic RPG engine written by George Markeloff.", (self.y, self.x + 2800), self.cache),
+            Credit("Thanks for playing!", (self.y + 410, self.x + 3300), self.cache)
         ]
         
         url_pattern = []
@@ -164,5 +170,5 @@ class CreditsScene(base.SceneBase):
             self.credit_url_rects[x] = utils.scale_rect(self.credit_url_rects[x], real_w, real_h)
         
         # Move the credits up one pixel for the next frame.
-        if self.x > -2700:
+        if self.x > -3000:
             self.x = self.x - 1

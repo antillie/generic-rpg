@@ -11,14 +11,14 @@ import formatting
 # The battle screen.
 class BattleScreen(base.SceneBase):
     
-    def __init__(self, sound, cache, transition, gamedata, background="forestbackground.png"):
+    def __init__(self, sound, cache, transition, gamedata):
         self.previous_scene = None
         self.menu = 5
         self.sound = sound
         self.cache = cache
         self.gamedata = gamedata
         self.menu_rects = []
-        self.background = cache.get_image(background)
+        self.background = cache.get_image(self.gamedata.battlebackground)
         
     # Handles user input passed from the main engine.
     def ProcessInput(self, events, pressed_keys):
@@ -104,13 +104,11 @@ class BattleScreen(base.SceneBase):
                             # End Battle.
                             elif self.menu == 5:
                                 self.sound.stop_music()
-                                self.SwitchToScene(self.gamedata.previous_scene)
-                                # New scene system.
                                 self.gamedata.next_scene = self.gamedata.previous_scene
                                 self.gamedata.previous_scene = "BattleScreen"
     # Internal game logic.
     def Update(self):
-        pass
+        self.background = self.cache.get_image(self.gamedata.battlebackground)
     
     # Draws things.
     def Render(self, screen, real_w, real_h):

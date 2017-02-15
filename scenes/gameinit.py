@@ -161,24 +161,37 @@ class GameScene(base.SceneBase):
             self.player.moveConductor.stop()
             self.player.update_image(None)
         
+        # Rect that represents the bottom half of the player sprite.
+        player_feet = pygame.Rect(self.player.rect.left, self.player.rect.top + 16, 32, 24)
+        
         # Collision detection.
         for layer in self.tmx_data.visible_layers:
             # The name of the object layer in the TMX file we are interested in. There could be more than one.
             if layer.name == "Meta":
                 for obj in layer:
-                    # Rect that represents the bottom half of the player sprite.
-                    player_feet = pygame.Rect(self.player.rect.left, self.player.rect.top + 16, 32, 24)
-                    
+                    # Look for a collision.
                     if pygame.Rect(obj.x, obj.y, obj.width, obj.height).colliderect(player_feet) == True:
                         # Move the player back to where they were before the collision.
-                        self.rect_x = self.pre_x[-3]
-                        self.rect_y = self.pre_y[-3]
+                        self.rect_x = self.pre_x[-4]
+                        self.rect_y = self.pre_y[-4]
                         # Delete the colliding point in the trail.
                         del self.pre_x[-1]
                         del self.pre_y[-1]
                         # Then add a new non colliding point.
                         self.pre_x.append(self.rect_x)
                         self.pre_y.append(self.rect_y)
+                        
+            elif layer.name == "Exit":
+                for obj in layer:
+                    # Look for a collision.
+                    if pygame.Rect(obj.x, obj.y, obj.width, obj.height).colliderect(player_feet) == True:
+                        if obj.name == "WorldMap":
+                            self.gamedata.worldpos_x = 400
+                            self.gamedata.worldpos_y = 300
+                            self.sound.stop_music()
+                            self.gamedata.next_scene = "WorldMap"
+                            self.gamedata.previous_scene = "GameScene"
+                            self.rect_x = self.rect_x + 50
         
         # Don't let the movement trail grow forever.
         if len(self.pre_x) > 500:

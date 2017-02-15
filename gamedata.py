@@ -19,3 +19,8 @@ class GameData:
         
         self.hero = hero.Hero(self.cache, "down")
         self.npc = npc.npc(self.cache, "down")
+        
+        self.worldpos_x = 0
+        self.worldpos_y = 0
+        
+        self.battlebackground = "forestbackground.png"
