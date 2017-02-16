@@ -41,9 +41,6 @@ class WorldMap(base.SceneBase):
         self.all_sprites_list = pygame.sprite.Group()
         # Then add the player object to it.
         self.all_sprites_list.add(self.player)
-        
-        self.pre_x = []
-        self.pre_y = []
     
     # Handles user input passed from the main engine.
     def ProcessInput(self, events, pressed_keys):
@@ -51,6 +48,8 @@ class WorldMap(base.SceneBase):
         self.sound.play_music(self.song)
         
         self.moved = False
+        self.future_x = 0
+        self.future_y = 0
         
         for event in events:
             if event.type == pygame.KEYDOWN:
@@ -61,56 +60,39 @@ class WorldMap(base.SceneBase):
         
         # Look for keys being held down. Arrow keys or WASD for movment.
         if pressed_keys[pygame.K_UP] or pressed_keys[pygame.K_w]:
-            self.gamedata.worldpos_y = self.gamedata.worldpos_y - 3
             self.moved = True
             self.player.update_image("up")
-            self.pre_x.append(self.gamedata.worldpos_x)
-            self.pre_y.append(self.gamedata.worldpos_y)
+            self.future_y = -3
         if pressed_keys[pygame.K_DOWN] or pressed_keys[pygame.K_s]:
-            self.gamedata.worldpos_y = self.gamedata.worldpos_y + 3
             self.moved = True
             self.player.update_image("down")
-            self.pre_x.append(self.gamedata.worldpos_x)
-            self.pre_y.append(self.gamedata.worldpos_y)
+            self.future_y = 3
         if pressed_keys[pygame.K_LEFT] or pressed_keys[pygame.K_a]:
-            self.gamedata.worldpos_x = self.gamedata.worldpos_x - 3
             self.moved = True
             self.player.update_image("left")
-            self.pre_x.append(self.gamedata.worldpos_x)
-            self.pre_y.append(self.gamedata.worldpos_y)
+            self.future_x = -3
         if pressed_keys[pygame.K_RIGHT] or pressed_keys[pygame.K_d]:
-            self.gamedata.worldpos_x = self.gamedata.worldpos_x + 3
             self.moved = True
             self.player.update_image("right")
-            self.pre_x.append(self.gamedata.worldpos_x)
-            self.pre_y.append(self.gamedata.worldpos_y)
-                
-        if self.moved:
-            self.battlebound = self.battlebound + 3
-            self.player.moveConductor.play()
-        else:
-            self.player.moveConductor.stop()
-            self.player.update_image(None)
+            self.future_x = 3
+            
+        # Rect that represents the bottom half of the player sprite.
+        player_feet = pygame.Rect(self.player.rect.left, self.player.rect.top + 16, 32, 24)
         
-        # Collision detection.
+        # Rect that represents where the player is trying to go.
+        future_location = player_feet.move(self.future_x, self.future_y)
+        
+        # Collision avoidance.
         for layer in self.tmx_data.visible_layers:
             # The name of the object layer in the TMX file we are interested in. There could be more than one.
             if layer.name == "Meta":
                 for obj in layer:
-                    # Rect that represents the bottom half of the player sprite.
-                    player_feet = pygame.Rect(self.player.rect.left, self.player.rect.top + 16, 32, 24)
-                    
-                    if pygame.Rect(obj.x, obj.y, obj.width, obj.height).colliderect(player_feet) == True:
-                        # Move the player back to where they were before the collision.
-                        self.gamedata.worldpos_x = self.pre_x[-4]
-                        self.gamedata.worldpos_y = self.pre_y[-4]
-                        # Delete the colliding point in the trail.
-                        del self.pre_x[-1]
-                        del self.pre_y[-1]
-                        # Then add a new non colliding point.
-                        self.pre_x.append(self.gamedata.worldpos_x)
-                        self.pre_y.append(self.gamedata.worldpos_y)
-            
+                    # Look for a collision. Nullify player movment if found.
+                    if pygame.Rect(obj.x, obj.y, obj.width, obj.height).colliderect(future_location) == True:
+                        self.future_y = 0
+                        self.future_x = 0
+                        self.moved = False
+            # Look for collisions with zone exit points.
             elif layer.name == "Exit":
                 for obj in layer:
                     # Look for a collision.
@@ -121,12 +103,16 @@ class WorldMap(base.SceneBase):
                             self.gamedata.previous_scene = "WorldMap"
                             self.gamedata.worldpos_x = 500
                             self.gamedata.worldpos_y = 350
-                            
-        # Don't let the movement trail grow forever.
-        if len(self.pre_x) > 500:
-            del self.pre_x[:-250]
-        if len(self.pre_y) > 500:
-            del self.pre_y[:-250]
+        
+        if self.moved:
+            self.battlebound = self.battlebound + 3
+            self.player.moveConductor.play()
+        else:
+            self.player.moveConductor.stop()
+            self.player.update_image(None)
+            
+        self.gamedata.worldpos_x = self.gamedata.worldpos_x + self.future_x
+        self.gamedata.worldpos_y = self.gamedata.worldpos_y + self.future_y
         
     # Internal game logic.
     def Update(self):
