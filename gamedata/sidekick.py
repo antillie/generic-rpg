@@ -6,7 +6,7 @@ import colors
 import utils
 import pyganim
 
-# This class represents the player character.
+# This class represents a party member.
 class Sidekick(pygame.sprite.Sprite):
     
     # Init builds everything.
