@@ -29,8 +29,7 @@ class BattleScreen(base.SceneBase):
                 if event.key in (pygame.K_RETURN, pygame.K_KP_ENTER, pygame.K_SPACE):
                     # Attack.
                     if self.menu == 0:
-                        # Not yet implimented.
-                        pass
+                        self.active_character.attack_flag = True
                     # Special Move.
                     elif self.menu == 1:
                         # Not yet implimented.
@@ -83,8 +82,7 @@ class BattleScreen(base.SceneBase):
                         if self.menu_rects[x].collidepoint(event.pos):
                             # Attack.
                             if self.menu == 0:
-                                # Not yet implimented.
-                                pass
+                                self.active_character.attack_flag = True
                             # Special Move.
                             elif self.menu == 1:
                                 # Not yet implimented.
@@ -109,7 +107,36 @@ class BattleScreen(base.SceneBase):
     # Internal game logic.
     def Update(self):
         self.background = self.cache.get_image(self.gamedata.battlebackground)
-    
+        
+        self.active_character = self.gamedata.party_slots[0]
+        
+        for character in self.gamedata.party_slots:
+            if character != None:
+                character.update_standing_image("left")
+                
+                if character.attack_flag:
+                    
+                    if character.battle_line_x < 100 and character.attack_starting:
+                        character.battle_line_x = character.battle_line_x + 10
+                        
+                        character.update_image("left")
+                        character.moveConductor.play()
+                        
+                    elif character.battle_line_x > 0 and character.attack_ending:
+                        character.battle_line_x = character.battle_line_x - 4
+                        
+                        character.update_image("left")
+                        character.moveConductor.play()
+                    
+                    elif character.battle_line_x == 100:
+                        character.attack_starting = False
+                        character.attack_ending = True
+                        
+                    elif character.battle_line_x == 0:
+                        character.attack_flag = False
+                        character.attack_starting = True
+                        character.attack_ending = False
+                
     # Draws things.
     def Render(self, screen, real_w, real_h):
         # Create our staticly sized virtual screen so we can draw stuff on it.
@@ -150,13 +177,20 @@ class BattleScreen(base.SceneBase):
         for x in range(len(self.menu_rects)):
             self.menu_rects[x] = utils.scale_rect(self.menu_rects[x], real_w, real_h)
         
-        x = 1100
-        y = 390
+        
+        
+        
+        
+        # Party line starting position.
+        self.player_x = 1100
+        self.player_y = 390
         # Draw the party on the screen.
         for character in self.gamedata.party_slots:
             if character != None:
-                canvas.canvas.blit(character.left_standing, (x, y))
-                y = y + 60
+                canvas.canvas.blit(character.image, (self.player_x - character.battle_line_x, self.player_y))
+                self.player_y = self.player_y + 60
+                
+                
         
         # Draw the upscaled virtual screen to actual screen.
         screen.blit(canvas.render(), (0, 0))

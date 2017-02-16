@@ -31,8 +31,8 @@ class GameData:
         # Make the background for the battle scene easily changable by the calling scene.
         self.battlebackground = "forestbackground.png"
         
-        # Define a couple of variables to control what mobs should be spawned in a battle. Either a specific mob (boss fight) or a random selection of mobs according to an area.
-        self.battle_monsters = None
+        # Define a couple of variables to control what mobs should be spawned in a battle. Either a list of specific mobs (boss fight) or a random selection of mobs according to an area.
+        self.battle_monsters = [None]
         self.battle_area = None
         
         # Create a flag so the battlescene will know when to reset itself for a fresh battle.

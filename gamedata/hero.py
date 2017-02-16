@@ -47,6 +47,12 @@ class Hero(pygame.sprite.Sprite):
         self.guard = 0
         self.counter = 0
         
+        self.battle_line_x = 0
+        self.attack_flag = False
+        
+        self.attack_starting = True
+        self.attack_ending = False
+        
         # Start with a transparant surface the size of our sprite and make a rect for it.
         self.image = pygame.Surface([width, height])
         self.image.fill(colors.black)
@@ -146,12 +152,16 @@ class Hero(pygame.sprite.Sprite):
     def update_standing_image(self, direction):
         self.direction = direction
         if self.direction == "up":
+            self.image.fill(colors.black)
             self.image.blit(self.back_standing, (0, 0))
         elif self.direction == "down":
+            self.image.fill(colors.black)
             self.image.blit(self.front_standing, (0, 0))
         elif self.direction == "left":
+            self.image.fill(colors.black)
             self.image.blit(self.left_standing, (0, 0))
         elif self.direction == "right":
+            self.image.fill(colors.black)
             self.image.blit(self.right_standing, (0, 0))
         else:
             raise Exception("You must pass in a valid direction for the character to be facing.")
