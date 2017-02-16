@@ -36,12 +36,16 @@ class Hero(pygame.sprite.Sprite):
         self.inteligence = 2
         self.charisma = 3
         
-        self.defence = 20
+        self.defence = 22
         self.attack = 20
         self.accuracy = 10
         self.dodge = 3
         self.magic_attack = 2
         self.magic_defense = 2
+        self.parry = 15
+        self.block = 20
+        self.guard = 0
+        self.counter = 0
         
         # Start with a transparant surface the size of our sprite and make a rect for it.
         self.image = pygame.Surface([width, height])

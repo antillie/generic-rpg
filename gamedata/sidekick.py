@@ -42,6 +42,10 @@ class Sidekick(pygame.sprite.Sprite):
         self.dodge = 4
         self.magic_attack = 2
         self.magic_defense = 3
+        self.parry = 0
+        self.block = 0
+        self.guard = 15
+        self.counter = 10
         
         # Start with a transparant surface the size of our sprite and make a rect for it.
         self.image = pygame.Surface([width, height])
