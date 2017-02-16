@@ -7,38 +7,38 @@ import utils
 import pyganim
 
 # This class represents the player character.
-class Hero(pygame.sprite.Sprite):
+class Sidekick(pygame.sprite.Sprite):
     
     # Init builds everything.
     def __init__(self, cache, direction, width=32, height=48):
         # Call the parent class constructor.
-        super(Hero, self).__init__()
+        super(Sidekick, self).__init__()
         self.direction = direction
         
         self.level = 1
         
-        self.current_hp = 24
-        self.max_hp = 24
+        self.current_hp = 26
+        self.max_hp = 26
         
         self.current_mp = 8
         self.max_mp = 8
         
         self.status = ["Normal"]
         
-        self.strength = 6
-        self.vitality = 5
+        self.strength = 5
+        self.vitality = 6
         self.agility = 4
-        self.dexterity = 4
-        self.mind = 3
+        self.dexterity = 5
+        self.mind = 4
         self.inteligence = 2
-        self.charisma = 3
+        self.charisma = 4
         
-        self.defence = 20
-        self.attack = 20
+        self.defence = 18
+        self.attack = 22
         self.accuracy = 10
-        self.dodge = 3
+        self.dodge = 4
         self.magic_attack = 2
-        self.magic_defense = 2
+        self.magic_defense = 3
         
         # Start with a transparant surface the size of our sprite and make a rect for it.
         self.image = pygame.Surface([width, height])
@@ -48,10 +48,10 @@ class Hero(pygame.sprite.Sprite):
         # Quack quack!
         
         # Set the standing still images.
-        self.front_standing = cache.get_char_sprite("character.png", 0, 0, 32, 48)
-        self.back_standing = cache.get_char_sprite("character.png", 0, 144, 32, 48)
-        self.left_standing = cache.get_char_sprite("character.png", 0, 48, 32, 48)
-        self.right_standing = cache.get_char_sprite("character.png", 0, 96, 32, 48)
+        self.front_standing = cache.get_char_sprite("sidekick.png", 0, 0, 32, 48)
+        self.back_standing = cache.get_char_sprite("sidekick.png", 0, 144, 32, 48)
+        self.left_standing = cache.get_char_sprite("sidekick.png", 0, 48, 32, 48)
+        self.right_standing = cache.get_char_sprite("sidekick.png", 0, 96, 32, 48)
         
         # Draw the starting image.
         if self.direction == "up":
@@ -71,28 +71,28 @@ class Hero(pygame.sprite.Sprite):
         # Define the still images to use for each frame of the animation.
         # Format: Image file, top left corner of the part of the file that we want (in x, y format), character width, character height.
         goingUpImages = [
-            (cache.get_char_sprite("character.png", 0, 144, width, height), anim_speed),
-            (cache.get_char_sprite("character.png", 32, 144, width, height), anim_speed),
-            (cache.get_char_sprite("character.png", 64, 144, width, height), anim_speed),
-            (cache.get_char_sprite("character.png", 96, 144, width, height), anim_speed)
+            (cache.get_char_sprite("sidekick.png", 0, 144, width, height), anim_speed),
+            (cache.get_char_sprite("sidekick.png", 32, 144, width, height), anim_speed),
+            (cache.get_char_sprite("sidekick.png", 64, 144, width, height), anim_speed),
+            (cache.get_char_sprite("sidekick.png", 96, 144, width, height), anim_speed)
         ]
         goingDownImages = [
-            (cache.get_char_sprite("character.png", 0, 0, width, height), anim_speed),
-            (cache.get_char_sprite("character.png", 32, 0, width, height), anim_speed),
-            (cache.get_char_sprite("character.png", 64, 0, width, height), anim_speed),
-            (cache.get_char_sprite("character.png", 96, 0, width, height), anim_speed)
+            (cache.get_char_sprite("sidekick.png", 0, 0, width, height), anim_speed),
+            (cache.get_char_sprite("sidekick.png", 32, 0, width, height), anim_speed),
+            (cache.get_char_sprite("sidekick.png", 64, 0, width, height), anim_speed),
+            (cache.get_char_sprite("sidekick.png", 96, 0, width, height), anim_speed)
         ]
         goingLeftImages = [
-            (cache.get_char_sprite("character.png", 0, 48, width, height), anim_speed),
-            (cache.get_char_sprite("character.png", 32, 48, width, height), anim_speed),
-            (cache.get_char_sprite("character.png", 64, 48, width, height), anim_speed),
-            (cache.get_char_sprite("character.png", 96, 48, width, height), anim_speed)
+            (cache.get_char_sprite("sidekick.png", 0, 48, width, height), anim_speed),
+            (cache.get_char_sprite("sidekick.png", 32, 48, width, height), anim_speed),
+            (cache.get_char_sprite("sidekick.png", 64, 48, width, height), anim_speed),
+            (cache.get_char_sprite("sidekick.png", 96, 48, width, height), anim_speed)
         ]
         goingRightImages = [
-            (cache.get_char_sprite("character.png", 0, 96, width, height), anim_speed),
-            (cache.get_char_sprite("character.png", 32, 96, width, height), anim_speed),
-            (cache.get_char_sprite("character.png", 64, 96, width, height), anim_speed),
-            (cache.get_char_sprite("character.png", 96, 96, width, height), anim_speed)
+            (cache.get_char_sprite("sidekick.png", 0, 96, width, height), anim_speed),
+            (cache.get_char_sprite("sidekick.png", 32, 96, width, height), anim_speed),
+            (cache.get_char_sprite("sidekick.png", 64, 96, width, height), anim_speed),
+            (cache.get_char_sprite("sidekick.png", 96, 96, width, height), anim_speed)
         ]
         
         # Create a dictionary to hold the animation objects.
