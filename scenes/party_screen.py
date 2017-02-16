@@ -59,6 +59,7 @@ class PartyScreen(base.SceneBase):
                     elif self.menu == 6:
                         self.gamedata.next_scene = self.gamedata.previous_scene
                         self.gamedata.previous_scene = "PartyScreen"
+                        self.menu = 0
                     # Quit to title screen.
                     elif self.menu == 7:
                         self.transition.run("fadeOutDown")
@@ -125,6 +126,7 @@ class PartyScreen(base.SceneBase):
                             elif self.menu == 6:
                                 self.gamedata.next_scene = self.gamedata.previous_scene
                                 self.gamedata.previous_scene = "PartyScreen"
+                                self.menu = 0
                             # Quit to title screen.
                             elif self.menu == 7:
                                 self.transition.run("fadeOutDown")
@@ -158,7 +160,7 @@ class PartyScreen(base.SceneBase):
             formatting.MenuOption("Inventory", (menu_x, 53), self.cache),
             formatting.MenuOption("Spells", (menu_x, 83), self.cache),
             formatting.MenuOption("Equipment", (menu_x, 113), self.cache),
-            formatting.MenuOption("Change Job", (menu_x, 143), self.cache),
+            formatting.MenuOption("Change Class", (menu_x, 143), self.cache),
             formatting.MenuOption("Save Game", (menu_x, 173), self.cache),
             formatting.MenuOption("Close Menu", (menu_x, 203), self.cache),
             formatting.MenuOption("Quit to Title", (menu_x, 233), self.cache),
@@ -183,15 +185,85 @@ class PartyScreen(base.SceneBase):
         for x in range(len(self.menu_rects)):
             self.menu_rects[x] = utils.scale_rect(self.menu_rects[x], real_w, real_h)
         
+        pygame.draw.line(canvas.canvas, colors.white, (10, 180), (1000, 180), 2)
+        
+        pygame.draw.line(canvas.canvas, colors.white, (10, 360), (1000, 360), 2)
+        
+        pygame.draw.line(canvas.canvas, colors.white, (10, 540), (1000, 540), 2)
         
         x = 40
-        y = 40
+        y = 50
+        
+        self.font = ["Immortal"]
+        
         # Draw the party on the screen.
         for character in self.gamedata.party_slots:
             if character != None:
                 canvas.canvas.blit(character.right_standing, (x, y))
-                y = y + 200
-        
+                
+                # Name.
+                name = self.cache.get_font(self.font, 20).render(character.name, True, colors.white)
+                canvas.canvas.blit(name, (x, y - 35))
+                
+                # Level.
+                level = self.cache.get_font(self.font, 20).render("Level: " + str(character.level), True, colors.white)
+                canvas.canvas.blit(level, (x + 250, y - 35))
+                
+                # Class.
+                cclass = self.cache.get_font(self.font, 20).render(character.cclass, True, colors.white)
+                canvas.canvas.blit(cclass, (x + 40, y - 5))
+                
+                # Current / Max HP.
+                current_hp = self.cache.get_font(self.font, 20).render(str(character.current_hp), True, colors.white)
+                canvas.canvas.blit(current_hp, (x + 50, y + 25))
+                
+                slash = self.cache.get_font(self.font, 20).render("/", True, colors.white)
+                canvas.canvas.blit(slash, (x + 110, y + 25))
+                
+                max_hp = self.cache.get_font(self.font, 20).render(str(character.max_hp) + " HP", True, colors.white)
+                canvas.canvas.blit(max_hp, (x + 125, y + 25))
+                
+                # Color coded HP % bar.
+                pygame.draw.line(canvas.canvas, colors.dark_grey, (x + 50, y + 53), (x + 190, y + 53), 2)
+                
+                hp_p = character.current_hp * 1.0 / character.max_hp
+                hp_len = int(hp_p * 140) + 50
+                
+                if hp_p > 0.75:
+                    pygame.draw.line(canvas.canvas, colors.green, (x + 50, y + 53), (x + hp_len, y + 53), 2)
+                
+                elif hp_p > .40:
+                    pygame.draw.line(canvas.canvas, colors.dark_yellow, (x + 50, y + 53), (x + hp_len, y + 53), 2)
+                
+                else:
+                    pygame.draw.line(canvas.canvas, colors.red, (x + 50, y + 53), (x + hp_len, y + 53), 2)
+                    
+                    
+                # Current / Max MP.
+                current_mp = self.cache.get_font(self.font, 20).render(str(character.current_mp), True, colors.white)
+                canvas.canvas.blit(current_mp, (x + 50, y + 60))
+                
+                canvas.canvas.blit(slash, (x + 110, y + 60))
+                
+                max_mp = self.cache.get_font(self.font, 20).render(str(character.max_mp) + " MP", True, colors.white)
+                canvas.canvas.blit(max_mp, (x + 125, y + 60))
+                
+                # Color coded MP % bar.
+                pygame.draw.line(canvas.canvas, colors.dark_grey, (x + 50, y + 88), (x + 190, y + 88), 2)
+                
+                mp_p = character.current_mp * 1.0 / character.max_mp
+                mp_len = int(mp_p * 140) + 50
+                
+                if mp_p > 0.75:
+                    pygame.draw.line(canvas.canvas, colors.green, (x + 50, y + 88), (x + mp_len, y + 88), 2)
+                
+                elif mp_p > .40:
+                    pygame.draw.line(canvas.canvas, colors.dark_yellow, (x + 50, y + 88), (x + mp_len, y + 88), 2)
+                
+                else:
+                    pygame.draw.line(canvas.canvas, colors.red, (x + 50, y + 88), (x + mp_len, y + 88), 2)
+                
+                y = y + 180
         
         # Draw the upscaled virtual screen to actual screen.
         screen.blit(canvas.render(), (0, 0))

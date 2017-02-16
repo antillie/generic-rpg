@@ -15,10 +15,13 @@ class Sidekick(pygame.sprite.Sprite):
         super(Sidekick, self).__init__()
         self.direction = direction
         
+        self.name = "Party Member"
+        self.cclass = "Monk"
+        
         self.level = 1
         
-        self.current_hp = 26
-        self.max_hp = 26
+        self.current_hp = 28
+        self.max_hp = 28
         
         self.current_mp = 8
         self.max_mp = 8

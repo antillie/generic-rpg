@@ -15,6 +15,9 @@ class Hero(pygame.sprite.Sprite):
         super(Hero, self).__init__()
         self.direction = direction
         
+        self.name = "Hero Name"
+        self.cclass = "Warrior"
+        
         self.level = 1
         
         self.current_hp = 24
