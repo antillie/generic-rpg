@@ -21,7 +21,6 @@ class PartyScreen(base.SceneBase):
         self.menu_rects = []
         
         self.status_select = False
-        self.status_selection = 0
         
     # Handles user input passed from the main engine.
     def ProcessInput(self, events, pressed_keys):
@@ -38,7 +37,9 @@ class PartyScreen(base.SceneBase):
                 elif event.key in (pygame.K_RETURN, pygame.K_KP_ENTER, pygame.K_SPACE):
                     # Status screen selection.
                     if self.status_select == True:
-                        print("Status for party member %s selected.") % self.status_selection
+                        # Go to the status screen.
+                        if self.gamedata.party_slots[self.gamedata.status_selection] != None:
+                            self.gamedata.next_scene = "StatusScreen"
                     # Normal menu entry selection.
                     else:
                         # Status.
@@ -82,11 +83,11 @@ class PartyScreen(base.SceneBase):
                 elif event.key in (pygame.K_DOWN, pygame.K_s):
                     if self.status_select:
                         # Incriment the status selection rectangle.
-                        self.status_selection = self.status_selection + 1
+                        self.gamedata.status_selection = self.gamedata.status_selection + 1
                         self.sound.play_sound("menu_change.wav")
-                        if self.status_selection == 4:
+                        if self.gamedata.status_selection == 4:
                             # Loop the selection if we went past the end.
-                            self.status_selection = 0
+                            self.gamedata.status_selection = 0
                     elif not self.status_select:
                         # Play the menu sound effect.
                         self.sound.play_sound("menu_change.wav")
@@ -99,11 +100,11 @@ class PartyScreen(base.SceneBase):
                 elif event.key in (pygame.K_UP, pygame.K_w):
                     if self.status_select:
                         # Incriment the status selection rectangle.
-                        self.status_selection = self.status_selection - 1
+                        self.gamedata.status_selection = self.gamedata.status_selection - 1
                         self.sound.play_sound("menu_change.wav")
-                        if self.status_selection == -1:
+                        if self.gamedata.status_selection == -1:
                             # Loop the selection if we went past the end.
-                            self.status_selection = 3
+                            self.gamedata.status_selection = 3
                     elif not self.status_select:
                         # Play the menu sound effect.
                         self.sound.play_sound("menu_change.wav")
@@ -124,7 +125,7 @@ class PartyScreen(base.SceneBase):
                 if event.button == 1:
                     # Status screen selection.
                     if self.status_select == True:
-                        print("Status for party member %s selected.") % self.status_selection
+                        print("Status for party member %s selected.") % self.gamedata.status_selection
                     # Normal menu entry selection.
                     else:
                         for x in range(len(self.menu_rects)):
@@ -220,13 +221,13 @@ class PartyScreen(base.SceneBase):
         pygame.draw.line(canvas.canvas, colors.white, (10, 540), (1000, 540), 2)
         
         if self.status_select == True:
-            if self.status_selection == 0:
+            if self.gamedata.status_selection == 0:
                 pygame.draw.rect(canvas.canvas, colors.off_yellow, pygame.Rect(5,5,1000,170), 2)
-            elif self.status_selection == 1:
+            elif self.gamedata.status_selection == 1:
                 pygame.draw.rect(canvas.canvas, colors.off_yellow, pygame.Rect(5,185,1000,170), 2)
-            elif self.status_selection == 2:
+            elif self.gamedata.status_selection == 2:
                 pygame.draw.rect(canvas.canvas, colors.off_yellow, pygame.Rect(5,365,1000,170), 2)
-            elif self.status_selection == 3:
+            elif self.gamedata.status_selection == 3:
                 pygame.draw.rect(canvas.canvas, colors.off_yellow, pygame.Rect(5,545,1000,170), 2)
         
         x = 40

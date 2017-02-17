@@ -36,7 +36,7 @@ class Sidekick(pygame.sprite.Sprite):
         self.inteligence = 2
         self.charisma = 4
         
-        self.defence = 18
+        self.defense = 18
         self.attack = 22
         self.accuracy = 10
         self.dodge = 4
@@ -46,6 +46,15 @@ class Sidekick(pygame.sprite.Sprite):
         self.block = 0
         self.guard = 15
         self.counter = 10
+        
+        self.fire_res = 0
+        self.ice_res = 0
+        self.wind_res = 0
+        self.earth_res = 0
+        self.lightning_res = 0
+        self.water_res = 0
+        self.holy_res = 0
+        self.darkness_res = 0
         
         self.tnl = 500
         

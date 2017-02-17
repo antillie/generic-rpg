@@ -21,6 +21,7 @@ import party_screen
 import battle
 import transitions
 import worldmap
+import status
 
 # Global sound object that handles all audio output.
 sound = sound.JukeBox()
@@ -109,6 +110,7 @@ class Engine:
         self.PartyScreen = party_screen.PartyScreen(sound, cache, transition, self.gamedata)
         self.BattleScreen = battle.BattleScreen(sound, cache, transition, self.gamedata)
         self.WorldMap = worldmap.WorldMap(sound, cache, transition, self.gamedata)
+        self.StatusScreen = status.StatusScreen(sound, cache, transition, self.gamedata)
         
         # Set the starting scene.
         active_scene = self.TitleScene
@@ -249,6 +251,8 @@ class Engine:
                         active_scene = self.BattleScreen
                     elif self.gamedata.next_scene == "WorldMap":
                         active_scene = self.WorldMap
+                    elif self.gamedata.next_scene == "StatusScreen":
+                        active_scene = self.StatusScreen
                     elif self.gamedata.next_scene == None:
                         active_scene = None
             

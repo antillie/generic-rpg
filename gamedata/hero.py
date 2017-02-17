@@ -36,7 +36,7 @@ class Hero(pygame.sprite.Sprite):
         self.inteligence = 2
         self.charisma = 3
         
-        self.defence = 22
+        self.defense = 22
         self.attack = 20
         self.accuracy = 10
         self.dodge = 3
@@ -46,6 +46,15 @@ class Hero(pygame.sprite.Sprite):
         self.block = 20
         self.guard = 0
         self.counter = 0
+        
+        self.fire_res = 0
+        self.ice_res = 0
+        self.wind_res = 0
+        self.earth_res = 0
+        self.lightning_res = 0
+        self.water_res = 0
+        self.holy_res = 0
+        self.darkness_res = 0
         
         self.tnl = 500
         

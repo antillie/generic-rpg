@@ -152,9 +152,9 @@ class BattleScreen(base.SceneBase):
         # Menu entries.
         self.options = [
             formatting.MenuOption("Attack", (menu_x, 23), self.cache),
-            formatting.MenuOption("Special Move", (menu_x, 53), self.cache),
-            formatting.MenuOption("Cast Spell", (menu_x, 83), self.cache),
-            formatting.MenuOption("Use Item", (menu_x, 113), self.cache),
+            formatting.MenuOption("Class Ability", (menu_x, 53), self.cache),
+            formatting.MenuOption("Magic", (menu_x, 83), self.cache),
+            formatting.MenuOption("Item", (menu_x, 113), self.cache),
             formatting.MenuOption("Guard", (menu_x, 143), self.cache),
             formatting.MenuOption("End Battle", (menu_x, 173), self.cache),
             ]

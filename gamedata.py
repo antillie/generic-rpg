@@ -40,3 +40,6 @@ class GameData:
         
         # When drawing the party use the party slot list. That way we can change party order visually without having to rework the scene.
         self.party_slots = [self.hero, self.sidekick, None, None]
+        
+        # Status screen selection choice.
+        self.status_selection = 0
