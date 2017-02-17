@@ -183,7 +183,7 @@ class BattleScreen(base.SceneBase):
         
         # Party line starting position.
         self.player_x = 1100
-        self.player_y = 390
+        self.player_y = 420
         # Draw the party on the screen.
         for character in self.gamedata.party_slots:
             if character != None:

@@ -20,11 +20,11 @@ class Sidekick(pygame.sprite.Sprite):
         
         self.level = 1
         
-        self.current_hp = 28
-        self.max_hp = 28
+        self.current_hp = 38
+        self.max_hp = 38
         
-        self.current_mp = 8
-        self.max_mp = 8
+        self.current_mp = 9
+        self.max_mp = 9
         
         self.status = ["Normal"]
         
@@ -46,6 +46,8 @@ class Sidekick(pygame.sprite.Sprite):
         self.block = 0
         self.guard = 15
         self.counter = 10
+        
+        self.tnl = 500
         
         self.battle_line_x = 0
         self.attack_flag = False

@@ -20,8 +20,8 @@ class Hero(pygame.sprite.Sprite):
         
         self.level = 1
         
-        self.current_hp = 24
-        self.max_hp = 24
+        self.current_hp = 32
+        self.max_hp = 32
         
         self.current_mp = 8
         self.max_mp = 8
@@ -46,6 +46,8 @@ class Hero(pygame.sprite.Sprite):
         self.block = 20
         self.guard = 0
         self.counter = 0
+        
+        self.tnl = 500
         
         self.battle_line_x = 0
         self.attack_flag = False

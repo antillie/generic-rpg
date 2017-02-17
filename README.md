@@ -9,7 +9,7 @@ This is because pygame's smoothscale() function is CPU intensive.
 
 System requirments:
 
-    Python 2.7/3.4 (3.5+ untested) with libraries:
+    Python 2.7 with libraries:
         (These can be installed with pip.)
         pygame
         pyscroll
@@ -34,7 +34,10 @@ Controls:
     Escape pulls up the party screen from the game world.
     Escape and Enter exit the credits screen.
     
-Tested on Windows and Linux. But any platform that has Python 2.7 or 3.4 and the needed libraries should work.
+Tested on Windows and Linux. But any platform that has Python 2.7 and the needed libraries should work.
+
+It runs on Python 3.4 on Linux but Python 3.6 on Windows seems to dislike my imports.
+I am not terribly interested in fixing this right now.
 
 Uses creative commons art and sound assets. Mostly CC-BY. Some CC-BY-SA. Some public domain.
 (https://creativecommons.org/licenses/)

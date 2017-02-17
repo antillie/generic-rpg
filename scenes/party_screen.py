@@ -20,122 +20,152 @@ class PartyScreen(base.SceneBase):
         self.gamedata = gamedata
         self.menu_rects = []
         
+        self.status_select = False
+        self.status_selection = 0
+        
     # Handles user input passed from the main engine.
     def ProcessInput(self, events, pressed_keys):
         for event in events:
             # Keyboard input.
             if event.type == pygame.KEYDOWN:
                 # Escape key closes the menu.
-                if event.key == pygame.K_ESCAPE:
+                if event.key == pygame.K_ESCAPE and self.status_select == False:
                     self.gamedata.next_scene = self.gamedata.previous_scene
                     self.gamedata.previous_scene = "PartyScreen"
+                elif event.key == pygame.K_ESCAPE and self.status_select == True:
+                    self.status_select = False
                 # Enter key or space.
                 elif event.key in (pygame.K_RETURN, pygame.K_KP_ENTER, pygame.K_SPACE):
-                    # Status.
-                    if self.menu == 0:
-                        # Not yet implimented.
-                        pass
-                    # Inventory.
-                    elif self.menu == 1:
-                        # Not yet implimented.
-                        pass
-                    # Spells.
-                    elif self.menu == 2:
-                        # Not yet implimented.
-                        pass
-                    # Equipment.
-                    elif self.menu == 3:
-                        # Not yet implimented.
-                        pass
-                    # Change Job.
-                    elif self.menu == 4:
-                        # Not yet implimented.
-                        pass
-                    # Save game.
-                    elif self.menu == 5:
-                        # Not yet implimented.
-                        pass
-                    # Close menu.
-                    elif self.menu == 6:
-                        self.gamedata.next_scene = self.gamedata.previous_scene
-                        self.gamedata.previous_scene = "PartyScreen"
-                        self.menu = 0
-                    # Quit to title screen.
-                    elif self.menu == 7:
-                        self.transition.run("fadeOutDown")
-                        self.sound.stop_music()
-                        self.gamedata.next_scene = "TitleScene"
-                        self.gamedata.previous_scene = "PartyScreen"
-                    # Quit to desktop.
-                    elif self.menu == 8:
-                        self.gamedata.next_scene = None
+                    # Status screen selection.
+                    if self.status_select == True:
+                        print("Status for party member %s selected.") % self.status_selection
+                    # Normal menu entry selection.
+                    else:
+                        # Status.
+                        if self.menu == 0:
+                            self.status_select = True
+                        # Inventory.
+                        elif self.menu == 1:
+                            # Not yet implimented.
+                            pass
+                        # Spells.
+                        elif self.menu == 2:
+                            # Not yet implimented.
+                            pass
+                        # Equipment.
+                        elif self.menu == 3:
+                            # Not yet implimented.
+                            pass
+                        # Change Job.
+                        elif self.menu == 4:
+                            # Not yet implimented.
+                            pass
+                        # Save game.
+                        elif self.menu == 5:
+                            # Not yet implimented.
+                            pass
+                        # Close menu.
+                        elif self.menu == 6:
+                            self.gamedata.next_scene = self.gamedata.previous_scene
+                            self.gamedata.previous_scene = "PartyScreen"
+                            self.menu = 0
+                        # Quit to title screen.
+                        elif self.menu == 7:
+                            self.transition.run("fadeOutDown")
+                            self.sound.stop_music()
+                            self.gamedata.next_scene = "TitleScene"
+                            self.gamedata.previous_scene = "PartyScreen"
+                        # Quit to desktop.
+                        elif self.menu == 8:
+                            self.gamedata.next_scene = None
                 # Down arrow or S.
                 elif event.key in (pygame.K_DOWN, pygame.K_s):
-                    # Play the menu sound effect.
-                    self.sound.play_sound("menu_change.wav")
-                    # Incriment the menu.
-                    self.menu = self.menu + 1
-                    if self.menu == 9:
-                        # Loop the menu if we went past the end.
-                        self.menu = 0
+                    if self.status_select:
+                        # Incriment the status selection rectangle.
+                        self.status_selection = self.status_selection + 1
+                        self.sound.play_sound("menu_change.wav")
+                        if self.status_selection == 4:
+                            # Loop the selection if we went past the end.
+                            self.status_selection = 0
+                    elif not self.status_select:
+                        # Play the menu sound effect.
+                        self.sound.play_sound("menu_change.wav")
+                        # Incriment the menu.
+                        self.menu = self.menu + 1
+                        if self.menu == 9:
+                            # Loop the menu if we went past the end.
+                            self.menu = 0
                 # Up arrow or W.
                 elif event.key in (pygame.K_UP, pygame.K_w):
-                    # Play the menu sound effect.
-                    self.sound.play_sound("menu_change.wav")
-                    # Incriment the menu.
-                    self.menu = self.menu - 1
-                    if self.menu == -1:
-                        # Loop the menu if we went past the end.
-                        self.menu = 8
+                    if self.status_select:
+                        # Incriment the status selection rectangle.
+                        self.status_selection = self.status_selection - 1
+                        self.sound.play_sound("menu_change.wav")
+                        if self.status_selection == -1:
+                            # Loop the selection if we went past the end.
+                            self.status_selection = 3
+                    elif not self.status_select:
+                        # Play the menu sound effect.
+                        self.sound.play_sound("menu_change.wav")
+                        # Incriment the menu.
+                        self.menu = self.menu - 1
+                        if self.menu == -1:
+                            # Loop the menu if we went past the end.
+                            self.menu = 8
             # Mouse moved.
             elif event.type == pygame.MOUSEMOTION:
-                for x in range(len(self.menu_rects)):
-                    if self.menu_rects[x].collidepoint(event.pos):
-                        self.menu = x
+                if not self.status_select:
+                    for x in range(len(self.menu_rects)):
+                        if self.menu_rects[x].collidepoint(event.pos):
+                            self.menu = x
             # Mouse click.
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 # Left click.
                 if event.button == 1:
-                    for x in range(len(self.menu_rects)):
-                        if self.menu_rects[x].collidepoint(event.pos):
-                            # Status.
-                            if self.menu == 0:
-                                # Not yet implimented.
-                                pass
-                            # Inventory.
-                            elif self.menu == 1:
-                                # Not yet implimented.
-                                pass
-                            # Spells.
-                            elif self.menu == 2:
-                                # Not yet implimented.
-                                pass
-                            # Equipment.
-                            elif self.menu == 3:
-                                # Not yet implimented.
-                                pass
-                            # Change Job.
-                            elif self.menu == 4:
-                                # Not yet implimented.
-                                pass
-                            # Save game.
-                            elif self.menu == 5:
-                                # Not yet implimented.
-                                pass
-                            # Close menu.
-                            elif self.menu == 6:
-                                self.gamedata.next_scene = self.gamedata.previous_scene
-                                self.gamedata.previous_scene = "PartyScreen"
-                                self.menu = 0
-                            # Quit to title screen.
-                            elif self.menu == 7:
-                                self.transition.run("fadeOutDown")
-                                self.sound.stop_music()
-                                self.gamedata.next_scene = "TitleScene"
-                                self.gamedata.previous_scene = "PartyScreen"
-                            # Quit to desktop.
-                            elif self.menu == 8:
-                                self.gamedata.next_scene = None
+                    # Status screen selection.
+                    if self.status_select == True:
+                        print("Status for party member %s selected.") % self.status_selection
+                    # Normal menu entry selection.
+                    else:
+                        for x in range(len(self.menu_rects)):
+                            if self.menu_rects[x].collidepoint(event.pos):
+                                # Status.
+                                if self.menu == 0:
+                                    self.status_select = True
+                                # Inventory.
+                                elif self.menu == 1:
+                                    # Not yet implimented.
+                                    pass
+                                # Spells.
+                                elif self.menu == 2:
+                                    # Not yet implimented.
+                                    pass
+                                # Equipment.
+                                elif self.menu == 3:
+                                    # Not yet implimented.
+                                    pass
+                                # Change Job.
+                                elif self.menu == 4:
+                                    # Not yet implimented.
+                                    pass
+                                # Save game.
+                                elif self.menu == 5:
+                                    # Not yet implimented.
+                                    pass
+                                # Close menu.
+                                elif self.menu == 6:
+                                    self.gamedata.next_scene = self.gamedata.previous_scene
+                                    self.gamedata.previous_scene = "PartyScreen"
+                                    self.menu = 0
+                                # Quit to title screen.
+                                elif self.menu == 7:
+                                    self.transition.run("fadeOutDown")
+                                    self.sound.stop_music()
+                                    self.gamedata.next_scene = "TitleScene"
+                                    self.gamedata.previous_scene = "PartyScreen"
+                                # Quit to desktop.
+                                elif self.menu == 8:
+                                    self.gamedata.next_scene = None
     # Internal game logic.
     def Update(self):
         pass
@@ -186,14 +216,21 @@ class PartyScreen(base.SceneBase):
             self.menu_rects[x] = utils.scale_rect(self.menu_rects[x], real_w, real_h)
         
         pygame.draw.line(canvas.canvas, colors.white, (10, 180), (1000, 180), 2)
-        
         pygame.draw.line(canvas.canvas, colors.white, (10, 360), (1000, 360), 2)
-        
         pygame.draw.line(canvas.canvas, colors.white, (10, 540), (1000, 540), 2)
+        
+        if self.status_select == True:
+            if self.status_selection == 0:
+                pygame.draw.rect(canvas.canvas, colors.off_yellow, pygame.Rect(5,5,1000,170), 2)
+            elif self.status_selection == 1:
+                pygame.draw.rect(canvas.canvas, colors.off_yellow, pygame.Rect(5,185,1000,170), 2)
+            elif self.status_selection == 2:
+                pygame.draw.rect(canvas.canvas, colors.off_yellow, pygame.Rect(5,365,1000,170), 2)
+            elif self.status_selection == 3:
+                pygame.draw.rect(canvas.canvas, colors.off_yellow, pygame.Rect(5,545,1000,170), 2)
         
         x = 40
         y = 50
-        
         self.font = ["Immortal"]
         
         # Draw the party on the screen.
@@ -215,52 +252,52 @@ class PartyScreen(base.SceneBase):
                 
                 # Current / Max HP.
                 current_hp = self.cache.get_font(self.font, 20).render(str(character.current_hp), True, colors.white)
-                canvas.canvas.blit(current_hp, (x + 120, y + 25))
+                canvas.canvas.blit(current_hp, (x + 110, y + 25))
                 
                 slash = self.cache.get_font(self.font, 20).render("/", True, colors.white)
                 canvas.canvas.blit(slash, (x + 180, y + 25))
                 
-                max_hp = self.cache.get_font(self.font, 20).render(str(character.max_hp) + " HP", True, colors.white)
+                max_hp = self.cache.get_font(self.font, 20).render(str(character.max_hp) + "    HP", True, colors.white)
                 canvas.canvas.blit(max_hp, (x + 195, y + 25))
                 
                 # Color coded HP % bar.
-                pygame.draw.line(canvas.canvas, colors.dark_grey, (x + 120, y + 53), (x + 220, y + 53), 2)
+                pygame.draw.line(canvas.canvas, colors.dark_grey, (x + 110, y + 53), (x + 220, y + 53), 2)
                 
                 hp_p = character.current_hp * 1.0 / character.max_hp
-                hp_len = int(hp_p * 140) + 120
+                hp_len = int(hp_p * 140) + 110
                 
                 if hp_p > 0.75:
-                    pygame.draw.line(canvas.canvas, colors.green, (x + 120, y + 53), (x + hp_len, y + 53), 2)
+                    pygame.draw.line(canvas.canvas, colors.green, (x + 110, y + 53), (x + hp_len, y + 53), 2)
                 
                 elif hp_p > .40:
-                    pygame.draw.line(canvas.canvas, colors.dark_yellow, (x + 120, y + 53), (x + hp_len, y + 53), 2)
+                    pygame.draw.line(canvas.canvas, colors.dark_yellow, (x + 110, y + 53), (x + hp_len, y + 53), 2)
                 
                 else:
-                    pygame.draw.line(canvas.canvas, colors.red, (x + 120, y + 53), (x + hp_len, y + 53), 2)
+                    pygame.draw.line(canvas.canvas, colors.red, (x + 110, y + 53), (x + hp_len, y + 53), 2)
                     
                 # Current / Max MP.
                 current_mp = self.cache.get_font(self.font, 20).render(str(character.current_mp), True, colors.white)
-                canvas.canvas.blit(current_mp, (x + 120, y + 60))
+                canvas.canvas.blit(current_mp, (x + 110, y + 60))
                 
                 canvas.canvas.blit(slash, (x + 180, y + 60))
                 
-                max_mp = self.cache.get_font(self.font, 20).render(str(character.max_mp) + " MP", True, colors.white)
+                max_mp = self.cache.get_font(self.font, 20).render(str(character.max_mp) + "     MP", True, colors.white)
                 canvas.canvas.blit(max_mp, (x + 195, y + 60))
                 
                 # Color coded MP % bar.
-                pygame.draw.line(canvas.canvas, colors.dark_grey, (x + 120, y + 88), (x + 220, y + 88), 2)
+                pygame.draw.line(canvas.canvas, colors.dark_grey, (x + 110, y + 88), (x + 220, y + 88), 2)
                 
                 mp_p = character.current_mp * 1.0 / character.max_mp
-                mp_len = int(mp_p * 140) + 120
+                mp_len = int(mp_p * 140) + 110
                 
                 if mp_p > 0.75:
-                    pygame.draw.line(canvas.canvas, colors.green, (x + 120, y + 88), (x + mp_len, y + 88), 2)
+                    pygame.draw.line(canvas.canvas, colors.green, (x + 110, y + 88), (x + mp_len, y + 88), 2)
                 
                 elif mp_p > .40:
-                    pygame.draw.line(canvas.canvas, colors.dark_yellow, (x + 120, y + 88), (x + mp_len, y + 88), 2)
+                    pygame.draw.line(canvas.canvas, colors.dark_yellow, (x + 110, y + 88), (x + mp_len, y + 88), 2)
                 
                 else:
-                    pygame.draw.line(canvas.canvas, colors.red, (x + 120, y + 88), (x + mp_len, y + 88), 2)
+                    pygame.draw.line(canvas.canvas, colors.red, (x + 110, y + 88), (x + mp_len, y + 88), 2)
                 
                 y = y + 180
         
