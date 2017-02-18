@@ -36,7 +36,7 @@ Controls:
     
 Tested on Windows and Linux. But any platform that has Python 2.7 and the needed libraries should work.
 
-It runs on Python 3.4 on Linux but Python 3.6 on Windows seems to dislike my imports.
+Runs on Python 3.4+ on Linux but Python 3.6 on Windows seems to dislike my imports.
 I am not terribly interested in fixing this right now.
 
 Uses creative commons art and sound assets. Mostly CC-BY. Some CC-BY-SA. Some public domain.
