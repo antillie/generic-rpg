@@ -7,7 +7,6 @@ import base
 import colors
 import utils
 import formatting
-import sys
 
 # The inventory screen. Lets you use items outside of battle.
 class InventoryScreen(base.SceneBase):
