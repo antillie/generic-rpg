@@ -39,8 +39,7 @@ class InventoryScreen(base.SceneBase):
                     if self.target_select == True:
                         # Use the selected item on the target.
                         if self.gamedata.party_slots[self.target_selection] != None:
-                            print("Used " + self.items[self.menu].text + " on " + self.gamedata.party_slots[self.target_selection].name)
-                            #print(self.items[self.menu].text)
+                            self.use_item(self.items[self.menu].text, self.target_selection)
                         
                     # Select target for item usage.
                     else:
@@ -243,3 +242,11 @@ class InventoryScreen(base.SceneBase):
         else:
             self.sound.play_sound("negative_2.wav")
             return False
+    
+    def use_item(self, item, target):
+        if self.gamedata.inventory[item] > 0:
+            print("Used " + item + " on " + self.gamedata.party_slots[target].name)
+            self.gamedata.inventory[item] = self.gamedata.inventory[item] - 1
+            self.sound.play_sound("misc_menu.wav")
+        else:
+            self.sound.play_sound("negative_2.wav")

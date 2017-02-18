@@ -36,6 +36,12 @@ class JukeBox:
         self.music_playing = False
         
     def play_sound(self, sound):
+        
+        if sound == "menu_change.wav":
+            self.fx_volume = 1.0
+        else:
+            self.fx_volume = 0.3
+        
         # Cache sound effect objects so we don't have to generate them every time a sound is played.
         global _sound_library
         sound_fx = _sound_library.get(sound)
