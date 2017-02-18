@@ -22,6 +22,7 @@ import battle
 import transitions
 import worldmap
 import status
+import inventory
 
 # Global sound object that handles all audio output.
 sound = sound.JukeBox()
@@ -48,6 +49,7 @@ class Engine:
         self.PartyScreen = party_screen.PartyScreen(sound, cache, transition, self.gamedata)
         self.WorldMap = worldmap.WorldMap(sound, cache, transition, self.gamedata)
         self.CreditsScene = credits_s.CreditsScene(sound, cache, transition, self.gamedata)
+        self.InventoryScreen = inventory.InventoryScreen(sound, cache, transition, self.gamedata)
         
     # Sets up the window, handles screen modes/sizes, manages scene changes, and forwards player input to the active scene.
     def run(self, width=1280, height=720, fps=60, fullscreen=False):
@@ -111,6 +113,7 @@ class Engine:
         self.BattleScreen = battle.BattleScreen(sound, cache, transition, self.gamedata)
         self.WorldMap = worldmap.WorldMap(sound, cache, transition, self.gamedata)
         self.StatusScreen = status.StatusScreen(sound, cache, transition, self.gamedata)
+        self.InventoryScreen = inventory.InventoryScreen(sound, cache, transition, self.gamedata)
         
         # Set the starting scene.
         active_scene = self.TitleScene
@@ -253,6 +256,8 @@ class Engine:
                         active_scene = self.WorldMap
                     elif self.gamedata.next_scene == "StatusScreen":
                         active_scene = self.StatusScreen
+                    elif self.gamedata.next_scene == "InventoryScreen":
+                        active_scene = self.InventoryScreen
                     elif self.gamedata.next_scene == None:
                         active_scene = None
             

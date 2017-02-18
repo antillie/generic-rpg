@@ -12,7 +12,6 @@ import formatting
 class PartyScreen(base.SceneBase):
     
     def __init__(self, sound, cache, transition, gamedata):
-        self.previous_scene = None
         self.menu = 0
         self.sound = sound
         self.cache = cache
@@ -48,7 +47,7 @@ class PartyScreen(base.SceneBase):
                         # Inventory.
                         elif self.menu == 1:
                             # Not yet implimented.
-                            pass
+                            self.gamedata.next_scene = "InventoryScreen"
                         # Spells.
                         elif self.menu == 2:
                             # Not yet implimented.
@@ -125,7 +124,7 @@ class PartyScreen(base.SceneBase):
                 if event.button == 1:
                     # Status screen selection.
                     if self.status_select == True:
-                        print("Status for party member %s selected.") % self.gamedata.status_selection
+                        pass
                     # Normal menu entry selection.
                     else:
                         for x in range(len(self.menu_rects)):

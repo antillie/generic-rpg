@@ -12,7 +12,6 @@ import formatting
 class BattleScreen(base.SceneBase):
     
     def __init__(self, sound, cache, transition, gamedata):
-        self.previous_scene = None
         self.menu = 5
         self.sound = sound
         self.cache = cache

@@ -90,7 +90,6 @@ class GameData:
         "Water Edge":"0",
         "Holy Edge":"0",
         "Darkness Edge":"0",
-        "Shuriken":"0",
-        "Fuma Shuriken":"0"
+        "Shuriken":"0"
         
         }
