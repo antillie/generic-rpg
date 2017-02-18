@@ -59,8 +59,8 @@ class GameData:
         # Ethers; restore MP.
         "Ether":"2",
         "Hi-Ether":"0",
-        "Turbo Ether":"0",
-        "Full Ether":"0",
+        "Mega-Ether":"0",
+        "X-Ether":"0",
         
         # HP/MP restorers.
         "Minor Elixer":"0", # Restores 30%
@@ -73,7 +73,7 @@ class GameData:
         "Gold Needle":"0", # Petrify
         "Green Cherry":"0", # Imp
         "Holy Water":"0", # Zombie
-        "Phoenix Down":"0" # KO
+        "Phoenix Feather":"0", # KO
                     
         # Party wide recovery items.
         "Tent":"3", # Out of battle, cheap, common.
@@ -89,6 +89,8 @@ class GameData:
         "Lightning Edge":"0",
         "Water Edge":"0",
         "Holy Edge":"0",
-        "Darkness Edge":"0"
+        "Darkness Edge":"0",
+        "Shuriken":"0",
+        "Fuma Shuriken":"0"
         
         }
