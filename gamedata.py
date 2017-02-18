@@ -43,3 +43,52 @@ class GameData:
         
         # Status screen selection choice.
         self.status_selection = 0
+        
+        # Party GP.
+        self.gp = 50
+        
+        # Party inventory.
+        self.inventory = {
+        
+        # Potions; restore HP.
+        "Potion":"6",
+        "Hi-Potion":"0",
+        "Mega-Potion":"0",
+        "X-Potion":"0",
+        
+        # Ethers; restore MP.
+        "Ether":"2",
+        "Hi-Ether":"0",
+        "Turbo Ether":"0",
+        "Full Ether":"0",
+        
+        # HP/MP restorers.
+        "Minor Elixer":"0", # Restores 30%
+        "Elixer":"0", # Restores to full
+        
+        # Status effect removers.
+        "Antidote":"2", # Poison
+        "Echo Screen":"0", # Silence
+        "Eye Drops":"0", # Blind
+        "Gold Needle":"0", # Petrify
+        "Green Cherry":"0", # Imp
+        "Holy Water":"0", # Zombie
+        "Phoenix Down":"0" # KO
+                    
+        # Party wide recovery items.
+        "Tent":"3", # Out of battle, cheap, common.
+        "Megalixer":"0", # In battle, rare.
+        
+        # Battle items.
+        "Smoke Bomb":"0",
+        "Warp Stone":"0",
+        "Fire Edge":"0",
+        "Ice Edge":"0",
+        "Wind Edge":"0",
+        "Earth Edge":"0",
+        "Lightning Edge":"0",
+        "Water Edge":"0",
+        "Holy Edge":"0",
+        "Darkness Edge":"0"
+        
+        }
