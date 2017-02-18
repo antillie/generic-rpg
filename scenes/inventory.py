@@ -38,8 +38,9 @@ class InventoryScreen(base.SceneBase):
                     # Item usage target selection.
                     if self.target_select == True:
                         # Use the selected item on the target.
-                        
-                        print(self.items[self.menu].text)
+                        if self.gamedata.party_slots[self.target_selection] != None:
+                            print("Used " + self.items[self.menu].text + " on " + self.gamedata.party_slots[self.target_selection].name)
+                            #print(self.items[self.menu].text)
                         
                     # Select target for item usage.
                     else:
@@ -91,11 +92,11 @@ class InventoryScreen(base.SceneBase):
                 elif event.key in (pygame.K_RIGHT, pygame.K_d):
                     if self.target_select:
                         # Incriment the status selection rectangle.
-                        self.target_selection = self.target_selection - 1
+                        self.target_selection = self.target_selection + 1
                         self.sound.play_sound("menu_change.wav")
-                        if self.target_selection == -1:
+                        if self.target_selection == 4:
                             # Loop the selection if we went past the end.
-                            self.target_selection = 3
+                            self.target_selection = 0
                     elif not self.target_select:
                         # Play the menu sound effect.
                         self.sound.play_sound("menu_change.wav")
@@ -199,6 +200,15 @@ class InventoryScreen(base.SceneBase):
             text = self.cache.get_font(["Immortal"], 20).render("Use item on?", True, colors.white)
             canvas.canvas.blit(text, (20 ,500))
         
+        
+            if self.target_selection == 0:
+                pygame.draw.rect(canvas.canvas, colors.off_yellow, pygame.Rect(10,550,200,150), 2)
+            elif self.target_selection == 1:
+                pygame.draw.rect(canvas.canvas, colors.off_yellow, pygame.Rect(210,550,200,150), 2)
+            elif self.target_selection == 2:
+                pygame.draw.rect(canvas.canvas, colors.off_yellow, pygame.Rect(410,550,200,150), 2)
+            elif self.target_selection == 3:
+                pygame.draw.rect(canvas.canvas, colors.off_yellow, pygame.Rect(610,550,200,150), 2)
         
         # Draw the upscaled virtual screen to actual screen.
         screen.blit(canvas.render(), (0, 0))
