@@ -16,7 +16,8 @@ class Hero(pygame.sprite.Sprite):
         self.direction = direction
         
         self.name = "Hero Name"
-        self.cclass = "Warrior"
+        self.mclass = "Warrior"
+        self.sclass = "Monk"
         
         # Stats.
         self.level = 1
@@ -24,10 +25,8 @@ class Hero(pygame.sprite.Sprite):
         self.current_hp = 32
         self.max_hp = 32
         
-        self.current_mp = 8
-        self.max_mp = 8
-        
-        self.status = ["Normal"]
+        self.current_mp = 0
+        self.max_mp = 0
         
         self.strength = 6
         self.vitality = 5

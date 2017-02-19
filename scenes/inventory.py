@@ -177,28 +177,29 @@ class InventoryScreen(base.SceneBase):
                     pygame.draw.line(canvas.canvas, colors.red, (x + 50, y + 33), (x + hp_len, y + 33), 2)
                     
                 # Current / Max MP.
-                current_mp = self.cache.get_font(self.font, 20).render(str(character.current_mp), True, colors.white)
-                canvas.canvas.blit(current_mp, (x + 50, y + 40))
-                
-                canvas.canvas.blit(slash, (x + 120, y + 40))
-                
-                max_mp = self.cache.get_font(self.font, 20).render(str(character.max_mp), True, colors.white)
-                canvas.canvas.blit(max_mp, (x + 135, y + 40))
-                
-                # Color coded MP % bar.
-                pygame.draw.line(canvas.canvas, colors.dark_grey, (x + 50, y + 68), (x + 160, y + 68), 2)
-                
-                mp_p = character.current_mp * 1.0 / character.max_mp
-                mp_len = int(mp_p * 140) + 50
-                
-                if mp_p > 0.75:
-                    pygame.draw.line(canvas.canvas, colors.green, (x + 50, y + 68), (x + mp_len, y + 68), 2)
-                
-                elif mp_p > .40:
-                    pygame.draw.line(canvas.canvas, colors.dark_yellow, (x + 50, y + 68), (x + mp_len, y + 68), 2)
-                
-                else:
-                    pygame.draw.line(canvas.canvas, colors.red, (x + 50, y + 68), (x + mp_len, y + 68), 2)
+                if character.max_mp > 0:
+                    current_mp = self.cache.get_font(self.font, 20).render(str(character.current_mp), True, colors.white)
+                    canvas.canvas.blit(current_mp, (x + 50, y + 40))
+                    
+                    canvas.canvas.blit(slash, (x + 120, y + 40))
+                    
+                    max_mp = self.cache.get_font(self.font, 20).render(str(character.max_mp), True, colors.white)
+                    canvas.canvas.blit(max_mp, (x + 135, y + 40))
+                    
+                    # Color coded MP % bar.
+                    pygame.draw.line(canvas.canvas, colors.dark_grey, (x + 50, y + 68), (x + 160, y + 68), 2)
+                    
+                    mp_p = character.current_mp * 1.0 / character.max_mp
+                    mp_len = int(mp_p * 140) + 50
+                    
+                    if mp_p > 0.75:
+                        pygame.draw.line(canvas.canvas, colors.green, (x + 50, y + 68), (x + mp_len, y + 68), 2)
+                    
+                    elif mp_p > .40:
+                        pygame.draw.line(canvas.canvas, colors.dark_yellow, (x + 50, y + 68), (x + mp_len, y + 68), 2)
+                    
+                    else:
+                        pygame.draw.line(canvas.canvas, colors.red, (x + 50, y + 68), (x + mp_len, y + 68), 2)
                 
                 stat_x = 0
                 stat_y = 70
@@ -265,13 +266,13 @@ class InventoryScreen(base.SceneBase):
             
             # Draw the item target selection retical.
             if self.target_selection == 0:
-                pygame.draw.rect(canvas.canvas, colors.off_yellow, pygame.Rect(10,550,220,150), 2)
+                pygame.draw.rect(canvas.canvas, colors.off_yellow, pygame.Rect(10,550,220,160), 2)
             elif self.target_selection == 1:
-                pygame.draw.rect(canvas.canvas, colors.off_yellow, pygame.Rect(230,550,220,150), 2)
+                pygame.draw.rect(canvas.canvas, colors.off_yellow, pygame.Rect(230,550,220,160), 2)
             elif self.target_selection == 2:
-                pygame.draw.rect(canvas.canvas, colors.off_yellow, pygame.Rect(430,550,220,150), 2)
+                pygame.draw.rect(canvas.canvas, colors.off_yellow, pygame.Rect(430,550,220,160), 2)
             elif self.target_selection == 3:
-                pygame.draw.rect(canvas.canvas, colors.off_yellow, pygame.Rect(630,550,220,150), 2)
+                pygame.draw.rect(canvas.canvas, colors.off_yellow, pygame.Rect(630,550,220,160), 2)
         
         # Draw the upscaled virtual screen to actual screen.
         screen.blit(canvas.render(), (0, 0))

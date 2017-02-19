@@ -247,8 +247,8 @@ class PartyScreen(base.SceneBase):
                 canvas.canvas.blit(level, (x + 320, y - 35))
                 
                 # Class.
-                cclass = self.cache.get_font(self.font, 20).render(character.cclass, True, colors.white)
-                canvas.canvas.blit(cclass, (x + 110, y - 5))
+                mclass = self.cache.get_font(self.font, 20).render(character.mclass, True, colors.white)
+                canvas.canvas.blit(mclass, (x + 110, y - 5))
                 
                 # Current / Max HP.
                 current_hp = self.cache.get_font(self.font, 20).render(str(character.current_hp), True, colors.white)
@@ -276,28 +276,30 @@ class PartyScreen(base.SceneBase):
                     pygame.draw.line(canvas.canvas, colors.red, (x + 110, y + 53), (x + hp_len, y + 53), 2)
                     
                 # Current / Max MP.
-                current_mp = self.cache.get_font(self.font, 20).render(str(character.current_mp), True, colors.white)
-                canvas.canvas.blit(current_mp, (x + 110, y + 60))
+                if character.max_mp > 0:
                 
-                canvas.canvas.blit(slash, (x + 180, y + 60))
-                
-                max_mp = self.cache.get_font(self.font, 20).render(str(character.max_mp) + "     MP", True, colors.white)
-                canvas.canvas.blit(max_mp, (x + 195, y + 60))
-                
-                # Color coded MP % bar.
-                pygame.draw.line(canvas.canvas, colors.dark_grey, (x + 110, y + 88), (x + 220, y + 88), 2)
-                
-                mp_p = character.current_mp * 1.0 / character.max_mp
-                mp_len = int(mp_p * 140) + 110
-                
-                if mp_p > 0.75:
-                    pygame.draw.line(canvas.canvas, colors.green, (x + 110, y + 88), (x + mp_len, y + 88), 2)
-                
-                elif mp_p > .40:
-                    pygame.draw.line(canvas.canvas, colors.dark_yellow, (x + 110, y + 88), (x + mp_len, y + 88), 2)
-                
-                else:
-                    pygame.draw.line(canvas.canvas, colors.red, (x + 110, y + 88), (x + mp_len, y + 88), 2)
+                    current_mp = self.cache.get_font(self.font, 20).render(str(character.current_mp), True, colors.white)
+                    canvas.canvas.blit(current_mp, (x + 110, y + 60))
+                    
+                    canvas.canvas.blit(slash, (x + 180, y + 60))
+                    
+                    max_mp = self.cache.get_font(self.font, 20).render(str(character.max_mp) + "     MP", True, colors.white)
+                    canvas.canvas.blit(max_mp, (x + 195, y + 60))
+                    
+                    # Color coded MP % bar.
+                    pygame.draw.line(canvas.canvas, colors.dark_grey, (x + 110, y + 88), (x + 220, y + 88), 2)
+                    
+                    mp_p = character.current_mp * 1.0 / character.max_mp
+                    mp_len = int(mp_p * 140) + 110
+                    
+                    if mp_p > 0.75:
+                        pygame.draw.line(canvas.canvas, colors.green, (x + 110, y + 88), (x + mp_len, y + 88), 2)
+                    
+                    elif mp_p > .40:
+                        pygame.draw.line(canvas.canvas, colors.dark_yellow, (x + 110, y + 88), (x + mp_len, y + 88), 2)
+                    
+                    else:
+                        pygame.draw.line(canvas.canvas, colors.red, (x + 110, y + 88), (x + mp_len, y + 88), 2)
                 
                 stat_x = 350
                 stat_y = 30

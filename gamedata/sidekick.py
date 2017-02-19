@@ -16,7 +16,8 @@ class Sidekick(pygame.sprite.Sprite):
         self.direction = direction
         
         self.name = "Party Member"
-        self.cclass = "Monk"
+        self.mclass = "Monk"
+        self.sclass = "Warrior"
         
         # Stats.
         self.level = 1
@@ -26,8 +27,6 @@ class Sidekick(pygame.sprite.Sprite):
         
         self.current_mp = 9
         self.max_mp = 9
-        
-        self.status = ["Normal"]
         
         self.strength = 5
         self.vitality = 6
