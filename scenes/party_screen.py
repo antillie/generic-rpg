@@ -299,6 +299,21 @@ class PartyScreen(base.SceneBase):
                 else:
                     pygame.draw.line(canvas.canvas, colors.red, (x + 110, y + 88), (x + mp_len, y + 88), 2)
                 
+                stat_x = 350
+                stat_y = 30
+                
+                # Status effects.
+                for status, applied in character.status_effects.items():
+                    # List any active status effects.
+                    if applied:
+                        status_render = self.cache.get_font(self.font, 14).render(status, True, colors.white)
+                        canvas.canvas.blit(status_render, (x + stat_x, y + stat_y))
+                        stat_x = stat_x + 60
+                    # Organize the active effects into up to three rows and three columns.
+                    if stat_x == 530:
+                        stat_x = 350
+                        stat_y = stat_y + 20
+                
                 y = y + 180
         
         # Draw the upscaled virtual screen to actual screen.

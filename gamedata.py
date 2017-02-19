@@ -73,7 +73,7 @@ class GameData:
         "Gold Needle":0, # Petrify
         "Green Cherry":0, # Imp
         "Holy Water":0, # Zombie
-        "Phoenix Feather":0, # KO
+        "Phoenix Plume":0, # KO
                     
         # Party wide recovery items.
         "Tent":3, # Out of battle, cheap, common.

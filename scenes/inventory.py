@@ -142,14 +142,81 @@ class InventoryScreen(base.SceneBase):
         # Draw the rectangle at the bottom of the screen.
         pygame.draw.rect(canvas.canvas, colors.white, pygame.Rect(5,545,1000,170), 2)
         
-        x = 40
+        x = 20
         y = 590
+        self.font = ["Immortal"]
         
         # Draw the party members on the screen.
         for character in self.gamedata.party_slots:
             if character != None:
                 canvas.canvas.blit(character.right_standing, (x, y))
-                x = x + 200
+                
+                # Current / Max HP.
+                current_hp = self.cache.get_font(self.font, 20).render(str(character.current_hp), True, colors.white)
+                canvas.canvas.blit(current_hp, (x + 50, y + 5))
+                
+                slash = self.cache.get_font(self.font, 20).render("/", True, colors.white)
+                canvas.canvas.blit(slash, (x + 120, y + 5))
+                
+                max_hp = self.cache.get_font(self.font, 20).render(str(character.max_hp), True, colors.white)
+                canvas.canvas.blit(max_hp, (x + 135, y + 5))
+                
+                # Color coded HP % bar.
+                pygame.draw.line(canvas.canvas, colors.dark_grey, (x + 50, y + 33), (x + 160, y + 33), 2)
+                
+                hp_p = character.current_hp * 1.0 / character.max_hp
+                hp_len = int(hp_p * 140) + 50
+                
+                if hp_p > 0.75:
+                    pygame.draw.line(canvas.canvas, colors.green, (x + 50, y + 33), (x + hp_len, y + 33), 2)
+                
+                elif hp_p > .40:
+                    pygame.draw.line(canvas.canvas, colors.dark_yellow, (x + 50, y + 33), (x + hp_len, y + 33), 2)
+                
+                else:
+                    pygame.draw.line(canvas.canvas, colors.red, (x + 50, y + 33), (x + hp_len, y + 33), 2)
+                    
+                # Current / Max MP.
+                current_mp = self.cache.get_font(self.font, 20).render(str(character.current_mp), True, colors.white)
+                canvas.canvas.blit(current_mp, (x + 50, y + 40))
+                
+                canvas.canvas.blit(slash, (x + 120, y + 40))
+                
+                max_mp = self.cache.get_font(self.font, 20).render(str(character.max_mp), True, colors.white)
+                canvas.canvas.blit(max_mp, (x + 135, y + 40))
+                
+                # Color coded MP % bar.
+                pygame.draw.line(canvas.canvas, colors.dark_grey, (x + 50, y + 68), (x + 160, y + 68), 2)
+                
+                mp_p = character.current_mp * 1.0 / character.max_mp
+                mp_len = int(mp_p * 140) + 50
+                
+                if mp_p > 0.75:
+                    pygame.draw.line(canvas.canvas, colors.green, (x + 50, y + 68), (x + mp_len, y + 68), 2)
+                
+                elif mp_p > .40:
+                    pygame.draw.line(canvas.canvas, colors.dark_yellow, (x + 50, y + 68), (x + mp_len, y + 68), 2)
+                
+                else:
+                    pygame.draw.line(canvas.canvas, colors.red, (x + 50, y + 68), (x + mp_len, y + 68), 2)
+                
+                stat_x = 0
+                stat_y = 70
+                
+                # Status effects.
+                for status, applied in character.status_effects.items():
+                    # List any active status effects.
+                    if applied:
+                        status_render = self.cache.get_font(self.font, 14).render(status, True, colors.white)
+                        canvas.canvas.blit(status_render, (x + stat_x, y + stat_y))
+                        stat_x = stat_x + 60
+                    # Organize the active effects into up to three rows and three columns.
+                    if stat_x == 180:
+                        stat_x = 0
+                        stat_y = stat_y + 20
+                
+                # Shift the next character to the right.
+                x = x + 220
         
         self.items = []
         self.amounts = []
@@ -157,14 +224,14 @@ class InventoryScreen(base.SceneBase):
         items_x = 100
         items_y = 60
         
-        # Create the inventory items and their quantities as objects.
+        # Create the inventory items and their quantities as menu objects.
         for item, amount in self.gamedata.inventory.items():
-            
             self.items.append(formatting.MenuOption(item, (items_x, items_y), self.cache))
             self.amounts.append(formatting.MenuOption(str(amount), (items_x + 200, items_y), self.cache))
             
             items_y = items_y + 30
             
+            # Organise the items into 10 rows and 3 columns.
             if items_y == 360:
                 items_y = 60
                 items_x = items_x + 300
@@ -190,24 +257,21 @@ class InventoryScreen(base.SceneBase):
         for x in range(len(self.menu_rects)):
             self.menu_rects[x] = utils.scale_rect(self.menu_rects[x], real_w, real_h)
         
-        
-        
-        
+        # Draw the item usage dialog.
         if self.target_select:
             pygame.draw.rect(canvas.canvas, colors.white, pygame.Rect(5,485,155,55), 2)
-            
             text = self.cache.get_font(["Immortal"], 20).render("Use item on?", True, colors.white)
             canvas.canvas.blit(text, (20 ,500))
-        
-        
+            
+            # Draw the item target selection retical.
             if self.target_selection == 0:
-                pygame.draw.rect(canvas.canvas, colors.off_yellow, pygame.Rect(10,550,200,150), 2)
+                pygame.draw.rect(canvas.canvas, colors.off_yellow, pygame.Rect(10,550,220,150), 2)
             elif self.target_selection == 1:
-                pygame.draw.rect(canvas.canvas, colors.off_yellow, pygame.Rect(210,550,200,150), 2)
+                pygame.draw.rect(canvas.canvas, colors.off_yellow, pygame.Rect(230,550,220,150), 2)
             elif self.target_selection == 2:
-                pygame.draw.rect(canvas.canvas, colors.off_yellow, pygame.Rect(410,550,200,150), 2)
+                pygame.draw.rect(canvas.canvas, colors.off_yellow, pygame.Rect(430,550,220,150), 2)
             elif self.target_selection == 3:
-                pygame.draw.rect(canvas.canvas, colors.off_yellow, pygame.Rect(610,550,200,150), 2)
+                pygame.draw.rect(canvas.canvas, colors.off_yellow, pygame.Rect(630,550,220,150), 2)
         
         # Draw the upscaled virtual screen to actual screen.
         screen.blit(canvas.render(), (0, 0))

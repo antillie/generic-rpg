@@ -18,6 +18,7 @@ class Hero(pygame.sprite.Sprite):
         self.name = "Hero Name"
         self.cclass = "Warrior"
         
+        # Stats.
         self.level = 1
         
         self.current_hp = 32
@@ -58,9 +59,19 @@ class Hero(pygame.sprite.Sprite):
         
         self.tnl = 500
         
+        # Status effects.
+        self.status_effects = {
+            "poison":False,
+            "silence":False,
+            "blind":False,
+            "petrify":False,
+            "imp":False,
+            "zombie":False
+        }
+        
+        # Battle screen info.
         self.battle_line_x = 0
         self.attack_flag = False
-        
         self.attack_starting = True
         self.attack_ending = False
         
