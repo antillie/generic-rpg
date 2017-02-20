@@ -31,7 +31,7 @@ class Sidekick(pygame.sprite.Sprite):
         self.tnl = 500
         
         # Stats.
-        race_hp = intself.race.hp(self.level)
+        race_hp = self.race.hp(self.level)
         class_hp = self.job.hp(self.level)
         subclass_hp = self.subjob.hp(self.level / 2) / 2
         

@@ -215,6 +215,15 @@ class PartyScreen(base.SceneBase):
         for x in range(len(self.menu_rects)):
             self.menu_rects[x] = utils.scale_rect(self.menu_rects[x], real_w, real_h)
         
+        # Default font for text objects.
+        self.font = ["Immortal"]
+        
+        # GP display.
+        pygame.draw.rect(canvas.canvas, colors.white, pygame.Rect(1056,310,214,50), 3)
+        gp = self.cache.get_font(self.font, 20).render("GP: " + str(self.gamedata.gp), True, colors.white)
+        canvas.canvas.blit(gp, (1066, 322))
+        
+        # Horozontal lines between characters.
         pygame.draw.line(canvas.canvas, colors.white, (10, 180), (1000, 180), 2)
         pygame.draw.line(canvas.canvas, colors.white, (10, 360), (1000, 360), 2)
         pygame.draw.line(canvas.canvas, colors.white, (10, 540), (1000, 540), 2)
@@ -231,7 +240,6 @@ class PartyScreen(base.SceneBase):
         
         x = 40
         y = 50
-        self.font = ["Immortal"]
         
         # Draw the party on the screen.
         for character in self.gamedata.party_slots:

@@ -47,7 +47,7 @@ class GameData:
         # Party GP.
         self.gp = 50
         
-        # Party inventory.
+        # General party inventory. Does not include equipment.
         self.inventory = {
         
         # Potions; restore HP.
@@ -93,5 +93,7 @@ class GameData:
         "Holy Edge":0,
         "Darkness Edge":0,
         "Shuriken":0
-        
         }
+        
+        # Weapons owned, but not currently equiped by, the party.
+        self.party_weapons = []
