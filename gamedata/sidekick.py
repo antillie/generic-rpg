@@ -31,12 +31,12 @@ class Sidekick(pygame.sprite.Sprite):
         self.tnl = 500
         
         # Stats.
-        race_hp = self.race.hp(self.level)
+        race_hp = intself.race.hp(self.level)
         class_hp = self.job.hp(self.level)
         subclass_hp = self.subjob.hp(self.level / 2) / 2
         
-        self.max_hp = race_hp + class_hp + subclass_hp
-        self.current_hp = race_hp + class_hp + subclass_hp
+        self.max_hp = int(race_hp + class_hp + subclass_hp)
+        self.current_hp = int(race_hp + class_hp + subclass_hp)
         
         if self.job.has_mp == False and self.subjob.has_mp == False:
             self.current_mp = 0
@@ -45,8 +45,8 @@ class Sidekick(pygame.sprite.Sprite):
             race_mp = self.race.mp(self.level)
             class_mp = self.job.mp(self.level)
             subclass_mp = self.subjob.mp(self.level / 2) / 2
-            self.current_mp = race_mp + class_mp + subclass_mp
-            self.max_mp = race_mp + class_mp + subclass_mp
+            self.current_mp = int(race_mp + class_mp + subclass_mp)
+            self.max_mp = int(race_mp + class_mp + subclass_mp)
         
         race_str = self.race.stat(self.level, "strength")
         race_vit = self.race.stat(self.level, "vitality")
@@ -72,13 +72,13 @@ class Sidekick(pygame.sprite.Sprite):
         subclass_int = self.subjob.stat(self.level / 2, "inteligence") / 2
         subclass_cha = self.subjob.stat(self.level / 2, "charisma") / 2
         
-        self.strength = race_str + class_str + subclass_str
-        self.vitality = race_vit + class_vit + subclass_vit
-        self.agility = race_agi + class_agi + subclass_agi
-        self.dexterity = race_dex + class_dex + subclass_dex
-        self.mind = race_mnd + class_mnd + subclass_mnd
-        self.inteligence = race_int + class_int + subclass_int
-        self.charisma = race_cha + class_cha + subclass_cha
+        self.strength = int(race_str + class_str + subclass_str)
+        self.vitality = int(race_vit + class_vit + subclass_vit)
+        self.agility = int(race_agi + class_agi + subclass_agi)
+        self.dexterity = int(race_dex + class_dex + subclass_dex)
+        self.mind = int(race_mnd + class_mnd + subclass_mnd)
+        self.inteligence = int(race_int + class_int + subclass_int)
+        self.charisma = int(race_cha + class_cha + subclass_cha)
         
         if self.level <= 50:
             self.base_defense = (self.vitality / 2) + 8 + self.level
