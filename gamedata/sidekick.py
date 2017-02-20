@@ -26,9 +26,11 @@ class Sidekick(pygame.sprite.Sprite):
         self.job = monk.Monk()
         self.subjob = warrior.Warrior()
         
-        # Stats.
+        # Level.
         self.level = 1
+        self.tnl = 500
         
+        # Stats.
         race_hp = self.race.hp(self.level)
         class_hp = self.job.hp(self.level)
         subclass_hp = self.subjob.hp(self.level / 2) / 2
@@ -104,8 +106,6 @@ class Sidekick(pygame.sprite.Sprite):
         self.water_res = 0
         self.holy_res = 0
         self.darkness_res = 0
-        
-        self.tnl = 500
         
        # Status effects.
         self.status_effects = {

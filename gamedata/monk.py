@@ -6,6 +6,9 @@ class Monk:
     
     def __init__(self):
         
+        # Skillrank template.
+        self.skill = skillranks.SkillRanks()
+        
         # Great HP and no MP.
         self.hp_scale = 9
         self.hp_base = 19

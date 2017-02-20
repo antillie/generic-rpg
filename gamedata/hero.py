@@ -26,9 +26,10 @@ class Hero(pygame.sprite.Sprite):
         self.job = warrior.Warrior()
         self.subjob = monk.Monk()
         
-        # Stats.
+        # Level.
         self.level = 1
         
+        # Stats.
         race_hp = self.race.hp(self.level)
         class_hp = self.job.hp(self.level)
         subclass_hp = self.subjob.hp(self.level / 2) / 2

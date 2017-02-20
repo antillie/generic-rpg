@@ -1,10 +1,15 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import skillranks
+
 # Defines the stat growth of the warrior class. Warriors are physical combatants that wear heavy armor and beat things to death with axes.
 class Warrior:
     
     def __init__(self):
+        
+        # Skillrank template.
+        self.skill = skillranks.SkillRanks()
         
         # Good HP and no MP.
         self.hp_scale = 8
@@ -68,3 +73,28 @@ class Warrior:
         elif stat == "charisma":
             charisma = int(self.charisma_scale * (level - 1) + self.charisma_base)
             return charisma
+        
+    def skill(self, level, skill):
+        if skill == "axe":
+            return self.skill.a_minus[level]
+        elif skill == "gaxe":
+            return self.skill.a_plus[level]
+        elif skill == "club":
+            return self.skill.b_minus[level]
+        elif skill == "dagger":
+            return self.skill.b_minus[level]
+        elif skill == "club":
+            return self.skill.b_minus[level]
+        elif skill == "h2h":
+            return self.skill.d[level]
+        elif skill == "polearm":
+            return self.skill.b_minus[level]
+        if skill == "scythe":
+            return self.skill.b_plus[level]
+        if skill == "staff":
+            return self.skill.b[level]
+        if skill == "sword":
+            return self.skill.b[level]
+        if skill == "gsword":
+            return self.skill.b_plus[level]
+
