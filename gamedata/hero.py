@@ -89,11 +89,11 @@ class Hero(pygame.sprite.Sprite):
         self.defense = self.base_defense # Add item/armor effects later.
         self.attack = 20
         self.accuracy = 10
-        self.dodge = 3
+        self.dodge = self.job.skill(self.level, "evasion")
         self.magic_attack = 2
         self.magic_defense = 2
-        self.parry = 15
-        self.block = 20
+        self.parry = self.job.skill(self.level, "parrying")
+        self.block = self.job.skill(self.level, "shield")
         self.guard = 0
         self.counter = 0
         

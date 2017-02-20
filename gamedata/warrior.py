@@ -9,7 +9,7 @@ class Warrior:
     def __init__(self):
         
         # Skillrank template.
-        self.skill = skillranks.SkillRanks()
+        self.skills = skillranks.SkillRanks()
         
         # Good HP and no MP.
         self.hp_scale = 8
@@ -76,25 +76,31 @@ class Warrior:
         
     def skill(self, level, skill):
         if skill == "axe":
-            return self.skill.a_minus[level]
+            return self.skills.a_minus[level]
         elif skill == "gaxe":
-            return self.skill.a_plus[level]
+            return self.skills.a_plus[level]
         elif skill == "club":
-            return self.skill.b_minus[level]
+            return self.skills.b_minus[level]
         elif skill == "dagger":
-            return self.skill.b_minus[level]
+            return self.skills.b_minus[level]
         elif skill == "club":
-            return self.skill.b_minus[level]
+            return self.skills.b_minus[level]
         elif skill == "h2h":
-            return self.skill.d[level]
+            return self.skills.d[level]
         elif skill == "polearm":
-            return self.skill.b_minus[level]
-        if skill == "scythe":
-            return self.skill.b_plus[level]
-        if skill == "staff":
-            return self.skill.b[level]
-        if skill == "sword":
-            return self.skill.b[level]
-        if skill == "gsword":
-            return self.skill.b_plus[level]
+            return self.skills.b_minus[level]
+        elif skill == "scythe":
+            return self.skills.b_plus[level]
+        elif skill == "staff":
+            return self.skills.b[level]
+        elif skill == "sword":
+            return self.skills.b[level]
+        elif skill == "gsword":
+            return self.skills.b_plus[level]
+        elif skill == "evasion":
+            return self.skills.c[level]
+        elif skill == "parrying":
+            return self.skills.c_minus[level]
+        elif skill == "shield":
+            return self.skills.c_plus[level]
 

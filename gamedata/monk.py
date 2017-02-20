@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import skillranks
+
 # Defines the stat growth of the monk class. Monks are physical combatants that favor raw HP over armor and beat things with their fists.
 class Monk:
     
