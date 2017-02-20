@@ -9,6 +9,8 @@ import human
 import warrior
 import monk
 
+import xpscale
+
 # This class represents the player character.
 class Hero(pygame.sprite.Sprite):
     
@@ -27,8 +29,10 @@ class Hero(pygame.sprite.Sprite):
         self.job = warrior.Warrior()
         self.subjob = monk.Monk()
         
-        # Level.
+        # Current level and XP to next level.
         self.level = 1
+        self.xpscale = xpscale.xpScale()
+        self.tnl = self.xpscale.tnl[self.level]
         
         # Equipment.
         self.equipment = {
@@ -158,8 +162,6 @@ class Hero(pygame.sprite.Sprite):
         self.block = self.job.skill(self.level, "shield")
         self.guard = 0
         self.counter = 0
-        
-        self.tnl = 500
         
         # Status effects.
         self.status_effects = {
