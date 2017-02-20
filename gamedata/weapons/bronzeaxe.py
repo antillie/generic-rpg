@@ -42,14 +42,14 @@ class BronzeAxe:
             "guardbonus":0,
             "counterbonus":0,
             # Elemental resistances.
-            "firebonus":0,
-            "icebonus":0,
-            "windbonus":0,
-            "earthbonus":0,
-            "lightningbonus":0,
-            "waterbonus":0,
-            "holybonus":0,
-            "darknessbonus":0
+            "fire_res":0,
+            "ice_res":0,
+            "wind_res":0,
+            "earth_res":0,
+            "lightning_res":0,
+            "water_res":0,
+            "holy_res":0,
+            "darkness_res":0
         }
         
         

@@ -68,20 +68,21 @@ class Hero(pygame.sprite.Sprite):
         self.counterbonus = 0
         
         # Elemental resistances.
-        self.firebonus = 0
-        self.icebonus = 0
-        self.windbonus = 0
-        self.earthbonus = 0
-        self.lightningbonus = 0
-        self.waterbonus = 0
-        self.holybonus = 0
-        self.darknessbonus = 0
+        self.fire_res = 0
+        self.ice_res = 0
+        self.wind_res = 0
+        self.earth_res = 0
+        self.lightning_res = 0
+        self.water_res = 0
+        self.holy_res = 0
+        self.darkness_res = 0
         
         # Add up the bonus stats from gear.
         for slot, item in self.equipment.items():
             if item != None:
                 self.hpbonus = self.hpbonus + item.stat_bonuses["hpbonus"]
                 self.mpbonus = self.mpbonus + item.stat_bonuses["mpbonus"]
+                self.strbonus = self.strbonus + item.stat_bonuses["strbonus"]
         
         # Main stats.
         race_hp = self.race.hp(self.level)
@@ -125,7 +126,7 @@ class Hero(pygame.sprite.Sprite):
         subclass_int = self.subjob.stat(self.level / 2, "inteligence") / 2
         subclass_cha = self.subjob.stat(self.level / 2, "charisma") / 2
         
-        self.strength = int(race_str + class_str + subclass_str)
+        self.strength = int(race_str + class_str + subclass_str + self.strbonus)
         self.vitality = int(race_vit + class_vit + subclass_vit)
         self.agility = int(race_agi + class_agi + subclass_agi)
         self.dexterity = int(race_dex + class_dex + subclass_dex)
@@ -157,15 +158,6 @@ class Hero(pygame.sprite.Sprite):
         self.block = self.job.skill(self.level, "shield")
         self.guard = 0
         self.counter = 0
-        
-        self.fire_res = 0
-        self.ice_res = 0
-        self.wind_res = 0
-        self.earth_res = 0
-        self.lightning_res = 0
-        self.water_res = 0
-        self.holy_res = 0
-        self.darkness_res = 0
         
         self.tnl = 500
         
