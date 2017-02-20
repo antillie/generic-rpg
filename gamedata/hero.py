@@ -5,6 +5,9 @@ import pygame
 import colors
 import utils
 import pyganim
+import human
+import warrior
+import monk
 
 # This class represents the player character.
 class Hero(pygame.sprite.Sprite):
@@ -19,24 +22,70 @@ class Hero(pygame.sprite.Sprite):
         self.mclass = "Warrior"
         self.sclass = "Monk"
         
+        self.race = human.Human()
+        self.job = warrior.Warrior()
+        self.subjob = monk.Monk()
+        
         # Stats.
         self.level = 1
         
-        self.current_hp = 32
-        self.max_hp = 32
+        race_hp = self.race.hp(self.level)
+        class_hp = self.job.hp(self.level)
+        subclass_hp = self.subjob.hp(self.level / 2) / 2
         
-        self.current_mp = 0
-        self.max_mp = 0
+        self.max_hp = race_hp + class_hp + subclass_hp
+        self.current_hp = race_hp + class_hp + subclass_hp
         
-        self.strength = 6
-        self.vitality = 5
-        self.agility = 4
-        self.dexterity = 4
-        self.mind = 3
-        self.inteligence = 2
-        self.charisma = 3
+        if self.job.has_mp == False and self.subjob.has_mp == False:
+            self.current_mp = 0
+            self.max_mp = 0
+        else:
+            race_mp = self.race.mp(self.level)
+            class_mp = self.job.mp(self.level)
+            subclass_mp = self.subjob.mp(self.level / 2) / 2
+            self.current_mp = race_mp + class_mp + subclass_mp
+            self.max_mp = race_mp + class_mp + subclass_mp
         
-        self.defense = 22
+        race_str = self.race.stat(self.level, "strength")
+        race_vit = self.race.stat(self.level, "vitality")
+        race_agi = self.race.stat(self.level, "agility")
+        race_dex = self.race.stat(self.level, "dexterity")
+        race_mnd = self.race.stat(self.level, "mind")
+        race_int = self.race.stat(self.level, "inteligence")
+        race_cha = self.race.stat(self.level, "charisma")
+        
+        class_str = self.job.stat(self.level, "strength")
+        class_vit = self.job.stat(self.level, "vitality")
+        class_agi = self.job.stat(self.level, "agility")
+        class_dex = self.job.stat(self.level, "dexterity")
+        class_mnd = self.job.stat(self.level, "mind")
+        class_int = self.job.stat(self.level, "inteligence")
+        class_cha = self.job.stat(self.level, "charisma")
+        
+        subclass_str = self.subjob.stat(self.level / 2, "strength") / 2
+        subclass_vit = self.subjob.stat(self.level / 2, "vitality") / 2
+        subclass_agi = self.subjob.stat(self.level / 2, "agility") / 2
+        subclass_dex = self.subjob.stat(self.level / 2, "dexterity") / 2
+        subclass_mnd = self.subjob.stat(self.level / 2, "mind") / 2
+        subclass_int = self.subjob.stat(self.level / 2, "inteligence") / 2
+        subclass_cha = self.subjob.stat(self.level / 2, "charisma") / 2
+        
+        self.strength = race_str + class_str + subclass_str
+        self.vitality = race_vit + class_vit + subclass_vit
+        self.agility = race_agi + class_agi + subclass_agi
+        self.dexterity = race_dex + class_dex + subclass_dex
+        self.mind = race_mnd + class_mnd + subclass_mnd
+        self.inteligence = race_int + class_int + subclass_int
+        self.charisma = race_cha + class_cha + subclass_cha
+        
+        if self.level <= 50:
+            self.base_defense = (self.vitality / 2) + 8 + self.level
+        elif self.level > 50 and self.level <= 60:
+            self.base_defense = (self.vitality / 2) + 8 + self.level + (self.level - 50)
+        else:
+            self.base_defense = (self.vitality / 2) + 8 + self.level + self.level + 10
+        
+        self.defense = self.base_defense # Add item/armor effects later.
         self.attack = 20
         self.accuracy = 10
         self.dodge = 3
