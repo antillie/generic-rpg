@@ -11,6 +11,10 @@ import sys
 import cache
 import sound
 sys.path.append("gamedata")
+sys.path.append("gamedata/characters")
+sys.path.append("gamedata/classes")
+sys.path.append("gamedata/races")
+sys.path.append("gamedata/weapons")
 import gamedata
 sys.path.append("scenes")
 sys.path.append("scenes/resources")

@@ -9,44 +9,97 @@ import human
 import warrior
 import monk
 
-# This class represents a party member.
-class Sidekick(pygame.sprite.Sprite):
+# This class represents the player character.
+class Hero(pygame.sprite.Sprite):
     
     # Init builds everything.
-    def __init__(self, cache, direction, width=32, height=48):
+    def __init__(self, cache, direction, weapons, width=32, height=48):
         # Call the parent class constructor.
-        super(Sidekick, self).__init__()
+        super(Hero, self).__init__()
         self.direction = direction
+        self.weapons = weapons
         
-        self.name = "Party Member"
-        self.mclass = "Monk"
-        self.sclass = "Warrior"
+        self.name = "Hero Name"
+        self.mclass = "Warrior"
+        self.sclass = "Monk"
         
         self.race = human.Human()
-        self.job = monk.Monk()
-        self.subjob = warrior.Warrior()
+        self.job = warrior.Warrior()
+        self.subjob = monk.Monk()
         
         # Level.
         self.level = 1
-        self.tnl = 500
         
-        # Stats.
+        # Equipment.
+        self.equipment = {
+            "main":self.weapons["bronzeaxe"],
+            "off":None,
+            "helm":None,
+            "body":None,
+            "gloves":None,
+            "boots":None,
+            "ring1":None,
+            "ring2":None
+        }
+        
+        # Bonus stats from gear.
+        
+        # Core stats.
+        self.hpbonus = 0
+        self.mpbonus = 0
+        self.strbonus = 0
+        self.vitbonus = 0
+        self.agibonus = 0
+        self.dexbonus = 0
+        self.mndbonus = 0
+        self.intbonus = 0
+        self.chabonus = 0
+        
+        # Secondary stats.
+        self.defbonus = 0
+        self.atkbonus = 0
+        self.accbonus = 0
+        self.dodgebonus = 0
+        self.matkbonus = 0
+        self.madefbonus = 0
+        self.parrybonus = 0
+        self.blockbonus = 0
+        self.guardbonus = 0
+        self.counterbonus = 0
+        
+        # Elemental resistances.
+        self.firebonus = 0
+        self.icebonus = 0
+        self.windbonus = 0
+        self.earthbonus = 0
+        self.lightningbonus = 0
+        self.waterbonus = 0
+        self.holybonus = 0
+        self.darknessbonus = 0
+        
+        # Add up the bonus stats from gear.
+        for slot, item in self.equipment.items():
+            if item != None:
+                self.hpbonus = self.hpbonus + item.stat_bonuses["hpbonus"]
+                self.mpbonus = self.mpbonus + item.stat_bonuses["mpbonus"]
+        
+        # Main stats.
         race_hp = self.race.hp(self.level)
         class_hp = self.job.hp(self.level)
         subclass_hp = self.subjob.hp(self.level / 2) / 2
         
-        self.max_hp = int(race_hp + class_hp + subclass_hp)
-        self.current_hp = int(race_hp + class_hp + subclass_hp)
+        self.max_hp = int(race_hp + class_hp + subclass_hp + self.hpbonus)
+        self.current_hp = int(race_hp + class_hp + subclass_hp + self.hpbonus)
         
         if self.job.has_mp == False and self.subjob.has_mp == False:
-            self.current_mp = 0
-            self.max_mp = 0
+            self.current_mp = 0 + self.mpbonus
+            self.max_mp = 0 + self.mpbonus
         else:
             race_mp = self.race.mp(self.level)
             class_mp = self.job.mp(self.level)
             subclass_mp = self.subjob.mp(self.level / 2) / 2
-            self.current_mp = int(race_mp + class_mp + subclass_mp)
-            self.max_mp = int(race_mp + class_mp + subclass_mp)
+            self.current_mp = int(race_mp + class_mp + subclass_mp + self.mpbonus)
+            self.max_mp = int(race_mp + class_mp + subclass_mp + self.mpbonus)
         
         race_str = self.race.stat(self.level, "strength")
         race_vit = self.race.stat(self.level, "vitality")
@@ -87,16 +140,23 @@ class Sidekick(pygame.sprite.Sprite):
         else:
             self.base_defense = (self.vitality / 2) + 8 + self.level + self.level + 10
         
-        self.defense = self.base_defense # Add item/armor effects later.
-        self.attack = 22
-        self.accuracy = 10
-        self.dodge = 4
-        self.magic_attack = 2
-        self.magic_defense = 3
-        self.parry = 0
-        self.block = 0
-        self.guard = 15
-        self.counter = 10
+        self.weaponskill = self.job.skill(self.level, self.equipment["main"].wtype)
+        
+        if self.weaponskill <= 200:
+            self.skillaccuracy = self.weaponskill
+        else:
+            self.skillaccuracy = (0.857 * (self.weaponskill - 200)) + 200
+        
+        self.defense = int(self.base_defense) # Add item/armor effects later.
+        self.attack = int(8 + self.weaponskill + (self.strength * 0.75)) # Add item/armor effects later.
+        self.accuracy = int(self.skillaccuracy + (self.dexterity * 0.75)) # Add item/armor effects later.
+        self.dodge = int(self.job.skill(self.level, "evasion") + (self.agility * 0.75))
+        self.magic_attack = 0
+        self.magic_defense = 0
+        self.parry = self.job.skill(self.level, "parrying")
+        self.block = self.job.skill(self.level, "shield")
+        self.guard = 0
+        self.counter = 0
         
         self.fire_res = 0
         self.ice_res = 0
@@ -107,7 +167,9 @@ class Sidekick(pygame.sprite.Sprite):
         self.holy_res = 0
         self.darkness_res = 0
         
-       # Status effects.
+        self.tnl = 500
+        
+        # Status effects.
         self.status_effects = {
             "poison":False,
             "silence":False,
@@ -131,10 +193,10 @@ class Sidekick(pygame.sprite.Sprite):
         # Quack quack!
         
         # Set the standing still images.
-        self.front_standing = cache.get_char_sprite("sidekick.png", 0, 0, 32, 48)
-        self.back_standing = cache.get_char_sprite("sidekick.png", 0, 144, 32, 48)
-        self.left_standing = cache.get_char_sprite("sidekick.png", 0, 48, 32, 48)
-        self.right_standing = cache.get_char_sprite("sidekick.png", 0, 96, 32, 48)
+        self.front_standing = cache.get_char_sprite("character.png", 0, 0, 32, 48)
+        self.back_standing = cache.get_char_sprite("character.png", 0, 144, 32, 48)
+        self.left_standing = cache.get_char_sprite("character.png", 0, 48, 32, 48)
+        self.right_standing = cache.get_char_sprite("character.png", 0, 96, 32, 48)
         
         # Draw the starting image.
         if self.direction == "up":
@@ -154,28 +216,28 @@ class Sidekick(pygame.sprite.Sprite):
         # Define the still images to use for each frame of the animation.
         # Format: Image file, top left corner of the part of the file that we want (in x, y format), character width, character height.
         goingUpImages = [
-            (cache.get_char_sprite("sidekick.png", 0, 144, width, height), anim_speed),
-            (cache.get_char_sprite("sidekick.png", 32, 144, width, height), anim_speed),
-            (cache.get_char_sprite("sidekick.png", 64, 144, width, height), anim_speed),
-            (cache.get_char_sprite("sidekick.png", 96, 144, width, height), anim_speed)
+            (cache.get_char_sprite("character.png", 0, 144, width, height), anim_speed),
+            (cache.get_char_sprite("character.png", 32, 144, width, height), anim_speed),
+            (cache.get_char_sprite("character.png", 64, 144, width, height), anim_speed),
+            (cache.get_char_sprite("character.png", 96, 144, width, height), anim_speed)
         ]
         goingDownImages = [
-            (cache.get_char_sprite("sidekick.png", 0, 0, width, height), anim_speed),
-            (cache.get_char_sprite("sidekick.png", 32, 0, width, height), anim_speed),
-            (cache.get_char_sprite("sidekick.png", 64, 0, width, height), anim_speed),
-            (cache.get_char_sprite("sidekick.png", 96, 0, width, height), anim_speed)
+            (cache.get_char_sprite("character.png", 0, 0, width, height), anim_speed),
+            (cache.get_char_sprite("character.png", 32, 0, width, height), anim_speed),
+            (cache.get_char_sprite("character.png", 64, 0, width, height), anim_speed),
+            (cache.get_char_sprite("character.png", 96, 0, width, height), anim_speed)
         ]
         goingLeftImages = [
-            (cache.get_char_sprite("sidekick.png", 0, 48, width, height), anim_speed),
-            (cache.get_char_sprite("sidekick.png", 32, 48, width, height), anim_speed),
-            (cache.get_char_sprite("sidekick.png", 64, 48, width, height), anim_speed),
-            (cache.get_char_sprite("sidekick.png", 96, 48, width, height), anim_speed)
+            (cache.get_char_sprite("character.png", 0, 48, width, height), anim_speed),
+            (cache.get_char_sprite("character.png", 32, 48, width, height), anim_speed),
+            (cache.get_char_sprite("character.png", 64, 48, width, height), anim_speed),
+            (cache.get_char_sprite("character.png", 96, 48, width, height), anim_speed)
         ]
         goingRightImages = [
-            (cache.get_char_sprite("sidekick.png", 0, 96, width, height), anim_speed),
-            (cache.get_char_sprite("sidekick.png", 32, 96, width, height), anim_speed),
-            (cache.get_char_sprite("sidekick.png", 64, 96, width, height), anim_speed),
-            (cache.get_char_sprite("sidekick.png", 96, 96, width, height), anim_speed)
+            (cache.get_char_sprite("character.png", 0, 96, width, height), anim_speed),
+            (cache.get_char_sprite("character.png", 32, 96, width, height), anim_speed),
+            (cache.get_char_sprite("character.png", 64, 96, width, height), anim_speed),
+            (cache.get_char_sprite("character.png", 96, 96, width, height), anim_speed)
         ]
         
         # Create a dictionary to hold the animation objects.

@@ -1,9 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+# Import characters.
 import hero
 import sidekick
 import npc
+
+# Import weapons.
+import bronzeaxe
 
 # This class holds all data about the current game session. Story progress, characters, inventory, ect...
 class GameData:
@@ -19,8 +23,15 @@ class GameData:
         self.current_w = current_w
         self.current_h = current_h
         
+        # Weapons data.
+        self.weapons = {
+            "bronzeaxe":bronzeaxe.BronzeAxe()
+        }
+        
+        # To do; define armor and other equipment data so it can be passed to the character instances as well.
+        
         # Define all the characters in the game. The NPCs will probably need to be moved into their own module later.
-        self.hero = hero.Hero(self.cache, "down")
+        self.hero = hero.Hero(self.cache, "down", self.weapons)
         self.sidekick = sidekick.Sidekick(self.cache, "down")
         self.npc = npc.npc(self.cache, "down")
         
@@ -94,6 +105,3 @@ class GameData:
         "Darkness Edge":0,
         "Shuriken":0
         }
-        
-        # Weapons owned, but not currently equiped by, the party.
-        self.party_weapons = []

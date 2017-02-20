@@ -9,25 +9,26 @@ import human
 import warrior
 import monk
 
-# This class represents the player character.
-class Hero(pygame.sprite.Sprite):
+# This class represents a party member.
+class Sidekick(pygame.sprite.Sprite):
     
     # Init builds everything.
     def __init__(self, cache, direction, width=32, height=48):
         # Call the parent class constructor.
-        super(Hero, self).__init__()
+        super(Sidekick, self).__init__()
         self.direction = direction
         
-        self.name = "Hero Name"
-        self.mclass = "Warrior"
-        self.sclass = "Monk"
+        self.name = "Party Member"
+        self.mclass = "Monk"
+        self.sclass = "Warrior"
         
         self.race = human.Human()
-        self.job = warrior.Warrior()
-        self.subjob = monk.Monk()
+        self.job = monk.Monk()
+        self.subjob = warrior.Warrior()
         
         # Level.
         self.level = 1
+        self.tnl = 500
         
         # Stats.
         race_hp = self.race.hp(self.level)
@@ -87,15 +88,15 @@ class Hero(pygame.sprite.Sprite):
             self.base_defense = (self.vitality / 2) + 8 + self.level + self.level + 10
         
         self.defense = int(self.base_defense) # Add item/armor effects later.
-        self.attack = 20
+        self.attack = 22
         self.accuracy = 10
-        self.dodge = self.job.skill(self.level, "evasion")
+        self.dodge = 4
         self.magic_attack = 2
-        self.magic_defense = 2
-        self.parry = self.job.skill(self.level, "parrying")
-        self.block = self.job.skill(self.level, "shield")
-        self.guard = 0
-        self.counter = 0
+        self.magic_defense = 3
+        self.parry = 0
+        self.block = 0
+        self.guard = 15
+        self.counter = 10
         
         self.fire_res = 0
         self.ice_res = 0
@@ -106,9 +107,7 @@ class Hero(pygame.sprite.Sprite):
         self.holy_res = 0
         self.darkness_res = 0
         
-        self.tnl = 500
-        
-        # Status effects.
+       # Status effects.
         self.status_effects = {
             "poison":False,
             "silence":False,
@@ -132,10 +131,10 @@ class Hero(pygame.sprite.Sprite):
         # Quack quack!
         
         # Set the standing still images.
-        self.front_standing = cache.get_char_sprite("character.png", 0, 0, 32, 48)
-        self.back_standing = cache.get_char_sprite("character.png", 0, 144, 32, 48)
-        self.left_standing = cache.get_char_sprite("character.png", 0, 48, 32, 48)
-        self.right_standing = cache.get_char_sprite("character.png", 0, 96, 32, 48)
+        self.front_standing = cache.get_char_sprite("sidekick.png", 0, 0, 32, 48)
+        self.back_standing = cache.get_char_sprite("sidekick.png", 0, 144, 32, 48)
+        self.left_standing = cache.get_char_sprite("sidekick.png", 0, 48, 32, 48)
+        self.right_standing = cache.get_char_sprite("sidekick.png", 0, 96, 32, 48)
         
         # Draw the starting image.
         if self.direction == "up":
@@ -155,28 +154,28 @@ class Hero(pygame.sprite.Sprite):
         # Define the still images to use for each frame of the animation.
         # Format: Image file, top left corner of the part of the file that we want (in x, y format), character width, character height.
         goingUpImages = [
-            (cache.get_char_sprite("character.png", 0, 144, width, height), anim_speed),
-            (cache.get_char_sprite("character.png", 32, 144, width, height), anim_speed),
-            (cache.get_char_sprite("character.png", 64, 144, width, height), anim_speed),
-            (cache.get_char_sprite("character.png", 96, 144, width, height), anim_speed)
+            (cache.get_char_sprite("sidekick.png", 0, 144, width, height), anim_speed),
+            (cache.get_char_sprite("sidekick.png", 32, 144, width, height), anim_speed),
+            (cache.get_char_sprite("sidekick.png", 64, 144, width, height), anim_speed),
+            (cache.get_char_sprite("sidekick.png", 96, 144, width, height), anim_speed)
         ]
         goingDownImages = [
-            (cache.get_char_sprite("character.png", 0, 0, width, height), anim_speed),
-            (cache.get_char_sprite("character.png", 32, 0, width, height), anim_speed),
-            (cache.get_char_sprite("character.png", 64, 0, width, height), anim_speed),
-            (cache.get_char_sprite("character.png", 96, 0, width, height), anim_speed)
+            (cache.get_char_sprite("sidekick.png", 0, 0, width, height), anim_speed),
+            (cache.get_char_sprite("sidekick.png", 32, 0, width, height), anim_speed),
+            (cache.get_char_sprite("sidekick.png", 64, 0, width, height), anim_speed),
+            (cache.get_char_sprite("sidekick.png", 96, 0, width, height), anim_speed)
         ]
         goingLeftImages = [
-            (cache.get_char_sprite("character.png", 0, 48, width, height), anim_speed),
-            (cache.get_char_sprite("character.png", 32, 48, width, height), anim_speed),
-            (cache.get_char_sprite("character.png", 64, 48, width, height), anim_speed),
-            (cache.get_char_sprite("character.png", 96, 48, width, height), anim_speed)
+            (cache.get_char_sprite("sidekick.png", 0, 48, width, height), anim_speed),
+            (cache.get_char_sprite("sidekick.png", 32, 48, width, height), anim_speed),
+            (cache.get_char_sprite("sidekick.png", 64, 48, width, height), anim_speed),
+            (cache.get_char_sprite("sidekick.png", 96, 48, width, height), anim_speed)
         ]
         goingRightImages = [
-            (cache.get_char_sprite("character.png", 0, 96, width, height), anim_speed),
-            (cache.get_char_sprite("character.png", 32, 96, width, height), anim_speed),
-            (cache.get_char_sprite("character.png", 64, 96, width, height), anim_speed),
-            (cache.get_char_sprite("character.png", 96, 96, width, height), anim_speed)
+            (cache.get_char_sprite("sidekick.png", 0, 96, width, height), anim_speed),
+            (cache.get_char_sprite("sidekick.png", 32, 96, width, height), anim_speed),
+            (cache.get_char_sprite("sidekick.png", 64, 96, width, height), anim_speed),
+            (cache.get_char_sprite("sidekick.png", 96, 96, width, height), anim_speed)
         ]
         
         # Create a dictionary to hold the animation objects.
