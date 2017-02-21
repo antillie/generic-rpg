@@ -87,6 +87,7 @@ class Hero(pygame.sprite.Sprite):
                 self.hpbonus = self.hpbonus + item.stat_bonuses["hpbonus"]
                 self.mpbonus = self.mpbonus + item.stat_bonuses["mpbonus"]
                 self.strbonus = self.strbonus + item.stat_bonuses["strbonus"]
+                self.vitbonus = self.vitbonus + item.stat_bonuses["vitbonus"]
         
         # Main stats.
         race_hp = self.race.hp(self.level)
@@ -131,7 +132,7 @@ class Hero(pygame.sprite.Sprite):
         subclass_cha = self.subjob.stat(self.level / 2, "charisma") / 2
         
         self.strength = int(race_str + class_str + subclass_str + self.strbonus)
-        self.vitality = int(race_vit + class_vit + subclass_vit)
+        self.vitality = int(race_vit + class_vit + subclass_vit + self.vitbonus)
         self.agility = int(race_agi + class_agi + subclass_agi)
         self.dexterity = int(race_dex + class_dex + subclass_dex)
         self.mind = int(race_mnd + class_mnd + subclass_mnd)
