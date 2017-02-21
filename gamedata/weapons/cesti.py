@@ -1,20 +1,20 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Defines the bronze axe weapon.
+# Defines the cesti weapon.
 
-class BronzeAxe:
+class Cesti:
     
     def __init__(self):
         
         # Base stats.
-        self.damage = 8
-        self.delay = 276
+        self.damage = 1
+        self.delay = 48
         self.amount = 0
-        self.wtype = "axe"
+        self.wtype = "h2h"
         self.twohander = False
-        self.description1 = "Damage: 8, Delay: 276"
-        self.description2 = "No stat bonuses."
+        self.description1 = "Damage: 1, Delay: 48"
+        self.description2 = "Accuracy +3"
         self.description3 = "WAR, DRK"
         
         # Attribute bonuses.
@@ -33,7 +33,7 @@ class BronzeAxe:
             # Secondary stats.
             "defbonus":0,
             "atkbonus":0,
-            "accbonus":0,
+            "accbonus":3,
             "dodgebonus":0,
             "matkbonus":0,
             "madefbonus":0,

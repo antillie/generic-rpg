@@ -9,14 +9,17 @@ import human
 import warrior
 import monk
 
+import xpscale
+
 # This class represents a party member.
 class Sidekick(pygame.sprite.Sprite):
     
     # Init builds everything.
-    def __init__(self, cache, direction, width=32, height=48):
+    def __init__(self, cache, direction, weapons, width=32, height=48):
         # Call the parent class constructor.
         super(Sidekick, self).__init__()
         self.direction = direction
+        self.weapons = weapons
         
         self.name = "Party Member"
         self.mclass = "Monk"
@@ -26,9 +29,64 @@ class Sidekick(pygame.sprite.Sprite):
         self.job = monk.Monk()
         self.subjob = warrior.Warrior()
         
-        # Level.
+         # Current level and XP to next level.
         self.level = 1
-        self.tnl = 500
+        self.xpscale = xpscale.xpScale()
+        self.tnl = self.xpscale.tnl[self.level]
+        
+        # Equipment.
+        self.equipment = {
+            "main":self.weapons["cesti"],
+            "off":None,
+            "helm":None,
+            "body":None,
+            "gloves":None,
+            "boots":None,
+            "ring1":None,
+            "ring2":None
+        }
+        
+        # Bonus stats from gear.
+        
+        # Core stats.
+        self.hpbonus = 0
+        self.mpbonus = 0
+        self.strbonus = 0
+        self.vitbonus = 0
+        self.agibonus = 0
+        self.dexbonus = 0
+        self.mndbonus = 0
+        self.intbonus = 0
+        self.chabonus = 0
+        
+        # Secondary stats.
+        self.defbonus = 0
+        self.atkbonus = 0
+        self.accbonus = 0
+        self.dodgebonus = 0
+        self.matkbonus = 0
+        self.madefbonus = 0
+        self.parrybonus = 0
+        self.blockbonus = 0
+        self.guardbonus = 0
+        self.counterbonus = 0
+        
+        # Elemental resistances.
+        self.fire_res = 0
+        self.ice_res = 0
+        self.wind_res = 0
+        self.earth_res = 0
+        self.lightning_res = 0
+        self.water_res = 0
+        self.holy_res = 0
+        self.darkness_res = 0
+        
+        # Add up the bonus stats from gear.
+        for slot, item in self.equipment.items():
+            if item != None:
+                self.hpbonus = self.hpbonus + item.stat_bonuses["hpbonus"]
+                self.mpbonus = self.mpbonus + item.stat_bonuses["mpbonus"]
+                self.strbonus = self.strbonus + item.stat_bonuses["strbonus"]
         
         # Stats.
         race_hp = self.race.hp(self.level)
@@ -87,25 +145,23 @@ class Sidekick(pygame.sprite.Sprite):
         else:
             self.base_defense = (self.vitality / 2) + 8 + self.level + self.level + 10
         
-        self.defense = int(self.base_defense) # Add item/armor effects later.
-        self.attack = 22
-        self.accuracy = 10
-        self.dodge = 4
-        self.magic_attack = 2
-        self.magic_defense = 3
-        self.parry = 0
-        self.block = 0
-        self.guard = 15
-        self.counter = 10
+        self.weaponskill = self.job.skill(self.level, self.equipment["main"].wtype)
         
-        self.fire_res = 0
-        self.ice_res = 0
-        self.wind_res = 0
-        self.earth_res = 0
-        self.lightning_res = 0
-        self.water_res = 0
-        self.holy_res = 0
-        self.darkness_res = 0
+        if self.weaponskill <= 200:
+            self.skillaccuracy = self.weaponskill
+        else:
+            self.skillaccuracy = (0.857 * (self.weaponskill - 200)) + 200
+        
+        self.defense = int(self.base_defense) # Add item/armor effects later.
+        self.attack = int(8 + self.weaponskill + (self.strength * 0.75))
+        self.accuracy = int(self.skillaccuracy + (self.dexterity * 0.75))
+        self.dodge = int(self.job.skill(self.level, "evasion") + (self.agility * 0.75))
+        self.magic_attack = 0
+        self.magic_defense = 0
+        self.parry = self.job.skill(self.level, "parrying")
+        self.block = self.job.skill(self.level, "shield")
+        self.guard = self.job.skill(self.level, "guard")
+        self.counter = self.job.skill(self.level, "counter")
         
        # Status effects.
         self.status_effects = {

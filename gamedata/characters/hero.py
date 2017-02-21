@@ -160,8 +160,8 @@ class Hero(pygame.sprite.Sprite):
         self.magic_defense = 0
         self.parry = self.job.skill(self.level, "parrying")
         self.block = self.job.skill(self.level, "shield")
-        self.guard = 0
-        self.counter = 0
+        self.guard = self.job.skill(self.level, "guard")
+        self.counter = self.job.skill(self.level, "counter")
         
         # Status effects.
         self.status_effects = {

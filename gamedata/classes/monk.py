@@ -9,7 +9,7 @@ class Monk:
     def __init__(self):
         
         # Skillrank template.
-        self.skill = skillranks.SkillRanks()
+        self.skills = skillranks.SkillRanks()
         
         # Great HP and no MP.
         self.hp_scale = 9
@@ -73,3 +73,21 @@ class Monk:
         elif stat == "charisma":
             charisma = int(self.charisma_scale * (level - 1) + self.charisma_base)
             return charisma
+        
+    def skill(self, level, skill):
+        if skill == "club":
+            return self.skills.c_plus[level]
+        elif skill == "h2h":
+            return self.skills.a_plus[level]
+        elif skill == "staff":
+            return self.skills.b[level]
+        elif skill == "evasion":
+            return self.skills.b_plus[level]
+        elif skill == "guard":
+            return self.skills.a_minus[level]
+        elif skill == "parrying":
+            return self.skills.e[level]
+        elif skill == "counter":
+            return 20
+        else:
+            return 0
