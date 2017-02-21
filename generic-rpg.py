@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Use the modern print function.
-from __future__ import print_function
+# Use the modern print function and proper division.
+from __future__ import print_function, division
 
 # Import modules.
 import pygame
