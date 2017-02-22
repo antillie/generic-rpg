@@ -8,6 +8,8 @@ import pyganim
 import human
 import warrior
 import monk
+import whitemage
+import redmage
 
 import xpscale
 

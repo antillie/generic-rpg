@@ -12,6 +12,7 @@ import cesti
 
 # Import spells.
 import cure
+import stone
 
 # This class holds all data about the current game session. Story progress, characters, inventory, ect...
 class GameData:
@@ -36,6 +37,12 @@ class GameData:
         # Healing spells.
         self.healingspells = {
             "cure":cure.Cure()
+        }
+        
+        # Elemental spells
+        self.elemetnalspells = {
+        
+            "stone":stone.Stone()
         }
         
         # To do; define armor and other equipment data so it can be passed to the character instances as well.

@@ -83,8 +83,6 @@ class Warrior:
             return self.skills.b_minus[level]
         elif skill == "dagger":
             return self.skills.b_minus[level]
-        elif skill == "club":
-            return self.skills.b_minus[level]
         elif skill == "h2h":
             return self.skills.d[level]
         elif skill == "polearm":

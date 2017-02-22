@@ -3,36 +3,36 @@
 
 import skillranks
 
-# Defines the stat growth of the monk class. Monks are physical combatants that favor raw HP over armor and beat things with their fists.
-class Monk:
+# Defines the stat growth of the red mage class. Red mages are generalists with a focus on debuffing. More or less the poster child for the trope.
+class RedMage:
     
     def __init__(self):
         
         # Skillrank template.
         self.skills = skillranks.SkillRanks()
         
-        # Great HP and no MP.
-        self.hp_scale = 9
-        self.hp_base = 19
-        self.hp_altscale = 1
-        self.mp_scale = 0
-        self.mp_base = 0
-        self.has_mp = False
+        # Moderate HP and MP.
+        self.hp_scale = 6
+        self.hp_base = 16
+        self.hp_altscale = 0
+        self.mp_scale = 3
+        self.mp_base = 10
+        self.has_mp = True
         
-        # Strong physical stats but poor magic stats.
-        self.strength_scale = 0.4
-        self.strength_base = 4
-        self.vitality_scale = 0.5
-        self.vitality_base = 5
-        self.agility_scale = 0.25
-        self.agility_base = 2
-        self.dexterity_scale = 0.45
-        self.dexterity_base = 4
-        self.mind_scale = 0.35
-        self.mind_base = 3
-        self.inteligence_scale = 0.2
-        self.inteligence_base = 2
-        self.charisma_scale = 0.3
+        # Somewhat balanced stats, slight emphasis on caster stats over physical stats.
+        self.strength_scale = 0.35
+        self.strength_base = 3
+        self.vitality_scale = 0.3
+        self.vitality_base = 3
+        self.agility_scale = 0.3
+        self.agility_base = 3
+        self.dexterity_scale = 0.35
+        self.dexterity_base = 3
+        self.mind_scale = 0.4
+        self.mind_base = 4
+        self.inteligence_scale = 0.4
+        self.inteligence_base = 4
+        self.charisma_scale = 0.35
         self.charisma_base = 3
     
     def hp(self, level):
@@ -75,19 +75,29 @@ class Monk:
             return charisma
         
     def skill(self, level, skill):
-        if skill == "club":
-            return self.skills.c_plus[level]
-        elif skill == "h2h":
-            return self.skills.a_plus[level]
-        elif skill == "staff":
+        if skill == "dagger":
             return self.skills.b[level]
+        if skill == "sword":
+            return self.skills.b[level]
+        elif skill == "club":
+            return self.skills.d[level]
         elif skill == "evasion":
-            return self.skills.b_plus[level]
-        elif skill == "guard":
-            return self.skills.a_minus[level]
+            return self.skills.d[level]
+        elif skill == "shield":
+            return self.skills.f[level]
         elif skill == "parrying":
             return self.skills.e[level]
-        elif skill == "counter":
-            return 10
+        elif skill == "healing":
+            return self.skills.c_minus[level]
+        elif skill == "divine":
+            return self.skills.e[level]
+        elif skill == "enhancing":
+            return self.skills.b_plus[level]
+        elif skill == "enfeebling":
+            return self.skills.a_plus[level]
+        elif skill == "elemental":
+            return self.skills.c_plus[level]
+        elif skill == "dark":
+            return self.skills.e[level]
         else:
             return 0

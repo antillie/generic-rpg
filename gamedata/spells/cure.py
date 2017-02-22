@@ -12,6 +12,7 @@ class Cure:
         self.spelltype = "healing"
         self.cost = 8
         self.element = "light"
+        self.casttime = 2
         self.description1 = "Restores HP"
     
     def amount(self, caster):
