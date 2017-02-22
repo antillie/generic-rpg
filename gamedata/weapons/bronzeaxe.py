@@ -32,7 +32,7 @@ class BronzeAxe:
             "chabonus":0,
             # Secondary stats.
             "defbonus":0,
-            "atkbonus":0,
+            "atkbonus":1,
             "accbonus":0,
             "dodgebonus":0,
             "matkbonus":0,

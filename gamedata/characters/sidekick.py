@@ -84,27 +84,56 @@ class Sidekick(pygame.sprite.Sprite):
         # Add up the bonus stats from gear.
         for slot, item in self.equipment.items():
             if item != None:
+                # Core stat bonuses.
                 self.hpbonus = self.hpbonus + item.stat_bonuses["hpbonus"]
                 self.mpbonus = self.mpbonus + item.stat_bonuses["mpbonus"]
                 self.strbonus = self.strbonus + item.stat_bonuses["strbonus"]
+                self.vitbonus = self.vitbonus + item.stat_bonuses["vitbonus"]
+                self.agibonus = self.agibonus + item.stat_bonuses["agibonus"]
+                self.dexbonus = self.dexbonus + item.stat_bonuses["dexbonus"]
+                self.mndbonus = self.mndbonus + item.stat_bonuses["mndbonus"]
+                self.intbonus = self.intbonus + item.stat_bonuses["intbonus"]
+                self.chabonus = self.chabonus + item.stat_bonuses["chabonus"]
+                
+                # Secondary stat bonuses.
+                self.defbonus = self.defbonus + item.stat_bonuses["defbonus"]
+                self.atkbonus = self.atkbonus + item.stat_bonuses["atkbonus"]
+                self.accbonus = self.accbonus + item.stat_bonuses["accbonus"]
+                self.dodgebonus = self.dodgebonus + item.stat_bonuses["dodgebonus"]
+                self.matkbonus = self.matkbonus + item.stat_bonuses["matkbonus"]
+                self.madefbonus = self.madefbonus + item.stat_bonuses["madefbonus"]
+                self.parrybonus = self.parrybonus + item.stat_bonuses["parrybonus"]
+                self.blockbonus = self.blockbonus + item.stat_bonuses["blockbonus"]
+                self.guardbonus = self.guardbonus + item.stat_bonuses["guardbonus"]
+                self.counterbonus = self.counterbonus + item.stat_bonuses["counterbonus"]
+                
+                # Elemental resistance bonuses.
+                self.fire_res = self.fire_res + item.stat_bonuses["fire_res"]
+                self.ice_res = self.ice_res + item.stat_bonuses["ice_res"]
+                self.wind_res = self.wind_res + item.stat_bonuses["wind_res"]
+                self.earth_res = self.earth_res + item.stat_bonuses["earth_res"]
+                self.lightning_res = self.lightning_res + item.stat_bonuses["lightning_res"]
+                self.water_res = self.water_res + item.stat_bonuses["water_res"]
+                self.holy_res = self.holy_res + item.stat_bonuses["holy_res"]
+                self.darkness_res = self.darkness_res + item.stat_bonuses["darkness_res"]
         
-        # Stats.
+        # Main stats.
         race_hp = self.race.hp(self.level)
         class_hp = self.job.hp(self.level)
         subclass_hp = self.subjob.hp(self.level / 2) / 2
         
-        self.max_hp = int(race_hp + class_hp + subclass_hp)
-        self.current_hp = int(race_hp + class_hp + subclass_hp)
+        self.max_hp = int(race_hp + class_hp + subclass_hp + self.hpbonus)
+        self.current_hp = int(race_hp + class_hp + subclass_hp + self.hpbonus)
         
         if self.job.has_mp == False and self.subjob.has_mp == False:
-            self.current_mp = 0
-            self.max_mp = 0
+            self.current_mp = 0 + self.mpbonus
+            self.max_mp = 0 + self.mpbonus
         else:
             race_mp = self.race.mp(self.level)
             class_mp = self.job.mp(self.level)
             subclass_mp = self.subjob.mp(self.level / 2) / 2
-            self.current_mp = int(race_mp + class_mp + subclass_mp)
-            self.max_mp = int(race_mp + class_mp + subclass_mp)
+            self.current_mp = int(race_mp + class_mp + subclass_mp + self.mpbonus)
+            self.max_mp = int(race_mp + class_mp + subclass_mp + self.mpbonus)
         
         race_str = self.race.stat(self.level, "strength")
         race_vit = self.race.stat(self.level, "vitality")
@@ -130,14 +159,15 @@ class Sidekick(pygame.sprite.Sprite):
         subclass_int = self.subjob.stat(self.level / 2, "inteligence") / 2
         subclass_cha = self.subjob.stat(self.level / 2, "charisma") / 2
         
-        self.strength = int(race_str + class_str + subclass_str)
-        self.vitality = int(race_vit + class_vit + subclass_vit)
-        self.agility = int(race_agi + class_agi + subclass_agi)
-        self.dexterity = int(race_dex + class_dex + subclass_dex)
-        self.mind = int(race_mnd + class_mnd + subclass_mnd)
-        self.inteligence = int(race_int + class_int + subclass_int)
-        self.charisma = int(race_cha + class_cha + subclass_cha)
+        self.strength = int(race_str + class_str + subclass_str + self.strbonus)
+        self.vitality = int(race_vit + class_vit + subclass_vit + self.vitbonus)
+        self.agility = int(race_agi + class_agi + subclass_agi + self.agibonus)
+        self.dexterity = int(race_dex + class_dex + subclass_dex + self.dexbonus)
+        self.mind = int(race_mnd + class_mnd + subclass_mnd + self.mndbonus)
+        self.inteligence = int(race_int + class_int + subclass_int + self.intbonus)
+        self.charisma = int(race_cha + class_cha + subclass_cha + self.chabonus)
         
+        # Base defense value.
         if self.level <= 50:
             self.base_defense = (self.vitality / 2) + 8 + self.level
         elif self.level > 50 and self.level <= 60:
@@ -145,23 +175,26 @@ class Sidekick(pygame.sprite.Sprite):
         else:
             self.base_defense = (self.vitality / 2) + 8 + self.level + self.level + 10
         
+        # Weapon skill level.
         self.weaponskill = self.job.skill(self.level, self.equipment["main"].wtype)
         
+        # Accuracy from weapon skill level.
         if self.weaponskill <= 200:
             self.skillaccuracy = self.weaponskill
         else:
             self.skillaccuracy = (0.857 * (self.weaponskill - 200)) + 200
         
-        self.defense = int(self.base_defense) # Add item/armor effects later.
-        self.attack = int(8 + self.weaponskill + (self.strength * 0.75))
-        self.accuracy = int(self.skillaccuracy + (self.dexterity * 0.75))
-        self.dodge = int(self.job.skill(self.level, "evasion") + (self.agility * 0.75))
-        self.magic_attack = 0
-        self.magic_defense = 0
-        self.parry = self.job.skill(self.level, "parrying")
-        self.block = self.job.skill(self.level, "shield")
-        self.guard = self.job.skill(self.level, "guard")
-        self.counter = self.job.skill(self.level, "counter")
+        # Accumulated combat stats.
+        self.defense = int(self.base_defense + self.defbonus)
+        self.attack = int(8 + self.weaponskill + (self.strength * 0.75) + self.atkbonus)
+        self.accuracy = int(self.skillaccuracy + (self.dexterity * 0.75) + self.accbonus)
+        self.dodge = int(self.job.skill(self.level, "evasion") + (self.agility * 0.75) + self.dodgebonus)
+        self.magic_attack = self.matkbonus
+        self.magic_defense = self.madefbonus
+        self.parry = self.job.skill(self.level, "parrying") + self.parrybonus
+        self.block = self.job.skill(self.level, "shield") + self.blockbonus
+        self.guard = self.job.skill(self.level, "guard") + self.guardbonus
+        self.counter = self.job.skill(self.level, "counter") + self.counterbonus
         
        # Status effects.
         self.status_effects = {
