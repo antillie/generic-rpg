@@ -186,7 +186,11 @@ class Sidekick(pygame.sprite.Sprite):
         
         # Accumulated combat stats.
         self.defense = int(self.base_defense + self.defbonus)
-        self.attack = int(8 + self.weaponskill + (self.strength * 0.75) + self.atkbonus)
+        if self.equipment["main"].twohander:
+            # Two handed weapons recieve twice the attack bonus from strength.
+            self.attack = int(8 + self.weaponskill + (self.strength * 1.5) + self.atkbonus)
+        else:
+            self.attack = int(8 + self.weaponskill + (self.strength * 0.75) + self.atkbonus)
         self.accuracy = int(self.skillaccuracy + (self.dexterity * 0.75) + self.accbonus)
         self.dodge = int(self.job.skill(self.level, "evasion") + (self.agility * 0.75) + self.dodgebonus)
         self.magic_attack = self.matkbonus
