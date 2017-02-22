@@ -15,11 +15,12 @@ import xpscale
 class Sidekick(pygame.sprite.Sprite):
     
     # Init builds everything.
-    def __init__(self, cache, direction, weapons, width=32, height=48):
+    def __init__(self, cache, direction, weapons, healingspells, width=32, height=48):
         # Call the parent class constructor.
         super(Sidekick, self).__init__()
         self.direction = direction
         self.weapons = weapons
+        self.healingspells = healingspells
         
         self.name = "Party Member"
         self.mclass = "Monk"
@@ -29,7 +30,7 @@ class Sidekick(pygame.sprite.Sprite):
         self.job = monk.Monk()
         self.subjob = warrior.Warrior()
         
-         # Current level and XP to next level.
+        # Current level and XP to next level.
         self.level = 1
         self.xpscale = xpscale.xpScale()
         self.tnl = self.xpscale.tnl[self.level]

@@ -15,11 +15,12 @@ import xpscale
 class Hero(pygame.sprite.Sprite):
     
     # Init builds everything.
-    def __init__(self, cache, direction, weapons, width=32, height=48):
+    def __init__(self, cache, direction, weapons, healingspells, width=32, height=48):
         # Call the parent class constructor.
         super(Hero, self).__init__()
         self.direction = direction
         self.weapons = weapons
+        self.healingspells = healingspells
         
         self.name = "Hero Name"
         self.mclass = "Warrior"
@@ -199,6 +200,14 @@ class Hero(pygame.sprite.Sprite):
         self.block = self.job.skill(self.level, "shield") + self.blockbonus
         self.guard = self.job.skill(self.level, "guard") + self.guardbonus
         self.counter = self.job.skill(self.level, "counter") + self.counterbonus
+        
+        # Magic skills.
+        self.dark = 0
+        self.divine = 0
+        self.elemental = 0
+        self.enfeebling = 0
+        self.enhancing = 0 
+        self.healing = 0
         
         # Status effects.
         self.status_effects = {

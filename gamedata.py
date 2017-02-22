@@ -10,6 +10,9 @@ import npc
 import bronzeaxe
 import cesti
 
+# Import spells.
+import cure
+
 # This class holds all data about the current game session. Story progress, characters, inventory, ect...
 class GameData:
 
@@ -30,11 +33,16 @@ class GameData:
             "cesti":cesti.Cesti()
         }
         
+        # Healing spells.
+        self.healingspells = {
+            "cure":cure.Cure()
+        }
+        
         # To do; define armor and other equipment data so it can be passed to the character instances as well.
         
         # Define all the characters in the game. The NPCs will probably need to be moved into their own module later.
-        self.hero = hero.Hero(self.cache, "down", self.weapons)
-        self.sidekick = sidekick.Sidekick(self.cache, "down", self.weapons)
+        self.hero = hero.Hero(self.cache, "down", self.weapons, self.healingspells)
+        self.sidekick = sidekick.Sidekick(self.cache, "down", self.weapons, self.healingspells)
         self.npc = npc.npc(self.cache, "down")
         
         # Make the party's position on the world map avilable to all scenes so we always know where to put the party when going to the world map.
