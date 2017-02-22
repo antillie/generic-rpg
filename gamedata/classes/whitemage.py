@@ -8,6 +8,10 @@ class WhiteMage:
     
     def __init__(self):
         
+        # Class name.
+        self.name = "White Mage"
+        self.short = "WHM"
+        
         # Skillrank template.
         self.skills = skillranks.SkillRanks()
         

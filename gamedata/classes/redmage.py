@@ -8,6 +8,10 @@ class RedMage:
     
     def __init__(self):
         
+        # Class name.
+        self.name = "Red Mage"
+        self.short = "RDM"
+        
         # Skillrank template.
         self.skills = skillranks.SkillRanks()
         

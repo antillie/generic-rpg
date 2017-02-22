@@ -8,6 +8,10 @@ class Monk:
     
     def __init__(self):
         
+        # Class name.
+        self.name = "Monk"
+        self.short = "MNK"
+        
         # Skillrank template.
         self.skills = skillranks.SkillRanks()
         

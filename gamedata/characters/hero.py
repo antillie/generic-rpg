@@ -25,12 +25,13 @@ class Hero(pygame.sprite.Sprite):
         self.healingspells = healingspells
         
         self.name = "Hero Name"
-        self.mclass = "Warrior"
-        self.sclass = "Monk"
         
         self.race = human.Human()
         self.job = warrior.Warrior()
         self.subjob = monk.Monk()
+        
+        self.mclass = self.job.name
+        self.sclass = self.subjob.name
         
         # Current level and XP to next level.
         self.level = 1

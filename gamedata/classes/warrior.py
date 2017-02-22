@@ -8,6 +8,10 @@ class Warrior:
     
     def __init__(self):
         
+        # Class name.
+        self.name = "Warrior"
+        self.short = "WAR"
+        
         # Skillrank template.
         self.skills = skillranks.SkillRanks()
         

@@ -25,12 +25,13 @@ class Sidekick(pygame.sprite.Sprite):
         self.healingspells = healingspells
         
         self.name = "Party Member"
-        self.mclass = "Monk"
-        self.sclass = "Warrior"
         
         self.race = human.Human()
         self.job = monk.Monk()
         self.subjob = warrior.Warrior()
+        
+        self.mclass = self.job.name
+        self.sclass = self.subjob.name
         
         # Current level and XP to next level.
         self.level = 1

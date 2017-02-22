@@ -9,6 +9,7 @@ import npc
 # Import weapons.
 import bronzeaxe
 import cesti
+import ashclub
 
 # Import spells.
 import cure
@@ -31,7 +32,8 @@ class GameData:
         # Weapons data.
         self.weapons = {
             "bronzeaxe":bronzeaxe.BronzeAxe(),
-            "cesti":cesti.Cesti()
+            "cesti":cesti.Cesti(),
+            "ashclub":ashclub.AshClub()
         }
         
         # Healing spells.
