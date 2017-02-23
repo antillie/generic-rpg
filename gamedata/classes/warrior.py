@@ -107,3 +107,6 @@ class Warrior:
             return self.skills.c_plus[level]
         else:
             return 0
+    
+    def spells(self, healing, elemental):
+        return [None]

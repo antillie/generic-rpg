@@ -47,11 +47,23 @@ class GameData:
             "stone":stone.Stone()
         }
         
+        # Enhancing spells.
+        self.enchancingspells = {}
+        
+        # Enfeebeling spells.
+        self.enchancingspells = {}
+        
+        # Dark spells.
+        self.darkspells = {}
+        
+        # Divine spells.
+        self.divinespells = {}
+        
         # To do; define armor and other equipment data so it can be passed to the character instances as well.
         
         # Define all the characters in the game. The NPCs will probably need to be moved into their own module later.
-        self.hero = hero.Hero(self.cache, "down", self.weapons, self.healingspells)
-        self.sidekick = sidekick.Sidekick(self.cache, "down", self.weapons, self.healingspells)
+        self.hero = hero.Hero(self.cache, "down", self.weapons, self.healingspells, self.elemetnalspells, self.enchancingspells, self.darkspells, self.divinespells)
+        self.sidekick = sidekick.Sidekick(self.cache, "down", self.weapons, self.healingspells, self.elemetnalspells, self.enchancingspells, self.darkspells, self.divinespells)
         self.npc = npc.npc(self.cache, "down")
         
         # Make the party's position on the world map avilable to all scenes so we always know where to put the party when going to the world map.

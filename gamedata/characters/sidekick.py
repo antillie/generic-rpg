@@ -17,12 +17,16 @@ import xpscale
 class Sidekick(pygame.sprite.Sprite):
     
     # Init builds everything.
-    def __init__(self, cache, direction, weapons, healingspells, width=32, height=48):
+    def __init__(self, cache, direction, weapons, healingspells, elemetnalspells, enchancingspells, darkspells, divinespells, width=32, height=48):
         # Call the parent class constructor.
         super(Sidekick, self).__init__()
         self.direction = direction
         self.weapons = weapons
         self.healingspells = healingspells
+        self.elemetnalspells = elemetnalspells
+        self.enchancingspells = enchancingspells
+        self.darkspells = darkspells
+        self.divinespells = divinespells
         
         self.name = "Party Member"
         
@@ -204,7 +208,15 @@ class Sidekick(pygame.sprite.Sprite):
         self.guard = self.job.skill(self.level, "guard") + self.guardbonus
         self.counter = self.job.skill(self.level, "counter") + self.counterbonus
         
-       # Status effects.
+        # Magic skills.
+        self.dark = self.job.skill(self.level, "dark")
+        self.divine = self.job.skill(self.level, "divine")
+        self.elemental = self.job.skill(self.level, "elemental")
+        self.enfeebling = self.job.skill(self.level, "enfeebling")
+        self.enhancing = self.job.skill(self.level, "enhancing") 
+        self.healing = self.job.skill(self.level, "healing")
+        
+        # Status effects.
         self.status_effects = {
             "poison":False,
             "silence":False,
