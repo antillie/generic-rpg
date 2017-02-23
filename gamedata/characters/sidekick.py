@@ -27,8 +27,8 @@ class Sidekick(pygame.sprite.Sprite):
         self.name = "Party Member"
         
         self.race = human.Human()
-        self.job = monk.Monk()
-        self.subjob = warrior.Warrior()
+        self.job = whitemage.WhiteMage()
+        self.subjob = redmage.RedMage()
         
         self.mclass = self.job.name
         self.sclass = self.subjob.name
@@ -40,7 +40,7 @@ class Sidekick(pygame.sprite.Sprite):
         
         # Equipment.
         self.equipment = {
-            "main":self.weapons["cesti"],
+            "main":self.weapons["ashclub"],
             "off":None,
             "helm":None,
             "body":None,
