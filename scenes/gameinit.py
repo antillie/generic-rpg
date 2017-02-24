@@ -5,9 +5,9 @@ import pygame
 import virtualscreen
 import base
 import colors
+import os
 import pyscroll
 import pytmx.util_pygame
-import os
 import utils
 import campfire
 import dialog

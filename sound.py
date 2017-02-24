@@ -3,6 +3,7 @@
 
 import pygame
 import os
+import sys
 
 # Cache sound objects so we aren't initializing the same sound over and over.
 _sound_library = {}
@@ -15,6 +16,12 @@ class JukeBox:
     
     def __init__(self):
         self.music_playing = False
+        if getattr(sys, 'frozen', False):
+            # frozen
+            self.root = os.path.dirname(sys.executable)
+        else:
+            # unfrozen
+            self.root = os.path.dirname(os.path.realpath(__file__))
     
     def play_music(self, song):
         if self.music_playing == False:
@@ -24,7 +31,7 @@ class JukeBox:
             else:
                 self.music_volume = 0.2
             
-            song_path = os.path.dirname(os.path.realpath(__file__)) + "/sound/music/" + song
+            song_path = self.root + "/sound/music/" + song
             song_path = song_path.replace("/", os.sep).replace("\\", os.sep)
             pygame.mixer.music.load(song_path)
             pygame.mixer.music.set_volume(self.music_volume)
@@ -46,7 +53,7 @@ class JukeBox:
         global _sound_library
         sound_fx = _sound_library.get(sound)
         if sound_fx == None:
-            path = os.path.dirname(os.path.realpath(__file__)) + "/sound/" + sound
+            path = self.root + "/sound/" + sound
             canonicalized_path = path.replace("/", os.sep).replace("\\", os.sep)
             sound_fx = pygame.mixer.Sound(canonicalized_path)
             sound_fx.set_volume(self.fx_volume)

@@ -3,6 +3,7 @@
 
 import pygame
 import os
+import sys
 
 # The image and font object cache lists are global.
 _cached_fonts = {}
@@ -10,11 +11,20 @@ _image_library = {}
 
 # Cache class that handles all image and font object caching.
 class CacheEngine:
+    
+    def __init__(self):
+        if getattr(sys, 'frozen', False):
+            # frozen
+            self.root = os.path.dirname(sys.executable)
+        else:
+            # unfrozen
+            self.root = os.path.dirname(os.path.realpath(__file__))
+    
     # Font object generator.
     def _make_font(self, fonts, size):
         
         if fonts[0] == "Immortal":
-            path = os.path.dirname(os.path.realpath(__file__)) + "/fonts/" + fonts[0] + ".ttf"
+            path = self.root + "/fonts/" + fonts[0] + ".ttf"
             path = path.replace('/', os.sep).replace("\\", os.sep)
             return pygame.font.Font(path, size)
         
@@ -41,7 +51,7 @@ class CacheEngine:
             global _image_library
             image = _image_library.get(path)
             if image == None:
-                temp_path = os.path.dirname(os.path.realpath(__file__)) + "/images/" + path
+                temp_path = self.root + "/images/" + path
                 canonicalized_path = temp_path.replace("/", os.sep).replace("\\", os.sep)
                 image = pygame.image.load(canonicalized_path).convert()
                 _image_library[path] = image
@@ -52,7 +62,7 @@ class CacheEngine:
             global _image_library
             image = _image_library.get(path)
             if image == None:
-                temp_path = os.path.dirname(os.path.realpath(__file__)) + "/images/" + path
+                temp_path = self.root + "/images/" + path
                 canonicalized_path = temp_path.replace("/", os.sep).replace("\\", os.sep)
                 image = pygame.image.load(canonicalized_path).convert_alpha()
                 _image_library[path] = image

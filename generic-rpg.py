@@ -10,6 +10,9 @@ import os
 import sys
 import cache
 import sound
+import webbrowser
+import pyscroll
+import pytmx.util_pygame
 sys.path.append("gamedata")
 sys.path.append("gamedata/characters")
 sys.path.append("gamedata/classes")
@@ -88,7 +91,14 @@ class Engine:
             pass
         
         # Load and set the window icon.
-        temp_path = os.path.dirname(os.path.realpath(__file__)) + "/images/window_shield.png"
+        
+        if getattr(sys, 'frozen', False):
+            # frozen
+            temp_path = os.path.dirname(sys.executable) + "/images/window_shield.png"
+        else:
+            # unfrozen
+            temp_path = os.path.dirname(os.path.realpath(__file__)) + "/images/window_shield.png"
+            
         canonicalized_path = temp_path.replace("/", os.sep).replace("\\", os.sep)
         image = pygame.image.load(canonicalized_path)
         pygame.display.set_icon(image)
@@ -214,7 +224,7 @@ class Engine:
                     
                     # Close the program.
                     print("Thanks for playing!")
-                    exit()
+                    sys.exit()
                 
             # No active scene means that we are done.
             if active_scene != None:

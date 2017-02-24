@@ -5,10 +5,10 @@ import pygame
 import virtualscreen
 import base
 import colors
-import pyscroll
-import pytmx.util_pygame
 import os
 import utils
+import pyscroll
+import pytmx.util_pygame
 
 # World map.
 class WorldMap(base.SceneBase):

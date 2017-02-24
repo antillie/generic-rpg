@@ -3,7 +3,6 @@
 
 import pygame
 import os
-import webbrowser
 import virtualscreen
 import base
 import colors
