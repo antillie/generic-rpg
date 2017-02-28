@@ -105,3 +105,15 @@ class RedMage:
             return self.skills.e[level]
         else:
             return 0
+    
+    def spells(self, level, healing, elemental, enchancing, dark, divine):
+        
+        spell_list = []
+        
+        if level >= 3:
+            spell_list.append(healing["cure"])
+        
+        if level >= 4:
+            spell_list.append(elemental["stone"])
+        
+        return spell_list

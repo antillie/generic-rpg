@@ -97,3 +97,12 @@ class WhiteMage:
             return self.skills.c_minus[level]
         else:
             return 0
+    
+    def spells(self, level, healing, elemental, enchancing, dark, divine):
+        
+        spell_list = []
+        
+        if level >= 1:
+            spell_list.append(healing["cure"])
+        
+        return spell_list

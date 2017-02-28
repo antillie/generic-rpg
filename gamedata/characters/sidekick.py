@@ -42,6 +42,13 @@ class Sidekick(pygame.sprite.Sprite):
         self.xpscale = xpscale.xpScale()
         self.tnl = self.xpscale.tnl[self.level]
         
+        # Avilable spells.
+        self.spells = self.job.spells(self.level, self.healingspells, self.elemetnalspells, self.enchancingspells, self.darkspells, self.divinespells)
+        self.spells.extend(self.subjob.spells(int(self.level / 2), self.healingspells, self.elemetnalspells, self.enchancingspells, self.darkspells, self.divinespells))
+        self.spells = list(set(self.spells)).sort()
+        
+        print(self.spells)
+        
         # Equipment.
         self.equipment = {
             "main":self.weapons["ashclub"],

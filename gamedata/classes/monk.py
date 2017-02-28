@@ -96,5 +96,5 @@ class Monk:
         else:
             return 0
     
-    def spells(self, healing, elemental):
+    def spells(self, level, healing, elemental, enchancing, dark, divine):
         return [None]
