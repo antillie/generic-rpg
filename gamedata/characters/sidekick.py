@@ -45,9 +45,8 @@ class Sidekick(pygame.sprite.Sprite):
         # Avilable spells.
         self.spells = self.job.spells(self.level, self.healingspells, self.elemetnalspells, self.enchancingspells, self.darkspells, self.divinespells)
         self.spells.extend(self.subjob.spells(int(self.level / 2), self.healingspells, self.elemetnalspells, self.enchancingspells, self.darkspells, self.divinespells))
-        self.spells = list(set(self.spells)).sort()
-        
-        print(self.spells)
+        self.spells = list(set(self.spells))
+        self.spells.sort()
         
         # Equipment.
         self.equipment = {

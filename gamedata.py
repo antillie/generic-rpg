@@ -43,7 +43,6 @@ class GameData:
         
         # Elemental spells
         self.elemetnalspells = {
-        
             "stone":stone.Stone()
         }
         
