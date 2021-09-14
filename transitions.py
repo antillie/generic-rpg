@@ -97,7 +97,7 @@ class Transition:
         transition = name
         transition_data = Object()
         transition_data.duration = duration
-        transition_data.start = time.clock()
+        transition_data.start = time.process_time()
         transition_data.screen = screen.copy()
         transition_data.current_screen = False
         transition_data.x = x
