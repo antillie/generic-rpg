@@ -108,7 +108,7 @@ class Transition:
         if inited == False:
             raise Exception("You must init transitions before using it!")
         if transition != False:
-            current_time = time.clock()
+            current_time = time.process_time()
             time_ratio = (current_time - transition_data.start) / transition_data.duration
             if time_ratio > 1.0:
                 transition_data = False
