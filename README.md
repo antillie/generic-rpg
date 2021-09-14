@@ -40,9 +40,6 @@ Uses creative commons art and sound assets. Mostly CC-BY. Some CC-BY-SA. Some pu
 (https://creativecommons.org/licenses/)
 Artists and specific asset details are listed in the credits screen.
 
-The python code is Copyright (c) 2017 by George Markeloff and licensed under the GNU GPL version 3 unless noted otherwise.
-See LICENSE.txt for the full license terms.
-
 The transitions module is Copyright (c) 2014 by Death_Miner and is licensed under the MIT license.
 (https://github.com/DeathMiner/Pygame-Transitions)
 Full license terms are in the module itself.
